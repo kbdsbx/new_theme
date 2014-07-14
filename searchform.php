@@ -6,6 +6,6 @@
 */
 ?>
 <form action="<?php echo esc_url( home_url( 'search' ) );?>" method="post">
-	<input type="text" placeholder="<?php __( 'Search', 'new' ); ?>" class="ft"/>
+	<input type="text" placeholder="<?php _e( 'Search', 'new' ); ?>" class="ft"/>
 	<input type="submit" value="" class="fs">
 </form>

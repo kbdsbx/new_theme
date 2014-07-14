@@ -17,7 +17,8 @@
 get_header(); ?>
 		<section id="slider">
             <div class="container">
-                <div class="main-slider">
+				<?php dynamic_sidebar('sidebar-flexslider'); ?>
+                <!--div class="main-slider">
                 	<div class="badg">
                     	<p><a href="#">hot.</a></p>
                     </div>
@@ -32,7 +33,7 @@ get_header(); ?>
 							{/dede:arclist}
                         </ul>
                     </div>
-                </div>
+                </div-->
                 
                 <div class="slider2">
                 	<div id="tabs">

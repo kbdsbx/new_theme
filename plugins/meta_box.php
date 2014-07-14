@@ -1,8 +1,8 @@
 <?php
 define('WP_DEBUG', true);
 
-function _article_flags() {
-	return array(
+global $posts_flags;
+$posts_flags = array(
 	'headline',		// 头条
 	'recommend',	// 推荐
 	'slide',		// 幻灯
@@ -11,8 +11,7 @@ function _article_flags() {
 	'blod',			// 加粗
 	'picture',		// 图片
 	'jump'			// 跳转
-	);
-}
+);
 
 /**
  * Adds a box to the main column on the Post and Page edit screens.
@@ -39,7 +38,7 @@ add_action( 'add_meta_boxes', 'new_plugin_add_meta_box' );
  * @param WP_Post $post The object for the current post/page.
  */
 function new_plugin_meta_box_callback( $post ) {
-	$_article_flags = _article_flags();
+	global $posts_flags;
 	// Add an nonce field so we can check for it later.
 	wp_nonce_field( 'new_plugin_meta_box', 'new_plugin_meta_box_nonce' );
 	/*
@@ -52,7 +51,7 @@ function new_plugin_meta_box_callback( $post ) {
 	_e( 'Select flag with your article', 'new' );
 	echo '</label> ';
 	// echo '<input type="text" id="myplugin_new_field" name="myplugin_new_field" value="' . esc_attr( $value ) . '" size="25" />';
-	foreach ( $_article_flags as $flag ) {
+	foreach ( $posts_flags as $flag ) {
 		$value = get_post_meta( $post->ID, '_new_meta_article_' . $flag, true );
 		echo '<label><input type="checkbox" id="'.$flag.'" name="'.$flag.'" value="true" ' . (esc_attr( $value ) == 'true' ? 'checked="checked"' : '') . '  />' . strtoupper( $flag ) . '</label>&nbsp;';
 	}
@@ -64,7 +63,7 @@ function new_plugin_meta_box_callback( $post ) {
  * @param int $post_id The ID of the post being saved.
  */
 function new_plugin_save_meta_box_data( $post_id ) {
-	$_article_flags = _article_flags();
+	global $posts_flags;
 
 	/*
 	 * We need to verify this came from our screen and with proper authorization,
@@ -106,7 +105,7 @@ function new_plugin_save_meta_box_data( $post_id ) {
 	//if ( ! isset( $_POST['hot'] ) ) {
 	//	$_POST['hot'] = 'false';
 	//}
-	foreach ( $_article_flags as $flag ) {
+	foreach ( $posts_flags as $flag ) {
 			if ( ! isset( $_POST[ $flag ] ) ) {
 				$_POST[ $flag ] = 'false';
 			}

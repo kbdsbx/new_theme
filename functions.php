@@ -1,6 +1,7 @@
 <?php
 
 require get_template_directory() . '/plugins/meta_box.php';
+require get_template_directory() . '/plugins/slider_widget.php';
 
 function new_setup() {
 	load_theme_textdomain( 'new', get_template_directory() . '/languages' );
@@ -33,18 +34,30 @@ add_filter( 'wp_nav_menu_args', 'new_nav_menu_args' );
 */
 function new_scripts_styles() {
 	global $wp_styles;
-	wp_enqueue_style( 'new-style-base', get_template_directory_uri() . '/css/base.css' );
-	wp_enqueue_style( 'new-style-960', get_template_directory_uri() . '/css/960.css' );
-	wp_enqueue_style( 'new-style-ie', get_template_directory_uri() . '/css/ie.css' );
-	wp_enqueue_style( 'new-style-new', get_template_directory_uri() . '/css/new.css' );
-	wp_enqueue_style( 'new-style-phone', get_template_directory_uri() . '/css/phone.css' );
-	wp_enqueue_style( 'new-style-ui', get_template_directory_uri() . '/css/ui.css' );
-	wp_enqueue_style( 'new-style-superfish', get_template_directory_uri() . '/css/superfish.css', array(), '1.0' );
-	wp_enqueue_style( 'new-style-style', get_template_directory_uri() . '/css/style.css', array(), '1.3' );
+	wp_enqueue_style( 'new-style-superfish', get_template_directory_uri() . '/css/superfish.css' );
 	wp_enqueue_style( 'new-style-fontello', get_template_directory_uri() . '/css/fontello/fontello.css' );
+	wp_enqueue_style( 'new-style-flexslider', get_template_directory_uri() . '/css/flexslider.css' );
+	wp_enqueue_style( 'new-style-ui', get_template_directory_uri() . '/css/ui.css' );
+	wp_enqueue_style( 'new-style-base', get_template_directory_uri() . '/css/base.css' );
+	wp_enqueue_style( 'new-style-style', get_template_directory_uri() . '/css/style.css' );
+	wp_enqueue_style( 'new-style-960', get_template_directory_uri() . '/css/960.css' );
+	wp_enqueue_style( 'new-style-new', get_template_directory_uri() . '/css/new.css' );
+	wp_enqueue_style( 'new-style-devices-1000', get_template_directory_uri() . '/css/devices/1000.css' );
+	wp_enqueue_style( 'new-style-devices-479', get_template_directory_uri() . '/css/devices/479.css' );
+	wp_enqueue_style( 'new-style-devices-767', get_template_directory_uri() . '/css/devices/767.css' );
 
 
-	wp_enqueue_script( 'new-superfish', get_template_directory_uri() . '/js/superfish.js', array(), '1.0' );
+	wp_enqueue_script( 'new-jquery', get_template_directory_uri() . '/js/jquery.js', array(), '1.9.1' );
+	wp_enqueue_script( 'new-easing', get_template_directory_uri() . '/js/easing.min.js', array(), '1.0' );
+	wp_enqueue_script( 'new-1.8.2', get_template_directory_uri() . '/js/1.8.2.min.js', array(), '1.0' );
+	wp_enqueue_script( 'new-ui', get_template_directory_uri() . '/js/ui.js', array(), '1.0' );
+	wp_enqueue_script( 'new-carouFreSel', get_template_directory_uri() . '/js/carouFredSel.js', array(), '1.0' );
+	wp_enqueue_script( 'new-supserfish', get_template_directory_uri() . '/js/superfish.js', array(), '1.0' );
+	wp_enqueue_script( 'new-customM', get_template_directory_uri() . '/js/customM.js', array(), '1.0' );
+	wp_enqueue_script( 'new-flexslider', get_template_directory_uri() . '/js/flexslider-min.js', array(), '1.0' );
+	wp_enqueue_script( 'new-tweetable', get_template_directory_uri() . '/js/tweetable.js', array(), '1.0' );
+	wp_enqueue_script( 'new-timeago', get_template_directory_uri() . '/js/timeago.js', array(), '1.0' );
+	wp_enqueue_script( 'new-jflickrfeed', get_template_directory_uri() . '/js/jflickrfeed.min.js', array(), '1.0' );
 	wp_enqueue_script( 'new-mobilemenu', get_template_directory_uri() . '/js/mobilemenu.js', array(), '1.0' );
 	wp_enqueue_script( 'new-new', get_template_directory_uri() . '/js/new.js', array(), '1.0' );
 	wp_enqueue_script( 'new-passion', get_template_directory_uri() . '/js/mypassion.js', array(), '1.0' );
@@ -63,6 +76,87 @@ function new_register_my_menus() {
 }
 add_action( 'after_setup_theme', 'new_register_my_menus' );
 
-function edit_header_image() {
+function new_widgets_init() {
+	register_sidebar( array(
+		'name'          => __( 'flexslider', 'new' ),
+		'id'            => 'sidebar-flexslider',
+		'class'			=> '',
+		'description'   => __( 'Appears in the footer section of the site.', 'new' ),
+		'before_widget' => '<div id="%1$s" class="widget %2$s">',
+		'after_widget'  => '</div>',
+		'before_title'  => '<h3 class="widget-title">',
+		'after_title'   => '</h3>',
+	) );
 }
-add_action( 'wp_get_image_editor', '' );
+add_action( 'widgets_init', 'new_widgets_init' );
+
+function new_custom_color_register( $wp_customize ) {
+	$colors = array();
+	
+	$colors[] = array(
+		'slug'=>'color_primary', 
+		'default' => '#ea4748',
+		'label' => __('Primary Color ', 'new')
+	);
+	
+	foreach( $colors as $color ) {
+		$wp_customize->add_setting(
+			$color['slug'], array(
+				'default' => $color['default'],
+				'type' => 'option', 
+				'capability' => 'edit_theme_options'
+			)
+		);
+		// CONTROLS
+		$wp_customize->add_control(
+			new WP_Customize_Color_Control(
+				$wp_customize,
+				$color['slug'], 
+				array('label' => $color['label'], 
+				'section' => 'colors',
+				'settings' => $color['slug'])
+			)
+		);
+	}
+}
+
+add_action( 'customize_register', 'new_custom_color_register' );
+
+function new_add_css_styles() { 
+	global $posts_size;
+	$color_primary = get_option('color_primary');
+	
+?>
+<style type="text/css">
+	<?php foreach ( $posts_size as $size_key => $size ) : ?>
+	.main-slider-<?php echo $size_key; ?> {
+		width: <?php echo $size[0]; ?>px;
+		height: <?php echo $size[1]; ?>px;
+		margin: 0 10px;
+		float: left;
+	}
+	<?php endforeach; ?>
+.badg,
+.search .fs,
+.flex-direction-nav a,
+.flexslider:hover .flex-next:hover,
+.flexslider:hover .flex-prev:hover
+{ background-color: <?php echo $color_primary; ?>; }
+a,
+.sf-menu li:hover,
+.sf-menu a:focus,
+.sf-menu a:hover,
+.sf-menu a:active,
+.sf-menu li a:hover
+{ color: <?php echo $color_primary; ?> }
+div#nav,
+.sf-menu li:hover ul, 
+.sf-menu li.sfHover ul,
+.sf-menu>li>a:hover
+{ border-color: <?php echo $color_primary; ?>; }
+</style>
+
+    <?php
+}
+
+add_action('wp_head', 'new_add_css_styles');

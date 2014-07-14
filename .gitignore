@@ -35,5 +35,7 @@ Icon
 .Spotlight-V100
 .Trashes
 
-# VIM backup file
+# VIM temp file 
 *.*~
+*.swp
+

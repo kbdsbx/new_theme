@@ -22,7 +22,7 @@
 	<?php wp_head(); ?>
 </head>
 
-<body>
+<body <?php body_class(); ?>>
 <!-- Body Wrapper -->
 <div class="body-wrapper">
 	<div class="controller">

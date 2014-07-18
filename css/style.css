@@ -29,12 +29,13 @@ body{
 	margin:0;
 	padding:0;
 	float:left;
+    z-index:9999;
 	position:relative;
 	height:auto;
 	min-height:100%;
 }
 .controller{
-	width:100%;
+	width:1060px;
 	margin:0 auto;
 	min-height:100%;
 }
@@ -294,7 +295,7 @@ li.sfHover > a > .sf-sub-indicator {
 /*------------------------------------------------------------------*/ 
 /*	2) SLIDER
 /*------------------------------------------------------------------*/
-#slider{
+.slider{
 	float:left;
 	clear:both;
 	width:100%;
@@ -1395,4 +1396,8 @@ p.copyright{
 	background:#ea4748;
 	margin:0;
 	padding:10px;
+}
+
+div#tabs{
+    margin-top: -18px;
 }

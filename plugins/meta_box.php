@@ -1,5 +1,4 @@
 <?php
-define('WP_DEBUG', true);
 
 global $posts_flags;
 $posts_flags = array(

@@ -1,15 +1,5 @@
 <?php
 
-global $posts_size;
-$posts_size = array(
-	'lg' => array( 540, 372 ),
-	'xs' => array( 140, 86 ),
-	'xx' => array( 300, 162 )
-);
-
-foreach( $posts_size as $size_key => $size ) {
-	add_image_size( $size_key, $size[0], $size[1], true );
-}
 
 class WP_Widget_Slider extends WP_Widget {
 
@@ -29,7 +19,7 @@ class WP_Widget_Slider extends WP_Widget {
 
 		$title = apply_filters( 'widget_title', empty( $instance['title'] ) ? __( 'Slider' ) : $instance['title'], $instance, $this->id_base );
 
-		$numberposts = empty( $instance['numberposts'] ) ? 5 : $instance['numberposts'];
+		$post_count = empty( $instance['post_count'] ) ? 5 : $instance['post_count'];
 		$title = empty( $instance['title'] ) ? '' : $instance['title'];
 		$orderby = empty( $instance['orderby'] ) ? 'post_date' : $instance['orderby'];
 		$meta_key = empty( $instance['new_meta_article_flag'] ) ? '' :  $instance['new_meta_article_flag'];
@@ -37,7 +27,7 @@ class WP_Widget_Slider extends WP_Widget {
 		$size = $instance['size'];
 		$post_size = $posts_size[ $instance['size'] ] ? $posts_size[ $instance['size'] ] : $posts_size['lg'];
 		$args = array(
-			'post_count' => $numberposts,
+			'post_count' => $post_count,
 			'order' => 'DESC',
 			'orderby' => $orderby,
 			'meta_key' => '_new_meta_article_' . $meta_key,
@@ -66,7 +56,7 @@ class WP_Widget_Slider extends WP_Widget {
 				</a>
 				<p class="flex-caption">
 					<a href="<?php the_permalink(); ?>"><?php the_title(); ?></a>
-					<?php echo strip_tags( get_the_excerpt( '...' ) ); ?>
+					<?php echo strip_tags( get_the_excerpt() ); ?>
 				</p>
 			</li>
 		<?php endwhile // end of foreach ?>
@@ -81,7 +71,7 @@ class WP_Widget_Slider extends WP_Widget {
 		$instance = $old_instance;
 
 		$instance['title'] = !empty( $new_instance['title'] ) ? $new_instance['title'] : '';
-		$instance['numberposts'] = ( !empty( $new_instance['numberposts'] ) && is_numeric( $new_instance['numberposts'] ) ) ? $new_instance['numberposts'] : 5;
+		$instance['post_count'] = ( !empty( $new_instance['post_count'] ) && is_numeric( $new_instance['post_count'] ) ) ? $new_instance['post_count'] : 5;
 		$instance['orderby'] = $new_instance['orderby'] ? $new_instance['orderby'] : '';
 		$instance['new_meta_article_flag'] = $new_instance['new_meta_article_flag'] ? $new_instance['new_meta_article_flag'] : '';
 		$instance['size'] = $new_instance['size'] ? $new_instance['size'] : 'lg';
@@ -94,7 +84,7 @@ class WP_Widget_Slider extends WP_Widget {
 		//Defaults
 		$instance = wp_parse_args( (array) $instance, array( 'sortby' => 'post_title', 'title' => '', 'exclude' => '') );
 		$title = esc_attr( $instance['title'] );
-		$numberposts = esc_attr( $instance['numberposts'] );
+		$post_count = esc_attr( $instance['post_count'] );
 		$orderby = esc_attr( $instance['orderby'] );
 		$article_flag = esc_attr( $instance['new_meta_article_flag'] );
 		$article_size = esc_attr( $instance['size'] );
@@ -108,20 +98,25 @@ class WP_Widget_Slider extends WP_Widget {
 			<input class="widefat" id="<?php echo $this->get_field_id('orderby'); ?>" name="<?php echo $this->get_field_name('orderby'); ?>" type="text" value="<?php echo $orderby; ?>" />
 		</p>
 		<p>
-			<label for="<?php echo $this->get_field_id('numberposts'); ?>"><?php _e( 'Posts count:' ); ?></label>
-			<input class="widefat" type="text" value="<?php echo $numberposts; ?>" name="<?php echo $this->get_field_name('numberposts'); ?>" id="<?php echo $this->get_field_id('numberposts'); ?>" />
+			<label for="<?php echo $this->get_field_id('post_count'); ?>"><?php _e( 'Posts count:' ); ?></label>
+			<input type="text" value="<?php echo $post_count; ?>" name="<?php echo $this->get_field_name('post_count'); ?>" id="<?php echo $this->get_field_id('post_count'); ?>" size="3" />
 		</p>
 		<p>
 			<label for="<?php echo $this->get_field_id('new_meta_article_flag'); ?>"><?php _e( 'Flags:' ); ?></label>
 			<br />
 			<?php foreach( $posts_flags as $flag ) : ?>
-			<?php _e( strtoupper( $flag ) ) ?>: <input type="radio" name="<?php echo $this->get_field_name('new_meta_article_flag'); ?>" id="<?php echo $this->get_field_id('new_meta_article_flag'); ?>" <?php if ( $flag == $article_flag ) : echo 'checked="checked"'; endif ?> value="<?php echo $flag; ?>" />
+			<input type="radio" name="<?php echo $this->get_field_name('new_meta_article_flag'); ?>" id="<?php echo $this->get_field_id('new_meta_article_flag'); ?>" <?php if ( $flag == $article_flag ) : echo 'checked="checked"'; endif ?> value="<?php echo $flag; ?>" />
+			<?php _e( strtoupper( $flag ) ) ?>
+			<br />
 			<?php endforeach; ?>
 		</p>
 		<p>
 			<label for="<?php echo $this->get_field_id( 'size' ); ?>"><?php _e( 'Size:' ); ?></label>
+			<br />
 			<?php foreach( $posts_size as $size_key => $size ) : ?>
-			<?php echo $size[0]; ?> * <?php echo $size[1]; ?>: <input type="radio" name="<?php echo $this->get_field_name('size'); ?>" id="<?php echo $this->get_field_id('size'); ?>" <?php if ( $article_size == $size_key ) : echo 'checked="checked"'; endif ?> value="<?php echo $size_key; ?>" />
+			<input type="radio" name="<?php echo $this->get_field_name('size'); ?>" id="<?php echo $this->get_field_id('size'); ?>" <?php if ( $article_size == $size_key ) : echo 'checked="checked"'; endif ?> value="<?php echo $size_key; ?>" />
+			<?php echo $size[0]; ?> * <?php echo $size[1]; ?>
+			<br />
 			<?php endforeach; ?>
 		</p>
 <?php

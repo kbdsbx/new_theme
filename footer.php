@@ -26,5 +26,6 @@
 				</div><!-- end of controller2 -->
 			</div><!-- end of controller -->
 		</div><!-- end of body-wrapper -->
+        <?php wp_footer(); ?>
 	</body>
 </html>

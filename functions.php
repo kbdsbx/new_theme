@@ -1,7 +1,32 @@
 <?php
 
-require get_template_directory() . '/plugins/meta_box.php';
-require get_template_directory() . '/plugins/slider_widget.php';
+DEFINE( 'plugins_uri', get_template_directory_uri() . '/plugins' );
+DEFINE( 'classes_uri', get_template_directory_uri() . '/classes' );
+DEFINE( 'plugins', get_template_directory() . '/plugins' );
+DEFINE( 'classes', get_template_directory() . '/classes' );
+
+require plugins . '/meta_box.php';
+require plugins . '/slider_widget.php';
+require plugins . '/tabs_widget.php';
+require plugins . '/flink_widget.php';
+require plugins . '/follow_widget.php';
+require plugins . '/flink_page.php';
+
+require_once classes . '/class-new-flink-list-table.php';
+
+
+global $posts_size;
+$posts_size = array(
+	'lg' => array( 960, 640 ),
+	'md' => array( 540, 372 ),
+	'sm' => array( 380, 253 ),
+	'xs' => array( 300, 162 ),
+	'xx' => array( 140, 86 )
+);
+
+foreach( $posts_size as $size_key => $size ) {
+	add_image_size( $size_key, $size[0], $size[1], true );
+}
 
 function new_setup() {
 	load_theme_textdomain( 'new', get_template_directory() . '/languages' );
@@ -78,15 +103,35 @@ add_action( 'after_setup_theme', 'new_register_my_menus' );
 
 function new_widgets_init() {
 	register_sidebar( array(
-		'name'          => __( 'flexslider', 'new' ),
-		'id'            => 'sidebar-flexslider',
+		'name'          => 'sidebar-home-head',
+		'id'            => 'sidebar-home-head',
 		'class'			=> '',
-		'description'   => __( 'Appears in the footer section of the site.', 'new' ),
+		'description'   => __( 'The main slider of the home page.', 'new' ),
 		'before_widget' => '<div id="%1$s" class="widget %2$s">',
 		'after_widget'  => '</div>',
-		'before_title'  => '<h3 class="widget-title">',
-		'after_title'   => '</h3>',
+		'before_title'  => '',
+		'after_title'   => '',
 	) );
+	register_sidebar( array(
+		'name'          => 'sidebar-home-footer',
+		'id'            => 'sidebar-home-footer',
+		'class'			=> '',
+		'description'   => __( 'The main slider of the home page.', 'new' ),
+		'before_widget' => '<div id="%1$s" class="widget %2$s">',
+		'after_widget'  => '</div>',
+		'before_title'  => '',
+		'after_title'   => '',
+	) );
+    register_sidebar( array( 
+		'name'          => 'sidebar-side',
+		'id'            => 'sidebar-side',
+		'class'			=> '',
+		'description'   => __( 'The right slider of the page.', 'new' ),
+		'before_widget' => '<div class="sidebar">',
+		'after_widget'  => '</div>',
+		'before_title'  => '',
+		'after_title'   => '',
+    ) );
 }
 add_action( 'widgets_init', 'new_widgets_init' );
 
@@ -135,6 +180,12 @@ function new_add_css_styles() {
 		margin: 0 10px;
 		float: left;
 	}
+	.slider-<?php echo $size_key; ?> {
+		width: <?php echo $size[0]; ?>px;
+		height: auto;
+		margin: 0 10px;
+		float: left;
+	}
 	<?php endforeach; ?>
 .badg,
 .search .fs,
@@ -147,12 +198,20 @@ a,
 .sf-menu a:focus,
 .sf-menu a:hover,
 .sf-menu a:active,
-.sf-menu li a:hover
+.sf-menu li a:hover,
+ul.sf-menu li.sfHover ul li:hover i,
+ul.sf-menu li.sfHover ul li a:hover,
+.block span,
+span.meta
 { color: <?php echo $color_primary; ?> }
 div#nav,
 .sf-menu li:hover ul, 
 .sf-menu li.sfHover ul,
-.sf-menu>li>a:hover
+.sf-menu>li>a:hover,
+.ui-tabs .ui-tabs-panel,
+.ui-tabs .ui-tabs-nav li.ui-tabs-active,
+h5.line,
+h5.line>span
 { border-color: <?php echo $color_primary; ?>; }
 </style>
 
@@ -160,3 +219,40 @@ div#nav,
 }
 
 add_action('wp_head', 'new_add_css_styles');
+
+// register click times to every posts' head;
+function new_record_visitors() {
+	if ( is_singular() ) 
+	{
+		global $post;
+		$post_ID = $post->ID;
+		if( $post_ID )	{
+			$post_views = ( int )get_post_meta( $post_ID, 'views', true );
+			if( !update_post_meta( $post_ID, 'views', ( $post_views + 1 ) ) ) {
+				add_post_meta( $post_ID, 'views', 1, true );
+			}
+		}
+	}
+}
+add_action('wp_head', 'new_record_visitors'); 
+
+function get_post_views() {
+	global $post;
+	$post_ID = $post->ID;
+	$views = ( int ) get_post_meta( $post_ID, 'views', true );
+	return $views;
+}
+
+
+function new_register_custom_background() {
+    $args = array(
+        'default-color' => '',
+        'default-image' => '',
+    );
+
+    $args = apply_filters( 'new_custom_background_args', $args );
+
+    add_theme_support( 'custom-background', $args );
+}
+
+add_action( 'after_setup_theme', 'new_register_custom_background' );

@@ -19,7 +19,7 @@ class WP_Widget_Slider extends WP_Widget {
 
 		$title = apply_filters( 'widget_title', empty( $instance['title'] ) ? __( 'Slider' ) : $instance['title'], $instance, $this->id_base );
 
-		$post_count = empty( $instance['post_count'] ) ? 5 : $instance['post_count'];
+		$posts_per_page = empty( $instance['posts_per_page'] ) ? 5 : $instance['posts_per_page'];
 		$title = empty( $instance['title'] ) ? '' : $instance['title'];
 		$orderby = empty( $instance['orderby'] ) ? 'post_date' : $instance['orderby'];
 		$meta_key = empty( $instance['new_meta_article_flag'] ) ? '' :  $instance['new_meta_article_flag'];
@@ -27,7 +27,8 @@ class WP_Widget_Slider extends WP_Widget {
 		$size = $instance['size'];
 		$post_size = $posts_size[ $instance['size'] ] ? $posts_size[ $instance['size'] ] : $posts_size['lg'];
 		$args = array(
-			'post_count' => $post_count,
+			'posts_per_page' => $posts_per_page,
+			'page' => 1,
 			'order' => 'DESC',
 			'orderby' => $orderby,
 			'meta_key' => '_new_meta_article_' . $meta_key,
@@ -48,7 +49,7 @@ class WP_Widget_Slider extends WP_Widget {
 		<ul class="slides">
 		<?php while( $query->have_posts() ) : $query->the_post(); ?>
 			<li>
-				<input hidden="hidden" id="<?php the_ID(); ?>" />
+				<input type="hidden" id="<?php the_ID(); ?>" />
 				<a href="<?php the_permalink(); ?>">
 					<?php if ( has_post_thumbnail() ) : ?>
 					<img width="<?php echo $post_size[0]; ?>" height="<?php echo $post_size[1]; ?>" src="<?php echo wp_get_attachment_image_src( get_post_thumbnail_id( get_the_ID() ), $size )[0]; ?>" alt="<?php the_title(); ?>" />
@@ -71,7 +72,7 @@ class WP_Widget_Slider extends WP_Widget {
 		$instance = $old_instance;
 
 		$instance['title'] = !empty( $new_instance['title'] ) ? $new_instance['title'] : '';
-		$instance['post_count'] = ( !empty( $new_instance['post_count'] ) && is_numeric( $new_instance['post_count'] ) ) ? $new_instance['post_count'] : 5;
+		$instance['posts_per_page'] = ( !empty( $new_instance['posts_per_page'] ) && is_numeric( $new_instance['posts_per_page'] ) ) ? $new_instance['posts_per_page'] : 5;
 		$instance['orderby'] = $new_instance['orderby'] ? $new_instance['orderby'] : '';
 		$instance['new_meta_article_flag'] = $new_instance['new_meta_article_flag'] ? $new_instance['new_meta_article_flag'] : '';
 		$instance['size'] = $new_instance['size'] ? $new_instance['size'] : 'lg';
@@ -83,11 +84,11 @@ class WP_Widget_Slider extends WP_Widget {
 		global $posts_flags, $posts_size;
 		//Defaults
 		$instance = wp_parse_args( (array) $instance, array( 'sortby' => 'post_title', 'title' => '', 'exclude' => '') );
-		$title = esc_attr( $instance['title'] );
-		$post_count = esc_attr( $instance['post_count'] );
-		$orderby = esc_attr( $instance['orderby'] );
-		$article_flag = esc_attr( $instance['new_meta_article_flag'] );
-		$article_size = esc_attr( $instance['size'] );
+		$title = esc_attr( empty ( $instance['title'] ) ? : $instance['title'] );
+		$posts_per_page = esc_attr( empty ( $instance['posts_per_page'] ) ? : $instance['posts_per_page'] );
+		$orderby = esc_attr( empty ( $instance['orderby'] ) ? : $instance['orderby'] );
+		$article_flag = esc_attr( empty ( $instance['new_meta_article_flag'] ) ? : $instance['new_meta_article_flag'] );
+		$article_size = esc_attr( empty ( $instance['size'] ) ? : $instance['size'] );
 	?>
 		<p>
 			<label for="<?php echo $this->get_field_id('title'); ?>"><?php _e('Title:'); ?></label>
@@ -98,8 +99,8 @@ class WP_Widget_Slider extends WP_Widget {
 			<input class="widefat" id="<?php echo $this->get_field_id('orderby'); ?>" name="<?php echo $this->get_field_name('orderby'); ?>" type="text" value="<?php echo $orderby; ?>" />
 		</p>
 		<p>
-			<label for="<?php echo $this->get_field_id('post_count'); ?>"><?php _e( 'Posts count:' ); ?></label>
-			<input type="text" value="<?php echo $post_count; ?>" name="<?php echo $this->get_field_name('post_count'); ?>" id="<?php echo $this->get_field_id('post_count'); ?>" size="3" />
+			<label for="<?php echo $this->get_field_id('posts_per_page'); ?>"><?php _e( 'Posts count:' ); ?></label>
+			<input type="text" value="<?php echo $posts_per_page; ?>" name="<?php echo $this->get_field_name('posts_per_page'); ?>" id="<?php echo $this->get_field_id('posts_per_page'); ?>" size="3" />
 		</p>
 		<p>
 			<label for="<?php echo $this->get_field_id('new_meta_article_flag'); ?>"><?php _e( 'Flags:' ); ?></label>
@@ -122,4 +123,4 @@ class WP_Widget_Slider extends WP_Widget {
 <?php
 	}
 }
-register_widget('WP_Widget_Slider');
+register_widget( 'WP_Widget_Slider' );

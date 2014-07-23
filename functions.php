@@ -5,11 +5,15 @@ DEFINE( 'classes_uri', get_template_directory_uri() . '/classes' );
 DEFINE( 'plugins', get_template_directory() . '/plugins' );
 DEFINE( 'classes', get_template_directory() . '/classes' );
 
+require plugins . '/widget_function.php';
+
 require plugins . '/meta_box.php';
 require plugins . '/slider_widget.php';
 require plugins . '/tabs_widget.php';
 require plugins . '/flink_widget.php';
 require plugins . '/follow_widget.php';
+require plugins . '/picture_widget.php';
+require plugins . '/ads_widget.php';
 require plugins . '/flink_page.php';
 
 require_once classes . '/class-new-flink-list-table.php';
@@ -20,7 +24,10 @@ $posts_size = array(
 	'lg' => array( 960, 640 ),
 	'md' => array( 540, 372 ),
 	'sm' => array( 380, 253 ),
+	's' => array( 380, 217 ),
 	'xs' => array( 300, 162 ),
+	'x' => array( 180, 135 ),
+	'w' => array( 125, 125 ),
 	'xx' => array( 140, 86 )
 );
 
@@ -38,21 +45,25 @@ function new_setup() {
 add_action( 'after_setup_theme', 'new_setup' );
 
 function new_filter_menu_link_attributes( $atts, $item, $args ) {
-	if ( $item->menu_item_parent != '0' ) {
-		$args->before = '<i class="icon-right-open"></i>';
-	} else {
-		$args->before = '';
-	}
+    switch ( $args->theme_location ) {
+    case 'navigation':
+        if ( $item->menu_item_parent != '0' ) {
+		    $args->before = '<i class="icon-right-open"></i>';
+    	} else {
+    		$args->before = '';
+        }
+        break;
+    case 'navigation-footer':
+        $args->before = '<i class="icon-right-open"></i>';
+        break;
+    default:
+        break;
+    }
+    
 	return $atts;
 }
 add_filter( 'nav_menu_link_attributes', 'new_filter_menu_link_attributes', 10, 3 );
 
-function new_nav_menu_args( $args = '' ) {
-	$args['container'] = false;
-	$args['menu_class'] = 'sf-menu';
-	return $args;
-}
-add_filter( 'wp_nav_menu_args', 'new_nav_menu_args' );
 /**
  * Enqueues scripts and styles for front-end.
  *
@@ -95,7 +106,8 @@ add_action( 'wp_enqueue_scripts', 'new_scripts_styles' );
 function new_register_my_menus() {
   register_nav_menus(
     array(
-      'navigation' => __( 'Main Header Menu', 'new' ),
+      'navigation-main' => __( 'Main Header Menu', 'new' ),
+      'navigation-footer' => __( 'Foot Navigation Menu', 'new' ),
     )
   );
 }

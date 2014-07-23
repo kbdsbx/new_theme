@@ -34,30 +34,6 @@ get_header(); ?>
                 <!-- /Main Content -->
                 <?php get_sidebar(); ?>
                 
-                <!-- Left Sidebar -->
-                <div class="column-one-third">
-                    <div class="sidebar">
-                    	<h5 class="line"><span>漫步西国</span></h5>
-                        <ul class="ads125">
-							{dede:arclist  row=8 typeid='22' titlelen=20 flag ='p' orderby='pubdate' }
-							<li><a href="[field:arcurl/]"><img src="[field:litpic/]" alt="[field:title/]" /></a></li>
-							{/dede:arclist}
-                        </ul>
-                    </div>
-                    <div class="sidebar">
-                    	<h5 class="line"><span>线下西语</span></h5>
-                        <div id="accordion">
-                        	{dede:arclist typeid=7 row=6 titlelen=30 infolen=200 orderby='typeid'}
-	                            <h3>[field:title/]</h3>
-	                            <div>
-	                                <p><a href="[field:arcurl/]" class="title">[field:info/]</a></p>
-	                            </div>
-                        	{/dede:arclist}
-                        </div>
-                    </div>
-                </div>
-                <!-- /Left Sidebar -->
-                
             </div>    
         </section>
 		<!-- / Content -->

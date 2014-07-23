@@ -29,10 +29,12 @@ class WP_Widget_flink extends WP_Widget {
 ?>
 <div class="main-content">
     <div class="column-two-third">
-        <h5 class="line"><span><?php _e( 'Friend links', 'new' ); ?></span></h5>
+        <h5 class="line"><span><?php echo $title; ?></span></h5>
 	    <ul class="block4">
             <?php foreach ( $flink_data as $link ) : ?>
+            <?php if ( $link['link_status'] ) : ?>
             <li><a href="<?php echo $link['link_url']; ?>" target="_blank"><?php echo $link['link_name']; ?></a></li>
+            <?php endif; ?>
             <?php endforeach; ?>
 	    </ul>
 	</div>

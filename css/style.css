@@ -1262,13 +1262,38 @@ ul.ads125 li{
 ul.ads125 li a{
 	padding:10px;
 	margin:0 5px 5px 0;
+    /* padding: 5px; */
 	background:#fafafa;
 	float:left;
 	display:block;
 }
 ul.ads125 li a img{
-	width:125px;
-	height:125px;
+	/* width:125px;
+	height:125px; */
+	float:left;	
+}
+ul.picbox {
+    list-style-type:none;
+    margin:0;
+    padding:0;
+}
+ul.picbox li{
+    float:left;
+    width:100%;
+}
+ul.picbox li a{
+	padding:10px;
+	margin:0 5px 5px 0;
+    /* padding: 5px; */
+	background:#fafafa;
+	float:left;
+	display:block;
+}
+ul.picbox li h6{
+}
+ul.picbox li a img{
+	/* width:125px;
+	height:125px; */
 	float:left;	
 }
 

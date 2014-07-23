@@ -41,7 +41,7 @@
 			            
 			            <!-- Nav -->
 			            <div id="nav">
-							<?php wp_nav_menu( array( 'theme_location'=>'navigation' ) ); ?>	
+							<?php wp_nav_menu( array( 'theme_location' => 'navigation', 'container' => false, 'menu_class' => 'sf-menu' ) ); ?>	
 			            </div>
 			            <!-- /Nav -->
 			        </div>

@@ -6,9 +6,6 @@ class WP_Widget_Tabs extends WP_Widget {
 		global $posts_size;
 		$widget_ops = array('classname' => 'widget_tabs', 'description' => __( 'The tabs of posts and incoding ranks, recommends, randoms.') );
 		
-		// wp_enqueue_style( 'new-style-flexslider', get_template_directory_uri() . '/css/flexslider.css' );
-		// wp_enqueue_script( 'new-flexslider', get_template_directory_uri() . '/js/flexslider-min.js', array('new-jquery'), '1.0' );
-
 		parent::__construct('tabs', __('Tabs'), $widget_ops);
 	}
 
@@ -18,21 +15,21 @@ class WP_Widget_Tabs extends WP_Widget {
 
 		$title = apply_filters( 'widget_title', empty( $instance['title'] ) ? __( 'Tabs' ) : $instance['title'], $instance, $this->id_base );
 
-		$post_count= empty( $instance['post_count'] ) ? 4 : $instance['post_count'];
+		$posts_per_page= empty( $instance['posts_per_page'] ) ? 4 : $instance['posts_per_page'];
 		$title = empty( $instance['title'] ) ? '' : $instance['title'];
 
 		$size = $instance['size'];
 		$post_size = $posts_size[ $instance['size'] ] ? $posts_size[ $instance['size'] ] : $posts_size['lg'];
 
 		$args_rank = array(
-            'posts_per_page'=> $post_count,
+            'posts_per_page'=> $posts_per_page,
             'page'          => 1,
 			'order'			=> 'DESC',
 			'meta_key'		=> 'views',
 			'orderby'		=> 'meta_value_num'
 		);
 		$args_recommend = array(
-            'posts_per_page'=> $post_count,
+            'posts_per_page'=> $posts_per_page,
             'page'          => 1,
 			'order'			=> 'DESC',
 			'meta_key'		=> '_new_meta_article_recommend',
@@ -40,7 +37,7 @@ class WP_Widget_Tabs extends WP_Widget {
 			'orderby'		=> 'post_date'
 		);
 		$args_random = array(
-            'posts_per_page'=> $post_count,
+            'posts_per_page'=> $posts_per_page,
             'page'          => 1,
 			'order'			=> 'DESC',
 			'orderby'		=> 'rand'
@@ -114,7 +111,7 @@ class WP_Widget_Tabs extends WP_Widget {
 		$instance = $old_instance;
 
 		$instance['title'] = !empty( $new_instance['title'] ) ? $new_instance['title'] : '';
-		$instance['post_count'] = ( !empty( $new_instance['post_count'] ) && is_numeric( $new_instance['post_count'] ) ) ? $new_instance['post_count'] : 4;
+		$instance['posts_per_page'] = ( !empty( $new_instance['posts_per_page'] ) && is_numeric( $new_instance['posts_per_page'] ) ) ? $new_instance['posts_per_page'] : 4;
 		$instance['size'] = $new_instance['size'] ? $new_instance['size'] : 'lg';
 
 		return $instance;
@@ -124,17 +121,17 @@ class WP_Widget_Tabs extends WP_Widget {
 		global $posts_size;
 		//Defaults
 		$instance = wp_parse_args( (array) $instance, array( 'sortby' => 'post_title', 'title' => '', 'exclude' => '') );
-		$title = esc_attr( $instance['title'] );
-		$post_count = esc_attr( $instance['post_count'] );
-		$article_size = esc_attr( $instance['size'] );
+		$title = esc_attr( empty ( $instance['title'] ) ? '' : $instance['title'] );
+		$posts_per_page = esc_attr( empty ( $instance['posts_per_page'] ) ? '' : $instance['posts_per_page'] );
+		$article_size = esc_attr( empty ( $instance['size'] ) ? '' : $instance['size'] );
 	?>
 		<p>
 			<label for="<?php echo $this->get_field_id('title'); ?>"><?php _e('Title:'); ?></label>
 			<input class="widefat" id="<?php echo $this->get_field_id('title'); ?>" name="<?php echo $this->get_field_name('title'); ?>" type="text" value="<?php echo $title; ?>" />
 		</p>
 		<p>
-			<label for="<?php echo $this->get_field_id('post_count'); ?>"><?php _e( 'Post count:' ); ?></label>
-			<input type="text" value="<?php echo $post_count; ?>" name="<?php echo $this->get_field_name('post_count'); ?>" id="<?php echo $this->get_field_id('post_count'); ?>" size="3" />
+			<label for="<?php echo $this->get_field_id('posts_per_page'); ?>"><?php _e( 'Post count:' ); ?></label>
+			<input type="text" value="<?php echo $posts_per_page; ?>" name="<?php echo $this->get_field_name('posts_per_page'); ?>" id="<?php echo $this->get_field_id('posts_per_page'); ?>" size="3" />
 		</p>
 		<p>
 			<label for="<?php echo $this->get_field_id( 'size' ); ?>"><?php _e( 'Size:' ); ?></label>

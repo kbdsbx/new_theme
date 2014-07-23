@@ -5,7 +5,7 @@ function new_flink_admin () {
     $flink_table -> prepare_items();
 ?>
 <div class="wrap" >
-    <h2>Friend links</h2>
+    <h2><?php _e( 'Friendly links', 'new' ); ?></h2>
     <div class="manage-menus">
         <span><?php _e( 'Be use friend links widget to show your links.', 'new' ); ?><a href="<?php echo esc_url( admin_url( 'widgets.php' ) ); ?>" ><?php _e( 'Check it to edit.', 'new' ); ?></a></span>
     </div>
@@ -109,7 +109,7 @@ function new_flink_page () {
         update_option( 'flink_data', $flink_data );
     }
 
-    add_options_page( 'new_flink_options', 'Friend links', 'manage_options', 'flink_page.php', 'new_flink_admin' );
+    add_options_page( 'new_flink_options', 'Friend links', 'manage_options', basename( __FILE__ ), 'new_flink_admin' );
 }
 add_action( 'admin_menu', 'new_flink_page' );
 ?>

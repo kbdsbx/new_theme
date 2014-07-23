@@ -15,6 +15,7 @@ require plugins . '/follow_widget.php';
 require plugins . '/picture_widget.php';
 require plugins . '/ads_widget.php';
 require plugins . '/flink_page.php';
+require plugins . '/theme_setting.php';
 
 require_once classes . '/class-new-flink-list-table.php';
 
@@ -203,7 +204,8 @@ function new_add_css_styles() {
 .search .fs,
 .flex-direction-nav a,
 .flexslider:hover .flex-next:hover,
-.flexslider:hover .flex-prev:hover
+.flexslider:hover .flex-prev:hover,
+p.copyright
 { background-color: <?php echo $color_primary; ?>; }
 a,
 .sf-menu li:hover,
@@ -223,7 +225,8 @@ div#nav,
 .ui-tabs .ui-tabs-panel,
 .ui-tabs .ui-tabs-nav li.ui-tabs-active,
 h5.line,
-h5.line>span
+h5.line>span,
+#footer
 { border-color: <?php echo $color_primary; ?>; }
 </style>
 

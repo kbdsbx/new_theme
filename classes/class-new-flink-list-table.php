@@ -16,8 +16,8 @@ class NEW_Flink_List_Table extends WP_List_Table {
     function get_columns() {
         $columns = array(
             'cb'            => '<input type="checkbox" />',
-            'link_name'     => __( 'Friend link', 'new' ),
-            'link_url'      => __( 'Friend Url', 'new' ),
+            'link_name'     => __( 'Friendly link title', 'new' ),
+            'link_url'      => __( 'Friendly link url', 'new' ),
             'link_date'     => __( 'Date', 'new' ),
             'link_status'   => __( 'Status', 'new' )
         );

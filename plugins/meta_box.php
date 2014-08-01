@@ -23,7 +23,7 @@ function new_plugin_add_meta_box() {
 
 		add_meta_box(
 			'new_plugin_flags',
-			__( 'This article\'s flags', 'new_plugin_flags' ),
+			__( 'This article\'s flags', 'new' ),
 			'new_plugin_meta_box_callback',
 			$screen
 		);

@@ -2,24 +2,17 @@
 
 class WP_Widget_Tabs extends WP_Widget {
 
-		function __construct() {
-		global $posts_size;
-		$widget_ops = array('classname' => 'widget_tabs', 'description' => __( 'The tabs of posts and incoding ranks, recommends, randoms.') );
-		
-		parent::__construct('tabs', __('Tabs'), $widget_ops);
+    function __construct() {
+        $widget_ops = array('classname' => 'widget_tabs', 'description' => __( 'The tabs of posts and incoding ranks, recommends, randoms.', 'new' ) );
+
+        parent::__construct('tabs', __( 'Tabs', 'new' ), $widget_ops);
 	}
 
 	function widget( $args, $instance ) {
-		global $posts_size;
-		extract( $args );
 
-		$title = apply_filters( 'widget_title', empty( $instance['title'] ) ? __( 'Tabs' ) : $instance['title'], $instance, $this->id_base );
+		$title      = apply_filters( 'widget_title', _filter_empty( $instance['title'], __( 'Ads Pictures', 'new' ), $instance, $this->id_base ) );
 
-		$posts_per_page= empty( $instance['posts_per_page'] ) ? 4 : $instance['posts_per_page'];
-		$title = empty( $instance['title'] ) ? '' : $instance['title'];
-
-		$size = $instance['size'];
-		$post_size = $posts_size[ $instance['size'] ] ? $posts_size[ $instance['size'] ] : $posts_size['lg'];
+		$posts_per_page = _filter_empty_numeric( $instance['posts_per_page'], 4 );
 
 		$args_rank = array(
             'posts_per_page'=> $posts_per_page,
@@ -43,9 +36,20 @@ class WP_Widget_Tabs extends WP_Widget {
 			'orderby'		=> 'rand'
 		);
 
-		echo $before_widget;
+        if ( is_category() ) {
+            $cat = get_cat_ID( single_cat_title( '', false ) );
+        } else if ( is_single() ) {
+            $category = get_the_category();
+            $cat = $category[0]->cat_ID;
+        }
+        if ( ! empty( $cat ) ) {
+            $args_rank[ 'cat' ] = $cat;
+            $args_recommend[ 'cat' ] = $cat;
+            $args_random[ 'cat' ] = $cat;
+        }
+
+		echo $args['before_widget'];
 ?>
-<div class="slider-<?php echo $size;?>">
 	<div id="tabs">
         <ul>
 			<li><a href="#tabs1"><?php _e( 'Rank', 'new' ); ?></a></li>
@@ -57,15 +61,9 @@ class WP_Widget_Tabs extends WP_Widget {
 <?php
 				$query = new WP_Query( $args_rank );
 			 	while( $query->have_posts() ) : $query->the_post();
+                    get_template_part( 'content', 'category-2' );
+                endwhile;
 ?>
-				<li>
-                	<a href="<?php the_permalink(); ?>" class="title"><?php the_title(); ?></a>
-					<span class="meta"><?php the_date( 'Y-m-d' ); ?>   \\   <?php the_author() ?>   \\   <?php echo get_post_meta( get_the_ID(), 'source', true ) ?></span>
-					<span class="rating">
-						<span style="width:<?php echo ( ( get_post_views() / 350 ) > 1 ? 100 : ( get_post_views() / 3.5 ) ) ?>%;"></span>
-					</span>
-				</li>
-				<?php endwhile; ?>
             </ul>
         </div>
         <div id="tabs2">
@@ -73,15 +71,9 @@ class WP_Widget_Tabs extends WP_Widget {
 <?php
 				$query = new WP_Query( $args_recommend );
 			 	while( $query->have_posts() ) : $query->the_post();
+                    get_template_part( 'content', 'category-2' );
+                endwhile;
 ?>
-				<li>
-                	<a href="<?php the_permalink(); ?>" class="title"><?php the_title(); ?></a>
-					<span class="meta"><?php the_date( 'Y-m-d' ); ?>   \\   <?php the_author() ?>   \\   <?php echo get_post_meta( get_the_ID(), 'source', true ) ?></span>
-					<span class="rating">
-						<span style="width:<?php echo ( ( get_post_views() / 350 ) > 1 ? 100 : ( get_post_views() / 3.5 ) ) ?>%;"></span>
-						</span>
-				</li>
-				<?php endwhile; ?>
             </ul>
         </div>
         <div id="tabs3">
@@ -89,58 +81,38 @@ class WP_Widget_Tabs extends WP_Widget {
 <?php
 				$query = new WP_Query( $args_random );
 			 	while( $query->have_posts() ) : $query->the_post();
+                    get_template_part( 'content', 'category-2' );
+                endwhile;
 ?>
-				<li>
-                	<a href="<?php the_permalink(); ?>" class="title"><?php the_title(); ?></a>
-					<span class="meta"><?php the_date( 'Y-m-d' ); ?>   \\   <?php the_author() ?>   \\   <?php echo get_post_meta( get_the_ID(), 'source', true ) ?></span>
-					<span class="rating">
-						<span style="width:<?php echo ( ( get_post_views() / 350 ) > 1 ? 100 : ( get_post_views() / 3.5 ) ) ?>%;"></span>
-						</span>
-				</li>
-				<?php endwhile; ?>
             </ul>
         </div>
     </div>
-</div>
 
-	<?php
-		echo $after_widget;
+<?php
+		echo $args['after_widget'];
 	}
 
 	function update( $new_instance, $old_instance ) {
-		$instance = $old_instance;
+		$instance = array();
 
-		$instance['title'] = !empty( $new_instance['title'] ) ? $new_instance['title'] : '';
-		$instance['posts_per_page'] = ( !empty( $new_instance['posts_per_page'] ) && is_numeric( $new_instance['posts_per_page'] ) ) ? $new_instance['posts_per_page'] : 4;
-		$instance['size'] = $new_instance['size'] ? $new_instance['size'] : 'lg';
+		$instance['title']          = _filter_empty( $new_instance['title'], $old_instance['title'] );
+        $instance['posts_per_page'] = _filter_empty_numeric( $new_instance['posts_per_page'], $old_instance['posts_per_page'] );
 
 		return $instance;
 	}
 
 	function form( $instance ) {
-		global $posts_size;
 		//Defaults
-		$instance = wp_parse_args( (array) $instance, array( 'sortby' => 'post_title', 'title' => '', 'exclude' => '') );
-		$title = esc_attr( empty ( $instance['title'] ) ? '' : $instance['title'] );
-		$posts_per_page = esc_attr( empty ( $instance['posts_per_page'] ) ? '' : $instance['posts_per_page'] );
-		$article_size = esc_attr( empty ( $instance['size'] ) ? '' : $instance['size'] );
+		$title = esc_attr( _filter_object_empty( $instance, 'title', '' ) );
+        $posts_per_page = esc_attr( _filter_object_empty( $instance, 'posts_per_page', '' ) );
 	?>
 		<p>
-			<label for="<?php echo $this->get_field_id('title'); ?>"><?php _e('Title:'); ?></label>
+			<label for="<?php echo $this->get_field_id('title'); ?>"><?php _e( 'Title:', 'new' ); ?></label>
 			<input class="widefat" id="<?php echo $this->get_field_id('title'); ?>" name="<?php echo $this->get_field_name('title'); ?>" type="text" value="<?php echo $title; ?>" />
 		</p>
 		<p>
-			<label for="<?php echo $this->get_field_id('posts_per_page'); ?>"><?php _e( 'Post count:' ); ?></label>
+			<label for="<?php echo $this->get_field_id('posts_per_page'); ?>"><?php _e( 'Post count:', 'new' ); ?></label>
 			<input type="text" value="<?php echo $posts_per_page; ?>" name="<?php echo $this->get_field_name('posts_per_page'); ?>" id="<?php echo $this->get_field_id('posts_per_page'); ?>" size="3" />
-		</p>
-		<p>
-			<label for="<?php echo $this->get_field_id( 'size' ); ?>"><?php _e( 'Size:' ); ?></label>
-			<br />
-			<?php foreach( $posts_size as $size_key => $size ) : ?>
-			<input type="radio" name="<?php echo $this->get_field_name('size'); ?>" id="<?php echo $this->get_field_id('size'); ?>" <?php if ( $article_size == $size_key ) : echo 'checked="checked"'; endif ?> value="<?php echo $size_key; ?>" />
-			<?php echo $size[0]; ?> px
-			<br />
-			<?php endforeach; ?>
 		</p>
 <?php
 	}

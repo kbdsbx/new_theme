@@ -15,13 +15,14 @@ require plugins . '/follow_widget.php';
 require plugins . '/picture_widget.php';
 require plugins . '/ads_widget.php';
 require plugins . '/flink_page.php';
-require plugins . '/theme_setting.php';
+require plugins . '/theme_setting_page.php';
 
 require_once classes . '/class-new-flink-list-table.php';
+require_once classes . '/class-new-comment-walker.php';
 
 
-global $posts_size;
-$posts_size = array(
+global $size_enum;
+$size_enum = array(
 	'lg' => array( 960, 640 ),
 	'md' => array( 540, 372 ),
 	'sm' => array( 380, 253 ),
@@ -32,7 +33,7 @@ $posts_size = array(
 	'xx' => array( 140, 86 )
 );
 
-foreach( $posts_size as $size_key => $size ) {
+foreach( $size_enum as $size_key => $size ) {
 	add_image_size( $size_key, $size[0], $size[1], true );
 }
 
@@ -41,7 +42,6 @@ function new_setup() {
 	add_theme_support( 'custom-header' );
 	add_theme_support( 'custom-background' );
 	add_theme_support( 'post-thumbnails' );
-	if ( ! isset( $content_width ) ) { $content_width = 628; }
 }
 add_action( 'after_setup_theme', 'new_setup' );
 
@@ -116,11 +116,21 @@ add_action( 'after_setup_theme', 'new_register_my_menus' );
 
 function new_widgets_init() {
 	register_sidebar( array(
-		'name'          => 'sidebar-home-head',
-		'id'            => 'sidebar-home-head',
+		'name'          => 'sidebar-main-slider',
+		'id'            => 'sidebar-main-slider',
 		'class'			=> '',
 		'description'   => __( 'The main slider of the home page.', 'new' ),
-		'before_widget' => '<div id="%1$s" class="widget %2$s">',
+		'before_widget' => '<div class="main-slider">',
+		'after_widget'  => '</div>',
+		'before_title'  => '',
+		'after_title'   => '',
+	) );
+	register_sidebar( array(
+		'name'          => 'sidebar-slider2',
+		'id'            => 'sidebar-slider2',
+		'class'			=> '',
+		'description'   => __( 'The main slider2 of the home page.', 'new' ),
+		'before_widget' => '<div class="slider2">',
 		'after_widget'  => '</div>',
 		'before_title'  => '',
 		'after_title'   => '',
@@ -130,16 +140,26 @@ function new_widgets_init() {
 		'id'            => 'sidebar-home-footer',
 		'class'			=> '',
 		'description'   => __( 'The main slider of the home page.', 'new' ),
-		'before_widget' => '<div id="%1$s" class="widget %2$s">',
+		'before_widget' => '<div class="column-two-third">',
 		'after_widget'  => '</div>',
 		'before_title'  => '',
 		'after_title'   => '',
 	) );
     register_sidebar( array( 
+		'name'          => 'sidebar-category-side',
+		'id'            => 'sidebar-category-side',
+		'class'			=> '',
+		'description'   => __( 'The right slider of the category page.', 'new' ),
+		'before_widget' => '<div class="sidebar">',
+		'after_widget'  => '</div>',
+		'before_title'  => '',
+		'after_title'   => '',
+    ) );
+    register_sidebar( array( 
 		'name'          => 'sidebar-side',
 		'id'            => 'sidebar-side',
 		'class'			=> '',
-		'description'   => __( 'The right slider of the page.', 'new' ),
+		'description'   => __( 'The right slider of the homepage.', 'new' ),
 		'before_widget' => '<div class="sidebar">',
 		'after_widget'  => '</div>',
 		'before_title'  => '',
@@ -181,31 +201,19 @@ function new_custom_color_register( $wp_customize ) {
 add_action( 'customize_register', 'new_custom_color_register' );
 
 function new_add_css_styles() { 
-	global $posts_size;
+	global $size_enum;
 	$color_primary = get_option('color_primary');
+    $color_primary_2 = '#' . _filter_empty( dechex( hexdec( $color_primary ) - 0x323333 ), '000000' );
 	
 ?>
 <style type="text/css">
-	<?php foreach ( $posts_size as $size_key => $size ) : ?>
-	.main-slider-<?php echo $size_key; ?> {
-		width: <?php echo $size[0]; ?>px;
-		height: <?php echo $size[1]; ?>px;
-		margin: 0 10px;
-		float: left;
-	}
-	.slider-<?php echo $size_key; ?> {
-		width: <?php echo $size[0]; ?>px;
-		height: auto;
-		margin: 0 10px;
-		float: left;
-	}
-	<?php endforeach; ?>
 .badg,
-.search .fs,
+.search-form .fs,
 .flex-direction-nav a,
 .flexslider:hover .flex-next:hover,
 .flexslider:hover .flex-prev:hover,
-p.copyright
+p.copyright,
+a.comment-reply-link:hover
 { background-color: <?php echo $color_primary; ?>; }
 a,
 .sf-menu li:hover,
@@ -216,7 +224,10 @@ a,
 ul.sf-menu li.sfHover ul li:hover i,
 ul.sf-menu li.sfHover ul li a:hover,
 .block span,
-span.meta
+.block2 span,
+span.meta,
+.comment-data p span,
+.relatednews ul li span
 { color: <?php echo $color_primary; ?> }
 div#nav,
 .sf-menu li:hover ul, 
@@ -228,6 +239,26 @@ h5.line,
 h5.line>span,
 #footer
 { border-color: <?php echo $color_primary; ?>; }
+input#submit,
+input.post-comment,
+.pager a:hover,
+.pager span.current {
+background: <?php echo $color_primary; ?>;
+background: -webkit-gradient(linear, 0% 0%, 0% 100%, from(<?php echo $color_primary; ?>), to(<?php echo $color_primary_2; ?>)); /* Safari 4-5, Chrome 1-9 */ 
+background: -webkit-linear-gradient(top, <?php echo $color_primary; ?>, <?php echo $color_primary_2; ?>);/* Safari 5.1, Chrome 10+ */  
+background: -moz-linear-gradient(top, <?php echo $color_primary; ?>, <?php echo $color_primary_2; ?>); /* Firefox 3.6+ */ 
+background: -ms-linear-gradient(top, <?php echo $color_primary; ?>, <?php echo $color_primary_2; ?>); /* IE 10 */ 
+background: -o-linear-gradient(top, <?php echo $color_primary; ?>, <?php echo $color_primary_2; ?>);/* Opera 11.10+ */ 
+}
+input#submit:hover,
+input.post-comment:hover {
+background: <?php echo $color_primary_2; ?>;
+background: -webkit-gradient(linear, 0% 0%, 0% 100%, from(<?php echo $color_primary_2; ?>), to(<?php echo $color_primary; ?>)); /* Safari 4-5, Chrome 1-9 */ 
+background: -webkit-linear-gradient(top, <?php echo $color_primary_2; ?>, <?php echo $color_primary; ?>);/* Safari 5.1, Chrome 10+ */  
+background: -moz-linear-gradient(top, <?php echo $color_primary_2; ?>, <?php echo $color_primary; ?>); /* Firefox 3.6+ */ 
+background: -ms-linear-gradient(top, <?php echo $color_primary_2; ?>, <?php echo $color_primary; ?>); /* IE 10 */ 
+background: -o-linear-gradient(top, <?php echo $color_primary_2; ?>, <?php echo $color_primary; ?>);/* Opera 11.10+ */ 
+}
 </style>
 
     <?php
@@ -236,20 +267,29 @@ h5.line>span,
 add_action('wp_head', 'new_add_css_styles');
 
 // register click times to every posts' head;
-function new_record_visitors() {
-	if ( is_singular() ) 
-	{
-		global $post;
-		$post_ID = $post->ID;
+function set_post_views() {
+    global $post;
+    if ( ! isset ( $post->ID ) )
+        return;
+
+    $post_ID = $post->ID;
+	if ( is_singular() ) {
 		if( $post_ID )	{
 			$post_views = ( int )get_post_meta( $post_ID, 'views', true );
 			if( !update_post_meta( $post_ID, 'views', ( $post_views + 1 ) ) ) {
-				add_post_meta( $post_ID, 'views', 1, true );
+				add_post_meta( $post_ID, 'views', rand( 50, 300 ), true );
 			}
 		}
-	}
+	} else if ( is_admin() ) {
+        if ( $post_ID && ! get_post_meta( $post_ID, 'views', true ) && ! isset( $_REQUEST['views'] ) )
+            add_post_meta( $post_ID, 'views', rand( 50, 300 ), true );
+        if ( $post_ID && !get_post_meta( $post_ID, 'source', true ) && ! isset( $_REQUEST['source'] ) )
+            add_post_meta( $post_ID, 'source', get_option( 'new_theme_default_source' ), true );
+    }
 }
-add_action('wp_head', 'new_record_visitors'); 
+
+add_action('wp_head', 'set_post_views'); 
+add_action('save_post', 'set_post_views'); 
 
 function get_post_views() {
 	global $post;
@@ -257,7 +297,6 @@ function get_post_views() {
 	$views = ( int ) get_post_meta( $post_ID, 'views', true );
 	return $views;
 }
-
 
 function new_register_custom_background() {
     $args = array(
@@ -271,3 +310,15 @@ function new_register_custom_background() {
 }
 
 add_action( 'after_setup_theme', 'new_register_custom_background' );
+
+
+function new_filter_background_color( $classes ) {
+    var_dump($classes);
+    if ( ! wp_is_mobile() ) {
+        unset( $classes['custom-background'] );
+    }
+    return $classes;
+}
+
+add_filter( 'body_class', 'new_filter_background_color' );
+

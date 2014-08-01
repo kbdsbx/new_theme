@@ -10,174 +10,121 @@ class WP_Widget_follow extends WP_Widget {
     }
 
     function widget( $args, $instance ) {
-        extract( $args ); 
-		$title = apply_filters( 'widget_title', empty( $instance['title'] ) ? __( 'Slider' ) : $instance['title'], $instance, $this->id_base );
-		$title = empty( $instance['title'] ) ? '' : $instance['title'];
-        $first_name = empty( $instance['first_name'] ) ? '' : $instance['first_name'];
-        $first_img = empty( $instance['first_img'] ) ? '' : $instance['first_img'];
-        $first_qrcode = empty( $instance['first_qrcode'] ) ? '' : $instance['first_qrcode'];
-        $second_name = empty( $instance['second_name'] ) ? '' : $instance['second_name'];
-        $second_img = empty( $instance['second_img'] ) ? '' : $instance['second_img'];
-        $second_qrcode= empty( $instance['second_qrcode'] ) ? '' : $instance['second_qrcode'];
-        $third_name = empty( $instance['third_name'] ) ? '' : $instance['third_name'];
-        $third_img = empty( $instance['third_img'] ) ? '' : $instance['third_img'];
-        $third_qrcode = empty( $instance['third_qrcode'] ) ? '' : $instance['third_qrcode'];
+		$title      = apply_filters( 'widget_title', _filter_empty( $instance['title'], __( 'Follow', 'new' ) ), $instance, $this->id_base );
+        $count      = _filter_empty_numeric( $instance['count'], 3 );
+        $follow_img = _filter_empty_array( $instance['follow_img'], array() );
 
-        echo $before_widget;
+        echo $args['before_widget'];
 ?>
-<div class="sidebar">
 <h5 class="line"><span><?php echo $title; ?></span></h5>
-    <ul class="social">
-    	<li data-hover='' data-target=".wb">
-        	<a href="#" class="weibo"><img src="<?php echo $first_img; ?>" alt="<?php echo $first_name; ?>"></img></a>
-            <span><?php echo $first_name; ?></span>
-            <img class="wb hover" src="<?php echo $first_qrcode; ?>" />
-        </li>
-        <li data-hover='' data-target=".wx">
-        	<a href="#" class="weixin"><img src="<?php echo $second_img; ?>" alt="<?php echo $second_name; ?>"></img></a>
-            <span><?php echo $second_name; ?></span>
-            <img class="wx hover" src="<?php echo $second_qrcode; ?>" />
-        </li>
-        <li>
-        	<a href="#" class="phone"><img src="<?php echo $third_img; ?>" alt="<?php echo $third_name; ?>"></img></a>
-            <span><?php echo $third_name; ?></span>
-            <img class="wx hover" src="<?php echo $third_qrcode; ?>" />
-        </li>
-    </ul>
-</div>
+<ul class="social">
+    <?php for( $i = 0; $i < $count; $i++ ) : $img = $follow_img[$i]; ?>
+    <li>
+        <div>
+        <a href="javascript:void(0)" class="follow" style="background-color:<?php echo _filter_object_empty( $img, 'color', '' ); ?>;"><img src="<?php echo wp_get_attachment_image_src( $img['src'], 'full' )[0]; ?>" alt="<?php echo $img['name']; ?>" /></a>
+        <a href="javascript:void(0)" class="hover" ><img class="hover" src="<?php echo wp_get_attachment_image_src( $img['qrcode'], 'full' )[0];  ?>" /></a>
+        </div>
+        <span><?php echo $img['name']; ?></span>
+    </li>
+    <?php endfor; ?>
+</ul>
 <?php
+        echo $args['after_widget'];
     }
 
     function update( $new_instance, $old_instance ) {
-        $instance = $old_instance;
+        $instance = array();
 
-		$instance['title'] = !empty( $new_instance['title'] ) ? $new_instance['title'] : '';
-        $instance['first_name'] = !empty( $new_instance['first_name'] ) ? $new_instance['first_name'] : '';
-        $instance['first_img'] = !empty( $new_instance['first_img'] ) ? $new_instance['first_img'] : '';
-        $instance['first_qrcode'] = !empty( $new_instance['first_qrcode'] ) ? $new_instance['first_qrcode'] : '';
-        $instance['second_name'] = !empty( $new_instance['second_name'] ) ? $new_instance['second_name'] : '';
-        $instance['second_img'] = !empty( $new_instance['second_img'] ) ? $new_instance['second_img'] : '';
-        $instance['second_qrcode'] = !empty( $new_instance['second_qrcode'] ) ? $new_instance['second_qrcode'] : '';
-        $instance['third_name'] = !empty( $new_instance['third_name'] ) ? $new_instance['third_name'] : '';
-        $instance['third_img'] = !empty( $new_instance['third_img'] ) ? $new_instance['third_img'] : '';
-        $instance['third_qrcode'] = !empty( $new_instance['third_qrcode'] ) ? $new_instance['third_qrcode'] : '';
+        $instance['title']  = _filter_empty( $new_instance['title'], $old_instance['title'] );
+        $instance['count']  = _filter_empty_numeric( $new_instance['count'], $old_instance['count'] );
+        $i = 0;
+        $follow_img = array();
+        while( isset( $new_instance['follow_name_' . $i] ) ) {
+            $follow_img[] = array(
+                'name' => _filter_empty( $new_instance[ 'follow_name_' . $i ], $old_instance[ 'follow_img' ][$i]['name'] ),
+                'src' => _filter_empty( $new_instance[ 'follow_src_' . $i ], $old_instance[ 'follow_img' ][$i]['src'] ),
+                'qrcode' => _filter_empty( $new_instance[ 'follow_qrcode_' . $i ], $old_instance[ 'follow_img' ][$i]['qrcode'] ),
+                'color' => _filter_empty( $new_instance[ 'follow_color_' . $i ], $old_instance[ 'follow_img' ][$i]['color'] ),
+            );
+            $i++;
+        }
+        $instance['follow_img'] = $follow_img;
 
         return $instance;
     }
 
     function form( $instance ) {
-		$title = esc_attr( empty ( $instance['title'] ) ? : $instance['title'] );
-        $first_name = esc_attr( $instance['first_name'] );
-        $first_img = esc_attr( $instance['first_img'] );
-        $first_qrcode = esc_attr( $instance['first_qrcode'] );
-        $second_name= esc_attr( $instance['second_name'] );
-        $second_img= esc_attr( $instance['second_img'] );
-        $second_qrcode= esc_attr( $instance['second_qrcode'] );
-        $third_name= esc_attr( $instance['third_name'] );
-        $third_img= esc_attr( $instance['third_img'] );
-        $third_qrcode= esc_attr( $instance['third_qrcode'] );
+        $title = esc_attr( _filter_object_empty( $instance, 'title', '' ) );
+        $count = esc_attr( _filter_object_empty( $instance, 'count', 1 ) );
+        $follow_img = _filter_object_empty( $instance, 'follow_img', array() );
+
 ?>
 	<p>
-		<label for="<?php echo $this->get_field_id('title'); ?>"><?php _e('Title:'); ?></label>
+		<label for="<?php echo $this->get_field_id('title'); ?>"><?php _e( 'Title:', 'new' ); ?></label>
 		<input class="widefat" id="<?php echo $this->get_field_id('title'); ?>" name="<?php echo $this->get_field_name('title'); ?>" type="text" value="<?php echo $title; ?>" />
 		</p>
 	<p>
     <p>
-        <label for="<?php echo $this->get_field_id('first_name'); ?>"><?php _e('First Name:'); ?></label>
-	    <input class="widefat" id="<?php echo $this->get_field_id('first_name'); ?>" name="<?php echo $this->get_field_name('first_name'); ?>" type="text" value="<?php echo $first_name; ?>" />
+			<label for="<?php echo $this->get_field_id('count'); ?>"><?php _e( 'Follow count:', 'new' ); ?></label>
+            <select class="select-element-count" id="<?php echo $this->get_field_id( 'count' ); ?>" name="<?php echo $this->get_field_name( 'count' ); ?>">
+            <?php
+            $count_enum = array( 1, 2, 3, 4, 5, 6 );
+            $count_max = max( $count_enum );
+            foreach( $count_enum as $c ) {
+                if ( $c == $count ) {
+                    printf( '<option value="%s" selected="selected">%s</option>', $c, $c );
+                } else {
+                    printf( '<option value="%s">%s</option>', $c, $c );
+                }
+            }
+            ?>
+            </select>
+            <?php _select_update_js(); ?>
     </p>
-    <p>
-        <label for="<?php echo $this->get_field_id( 'first_img' ); ?>"><?php _e( 'First image:', 'new' ); ?></label>
-        <br />
-        <img id="preview_first_img" src="<?php echo esc_url( $first_img ); ?>" />
-        <br />
-        <input id="<?php echo $this->get_field_id('first_img'); ?>" name="<?php echo $this->get_field_name('first_img'); ?>" type="text" value="<?php echo $first_img; ?>" />
-        <a id="<?php echo $this->get_field_id( 'first_img' ); ?>" name="<?php echo $this->get_field_name( 'first_img' ); ?>" class="button choose-from-library-link"
-			data-update-url="<?php echo get_admin_url() . '/admin-ajax.php'; ?>"
-			data-update-action="img_widget_update"
-			data-update-preview="preview_first_img"
-			data-update-preview-id="<?php echo $this->get_field_id('first_img'); ?>"
-			data-choose="<?php _e( 'Choose a Image', 'new' ); ?>"
-			data-update="<?php _e( 'Select', 'new' ); ?>"><?php _e( 'Choose Image' ); ?></a>
-	</p>
-    <p>
-        <label for="<?php echo $this->get_field_id( 'first_qrcode' ); ?>"><?php _e( 'First QR code:', 'new' ); ?></label>
-        <br />
-        <img id="preview_first_qrcode" src="<?php echo esc_url( $first_qrcode ); ?>" />
-        <br />
-        <input id="<?php echo $this->get_field_id('first_qrcode'); ?>" name="<?php echo $this->get_field_name('first_qrcode'); ?>" type="text" value="<?php echo $first_qrcode; ?>" />
-        <a id="<?php echo $this->get_field_id( 'first_qrcode' ); ?>" name="<?php echo $this->get_field_name( 'first_qrcode' ); ?>" class="button choose-from-library-link"
-			data-update-url="<?php echo get_admin_url() . 'admin-ajax.php'; ?>"
-			data-update-action="img_widget_update"
-			data-update-preview="preview_first_qrcode"
-			data-update-preview-id="<?php echo $this->get_field_id('first_qrcode'); ?>"
-			data-choose="<?php _e( 'Choose a Image', 'new' ); ?>"
-			data-update="<?php _e( 'Select', 'new' ); ?>"><?php _e( 'Choose Image' ); ?></a>
-	</p>
-    <p>
-        <label for="<?php echo $this->get_field_id('second_name'); ?>"><?php _e('Second Name:'); ?></label>
-	    <input class="widefat" id="<?php echo $this->get_field_id('second_name'); ?>" name="<?php echo $this->get_field_name('second_name'); ?>" type="text" value="<?php echo $second_name; ?>" />
-    </p>
-    <p>
-        <label for="<?php echo $this->get_field_id( 'second_img' ); ?>"><?php _e( 'Second image:', 'new' ); ?></label>
-        <br />
-        <img id="preview_second_img" src="<?php echo esc_url( $second_img ); ?>" />
-        <br />
-        <input id="<?php echo $this->get_field_id('second_img'); ?>" name="<?php echo $this->get_field_name('second_img'); ?>" type="text" value="<?php echo $second_img; ?>" />
-        <a id="<?php echo $this->get_field_id( 'second_img' ); ?>" name="<?php echo $this->get_field_name( 'second_img' ); ?>" class="button choose-from-library-link"
-			data-update-url="<?php echo get_admin_url() . '/admin-ajax.php'; ?>"
-			data-update-action="img_widget_update"
-			data-update-preview="preview_second_img"
-			data-update-preview-id="<?php echo $this->get_field_id('second_img'); ?>"
-			data-choose="<?php _e( 'Choose a Image', 'new' ); ?>"
-			data-update="<?php _e( 'Select', 'new' ); ?>"><?php _e( 'Choose Image' ); ?></a>
-	</p>
-    <p>
-        <label for="<?php echo $this->get_field_id( 'second_qrcode' ); ?>"><?php _e( 'Second QR code:', 'new' ); ?></label>
-        <br />
-        <img id="preview_second_qrcode" src="<?php echo esc_url( $second_qrcode ); ?>" />
-        <br />
-        <input id="<?php echo $this->get_field_id('second_qrcode'); ?>" name="<?php echo $this->get_field_name('second_qrcode'); ?>" type="text" value="<?php echo $second_qrcode; ?>" />
-        <a id="<?php echo $this->get_field_id( 'second_qrcode' ); ?>" name="<?php echo $this->get_field_name( 'second_qrcode' ); ?>" class="button choose-from-library-link"
-			data-update-url="<?php echo get_admin_url() . '/admin-ajax.php'; ?>"
-			data-update-action="img_widget_update"
-			data-update-preview="preview_second_qrcode"
-			data-update-preview-id="<?php echo $this->get_field_id('second_qrcode'); ?>"
-			data-choose="<?php _e( 'Choose a Image', 'new' ); ?>"
-			data-update="<?php _e( 'Select', 'new' ); ?>"><?php _e( 'Choose Image' ); ?></a>
-	</p>
-    <p>
-        <label for="<?php echo $this->get_field_id('third_name'); ?>"><?php _e('Second Name:'); ?></label>
-	    <input class="widefat" id="<?php echo $this->get_field_id('third_name'); ?>" name="<?php echo $this->get_field_name('third_name'); ?>" type="text" value="<?php echo $third_name; ?>" />
-    </p>
-    <p>
-        <label for="<?php echo $this->get_field_id( 'third_img' ); ?>"><?php _e( 'Third image:', 'new' ); ?></label>
-        <br />
-        <img id="preview_third_img" src="<?php echo esc_url( $third_img ); ?>" />
-        <br />
-        <input id="<?php echo $this->get_field_id('third_img'); ?>" name="<?php echo $this->get_field_name('third_img'); ?>" type="text" value="<?php echo $third_img; ?>" />
-        <a id="<?php echo $this->get_field_id( 'third_img' ); ?>" name="<?php echo $this->get_field_name( 'third_img' ); ?>" class="button choose-from-library-link"
-			data-update-url="<?php echo get_admin_url() . '/admin-ajax.php'; ?>"
-			data-update-action="img_widget_update"
-			data-update-preview="preview_third_img"
-			data-update-preview-id="<?php echo $this->get_field_id('third_img'); ?>"
-			data-choose="<?php _e( 'Choose a Image', 'new' ); ?>"
-			data-update="<?php _e( 'Select', 'new' ); ?>"><?php _e( 'Choose Image' ); ?></a>
-	</p>
-    <p>
-        <label for="<?php echo $this->get_field_id( 'third_qrcode' ); ?>"><?php _e( 'Third QR code:', 'new' ); ?></label>
-        <br />
-        <img id="preview_third_qrcode" src="<?php echo esc_url( $third_qrcode ); ?>" />
-        <br />
-        <input id="<?php echo $this->get_field_id('third_qrcode'); ?>" name="<?php echo $this->get_field_name('third_qrcode'); ?>" type="text" value="<?php echo $third_qrcode; ?>" />
-        <a id="<?php echo $this->get_field_id( 'third_qrcode' ); ?>" name="<?php echo $this->get_field_name( 'third_qrcode' ); ?>" class="button choose-from-library-link"
-			data-update-url="<?php echo get_admin_url() . '/admin-ajax.php'; ?>"
-			data-update-action="img_widget_update"
-			data-update-preview="preview_third_qrcode"
-			data-update-preview-id="<?php echo $this->get_field_id('third_qrcode'); ?>"
-			data-choose="<?php _e( 'Choose a Image', 'new' ); ?>"
-			data-update="<?php _e( 'Select', 'new' ); ?>"><?php _e( 'Choose Image' ); ?></a>
-	</p>
+    <?php for( $i = 0; $i < $count_max; $i++ ) : ?>
+    <div class="img-div" <?php if ( $i >= $count ) : echo 'style="display:none;"'; endif; ?>>
+        <p>
+	        <label for="<?php echo $this->get_field_id( 'follow_src_' . $i ); ?>"><?php printf( __( 'Image No.%s:', 'new' ), $i + 1 ) ?></label>
+	        <a class="button choose-from-library-link"
+				data-update-url="<?php echo get_admin_url() . 'admin-ajax.php'; ?>"
+				data-update-action="img_widget_update"
+	            data-update-preview=".preview_<?php echo $i; ?>_src"
+				data-update-preview-src=".<?php echo $this->get_field_id( 'follow_src_' . $i ); ?>"
+				data-choose="<?php _e( 'Choose a Image', 'new' ); ?>"
+				data-update="<?php _e( 'Select', 'new' ); ?>"><?php _e( 'Choose Image', 'new' ); ?></a>
+	    </p>
+        <p>
+	        <img class="preview_<?php echo $i; ?>_src" src="<?php if ( ! empty( $follow_img[ $i ] ) ) echo wp_get_attachment_image_src( $follow_img[ $i ][ 'src' ] )[0]; ?>" />
+	        <input class="<?php echo $this->get_field_id( 'follow_src_' . $i ); ?>" name="<?php echo $this->get_field_name( 'follow_src_' . $i ); ?>" type="hidden" value="<?php if ( ! empty( $follow_img[ $i ] ) ) echo $follow_img[ $i ][ 'src' ]; ?>" />
+        </p>
+        <p>
+	        <label for="<?php echo $this->get_field_id( 'follow_qrcode_' . $i ); ?>"><?php printf( __( 'QR code No.%s:', 'new' ), $i + 1 ) ?></label>
+	        <a class="button choose-from-library-link"
+				data-update-url="<?php echo get_admin_url() . 'admin-ajax.php'; ?>"
+				data-update-action="img_widget_update"
+	            data-update-preview=".preview_<?php echo $i; ?>_qrcode"
+				data-update-preview-src=".<?php echo $this->get_field_id( 'follow_qrcode_' . $i ); ?>"
+				data-choose="<?php _e( 'Choose a Image', 'new' ); ?>"
+				data-update="<?php _e( 'Select', 'new' ); ?>"><?php _e( 'Choose Image', 'new' ); ?></a>
+	    </p>
+        <p>
+	        <img class="preview_<?php echo $i; ?>_qrcode" src="<?php if ( ! empty( $follow_img[ $i ] ) ) echo wp_get_attachment_image_src( $follow_img[ $i ][ 'qrcode' ] )[0]; ?>" />
+	        <input class="<?php echo $this->get_field_id( 'follow_qrcode_' . $i ); ?>" name="<?php echo $this->get_field_name( 'follow_qrcode_' . $i ); ?>" type="hidden" value="<?php if ( ! empty( $follow_img[ $i ] ) ) echo $follow_img[ $i ][ 'qrcode' ]; ?>" />
+        </p>
+        <p>
+            <label for="<?php echo $this->get_field_id( 'follow_name_' . $i ); ?>"><?php printf( __( 'Name No.%s:', 'new' ), $i + 1 ); ?></label>
+            <input id="<?php echo $this->get_field_id( 'follow_name_' . $i ); ?>" name="<?php echo $this->get_field_name( 'follow_name_' . $i ); ?>" type="text" value="<?php if ( ! empty( $follow_img[ $i ] ) ) echo $follow_img[ $i ][ 'name' ]; ?>" /> 
+        </p>
+        <p>
+            <label for="<?php echo $this->get_field_id( 'follow_color_' . $i ); ?>"><?php printf( __( 'Color No.%s:', 'new' ), $i + 1 ); ?></label>
+            <input type="text" name="<?php echo $this->get_field_name( 'follow_color_' . $i ); ?>" id="<?php echo $this->get_field_id( 'follow_color_' . $i ); ?>" class="choose-color" value="<?php if ( ! empty( $follow_img[ $i ] ) ) echo $follow_img[ $i ][ 'color' ]; ?>"/>
+        </p>
+        <hr/>
+    </div>
+    <?php endfor; ?>
+    
+    <?php _img_widget_update_js(); ?>
+    <?php _color_widget_update_js(); ?>
 <?php
     }
 }

@@ -7,7 +7,8 @@
 /*	1) Header
 /*------------------------------------------------------------------*/
 .logo{margin-left:0; width:100%; text-align:center;}
-.search{margin:0 90px 10px 0;}
+.logo img{max-width:400px;}
+.search-form{margin:0 90px 10px 0;}
 .device-menu{ display:block; margin-top:10px;}
 ul.sf-menu { display:none; }
 

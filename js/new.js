@@ -6,22 +6,17 @@
 */
 
 jQuery(document).ready(function(){
-	jQuery("*[data-hover]").mousemove(function(){
-		var $this	= $(this);
-		var target	= $this.data('target');
-		
-		if (jQuery(target).length == 0) return;
-		
-		jQuery(target).show(200);
-	});
-	jQuery("*[data-hover]").mouseleave(function(){
-		var $this	= $(this);
-		var target	= $this.data('target');
-		
-		if (jQuery(target).length == 0) return;
-		
-		jQuery(target).hide(200);
-	});
+    jQuery( "ul.social li" ).mouseenter( function() {
+        $this = $(this);
+        var p = 'right';
+        $this.find( '.follow' ).stop( true, false ).animate( { 'top': '-98px' }, 400 );
+        $this.find( '.hover' ).stop( true, false ).css( { 'display': 'block' } ).animate( { 'top': '-98px' }, 400 );
+    } );
+    jQuery( "ul.social li" ).mouseleave( function() {
+        $this = $(this);
+        $this.find( '.follow' ).stop( true, false ).css( { 'display': 'block' } ).animate( { 'top': '0px' }, 400 );
+        $this.find( '.hover' ).stop( true, false).animate( { 'top': '0px' }, 400 );
+    } );
 	jQuery("input[id='send']").click(function(){
 		var $this		= $(this);
 		var url			= $this.data('url');
@@ -59,8 +54,8 @@ jQuery(document).ready(function(){
 			}
 		});
 	});
-	jQuery('.comments').each(load_module);
-	jQuery('.z_top_right').each(load_module);
+	// jQuery('.comments').each(load_module);
+	// jQuery('.z_top_right').each(load_module);
 	function load_module(i, self){
 		var $this	= $(self);
 		var url		= $this.data('url');

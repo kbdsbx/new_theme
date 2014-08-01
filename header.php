@@ -32,12 +32,10 @@
 			    <div class="container">
 			        <div class="column">
 			            <div class="logo">
-				    		<a href="<?php esc_url( home_url( '/' ) );?>"><img src="<?php header_image(); ?>" alt="<?php bloginfo( 'name' ); ?>" /></a>
+				    		<a href="<?php echo esc_url( home_url( '/' ) );?>"><img src="<?php header_image(); ?>" alt="<?php bloginfo( 'name' ); ?>" /></a>
 			            </div>
 			            
-			            <div class="search">
 						<?php get_search_form(); ?>	
-			            </div>
 			            
 			            <!-- Nav -->
 			            <div id="nav">

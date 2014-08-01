@@ -17,7 +17,14 @@ function new_theme_setting_admin() {
                 <td scope="row"><label for="new_theme_license"><?php _e( 'License', 'new' ); ?></label></td>
                 <td>
                     <textarea name="new_theme_license" rows="3" cols="35" id="new_theme_license" class="large-text code"><?php form_option( 'new_theme_license' ); ?></textarea>
-                    <p><?php _e( 'Show your ICP license', 'new' ); ?></p>
+                    <p><?php _e( 'Show your ICP license.', 'new' ); ?></p>
+                </td>
+            </tr>
+            <tr>
+                <td scope="row"><label for="new_theme_default_source"><?php _e( 'Default source', 'new' ); ?></label></td>
+                <td>
+                    <input type="text" id="new_theme_default_source" name="new_theme_default_source" class="regular-text code" value="<?php form_option( 'new_theme_default_source' ); ?>" />
+                    <p><?php _e( 'If you empty the article\'s source for create new, this is the default source.', 'new' ); ?></p>
                 </td>
             </tr>
         </table>
@@ -34,6 +41,8 @@ function new_theme_setting_page() {
         update_option( 'new_theme_about', $new_theme_about );
         $new_theme_license = _filter_object_empty( $_REQUEST, 'new_theme_license', get_option( 'new_theme_license' ) );
         update_option( 'new_theme_license', $new_theme_license );
+        $new_theme_default_source = _filter_object_empty( $_REQUEST, 'new_theme_default_source', get_option( 'new_theme_default_source' ) );
+        update_option( 'new_theme_default_source', $new_theme_default_source);
     }
 
     add_theme_page( 'new_theme_setting', 'Theme Setting', 'manage_options', basename( __FILE__ ), 'new_theme_setting_admin' );

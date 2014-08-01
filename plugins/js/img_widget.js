@@ -4,7 +4,6 @@
 		jQuery( '.choose-from-library-link' ).click( function( event ) {
 			var $el = jQuery(this);
 			event.preventDefault();
-			           
 			// If the media frame already exists, reopen it.
 			if ( $el.frame ) {
 				$el.frame.open();

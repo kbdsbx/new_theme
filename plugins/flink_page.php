@@ -7,12 +7,13 @@ function new_flink_admin () {
 <div class="wrap" >
     <h2><?php _e( 'Friendly links', 'new' ); ?></h2>
     <div class="manage-menus">
-        <span><?php _e( 'Be use friend links widget to show your links.', 'new' ); ?><a href="<?php echo esc_url( admin_url( 'widgets.php' ) ); ?>" ><?php _e( 'Check it to edit.', 'new' ); ?></a></span>
+        <span><?php _e( 'Be use friendly links widget to show your links.', 'new' ); ?><a href="<?php echo esc_url( admin_url( 'widgets.php' ) ); ?>" ><?php _e( 'Check it to edit.', 'new' ); ?></a></span>
     </div>
     <div id="ajax-response"></div>
+    <hr/>
     <form class="search-form" action="" method="get">
         <input type="hidden" name="page" id="page" value="<?php echo basename( __FILE__ ); ?>" />
-        <?php $flink_table -> search_box( 'Search Friend links', 'flink_search' ); ?>
+        <?php $flink_table -> search_box( 'Search Friendly links', 'flink_search' ); ?>
     </form>
     <br class="clear" />
     <div id="col-container" />
@@ -109,7 +110,7 @@ function new_flink_page () {
         update_option( 'flink_data', $flink_data );
     }
 
-    add_options_page( 'new_flink_options', 'Friend links', 'manage_options', basename( __FILE__ ), 'new_flink_admin' );
+    add_options_page( 'new_flink_options', 'Friendly links', 'manage_options', basename( __FILE__ ), 'new_flink_admin' );
 }
 add_action( 'admin_menu', 'new_flink_page' );
 ?>

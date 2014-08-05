@@ -2,7 +2,7 @@
 /**
  * The main template file
  */
-
+global $post_types;
 get_header(); ?>
 <section class="slider">
     <div class="container">
@@ -27,7 +27,8 @@ $args = array(
     'posts_per_page' => 4,
     'page'           => 1,
     'order'          => 'DESC',
-    'orderby'        => 'date'
+    'orderby'        => 'date',
+    'post_type'      => $post_types
 );
 $query = new WP_Query( $args );
 while ( $query->have_posts() ) : $query->the_post();
@@ -47,7 +48,8 @@ $args = array(
     'page'          => 1,
     'order'         => 'DESC',
     'orderby'       => 'date',
-    'category_name' => 'activites'
+    'category_name' => 'activites',
+    'post_type'     => $post_types
 );
 $query = new WP_Query( $args );
 while ( $query->have_posts() ) : $query->the_post();
@@ -72,7 +74,8 @@ $args = array(
     'page'          => 1,
     'order'         => 'DESC',
     'orderby'       => 'date',
-    'category_name' => 'teachers'
+    'category_name' => 'teachers',
+    'post_type'     => $post_types
 );
 $query = new WP_Query( $args );
 ?>
@@ -90,7 +93,8 @@ $args = array(
     'offset'        => 1,
     'order'         => 'DESC',
     'orderby'       => 'date',
-    'category_name' => 'teachers'
+    'category_name' => 'teachers',
+    'post_type'     => $post_types
 );
 $query = new WP_Query( $args );
 ?> 
@@ -119,7 +123,8 @@ $args = array(
     'page'          => 1,
     'order'         => 'DESC',
     'orderby'       => 'date',
-    'category_name' => 'study'
+    'category_name' => 'study',
+    'post_type'     => $post_types
 );
 $query = new WP_Query( $args );
 while ( $query->have_posts() ) : $query->the_post();
@@ -139,7 +144,8 @@ $args = array(
     'page'          => 1,
     'order'         => 'DESC',
     'orderby'       => 'date',
-    'category_name' => 'downcenter'
+    'category_name' => 'downcenter',
+    'post_type'     => $post_types
 );
 $query = new WP_Query( $args );
 while ( $query->have_posts() ) : $query->the_post();

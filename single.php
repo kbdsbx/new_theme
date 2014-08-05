@@ -17,14 +17,18 @@ while ( have_posts() ) : the_post();
 endwhile;
 ?>
                 <div class="share">
-                    <?php get_option( 'new_theme_share' ); ?>
+                    <h5 class="line"><span><?php _e( 'Share.', 'new' ); ?></span></h5>
+                    <?php echo get_option( 'new_theme_share' ); ?>
                 </div>
                 <div class="relatednews">
-                    <h5 class="line"><?php _e( 'Other articles.', 'new' ); ?></h5>
+                    <h5 class="line"><span><?php _e( 'Other articles.', 'new' ); ?></span></h5>
                     <ul>
 <?php
 $category = get_the_category();
-$cat = $category[0]->cat_ID;
+if ( ! empty( $category ) )
+    $cat = $category[0]->cat_ID;
+else
+    $cat = 0;
 $args = array(
     'posts_per_page'=> 4,
     'page'          => 1,

@@ -7,7 +7,6 @@ DEFINE( 'classes', get_template_directory() . '/classes' );
 
 require plugins . '/widget_function.php';
 
-require plugins . '/meta_box.php';
 require plugins . '/slider_widget.php';
 require plugins . '/tabs_widget.php';
 require plugins . '/flink_widget.php';
@@ -20,22 +19,187 @@ require plugins . '/theme_setting_page.php';
 require_once classes . '/class-new-flink-list-table.php';
 require_once classes . '/class-new-comment-walker.php';
 
+function new_enum_init() {
+	
+	global $size_enum, $post_types;
+	$size_enum = array(
+		'lg' => array( 960, 640 ),
+		'md' => array( 540, 372 ),
+		'sm' => array( 380, 253 ),
+		's' => array( 380, 217 ),
+		'xs' => array( 300, 162 ),
+		'x' => array( 180, 135 ),
+		'w' => array( 125, 125 ),
+		'xx' => array( 140, 86 )
+	);
+	
+	foreach( $size_enum as $size_key => $size ) {
+		add_image_size( $size_key, $size[0], $size[1], true );
+	}
 
-global $size_enum;
-$size_enum = array(
-	'lg' => array( 960, 640 ),
-	'md' => array( 540, 372 ),
-	'sm' => array( 380, 253 ),
-	's' => array( 380, 217 ),
-	'xs' => array( 300, 162 ),
-	'x' => array( 180, 135 ),
-	'w' => array( 125, 125 ),
-	'xx' => array( 140, 86 )
-);
-
-foreach( $size_enum as $size_key => $size ) {
-	add_image_size( $size_key, $size[0], $size[1], true );
+    $post_types = array( 'post', 'page', 'gallery', 'download' );
 }
+
+add_action( 'init', 'new_enum_init' );
+
+function new_field_init() {
+	if( function_exists( "register_field_group") )	{
+		register_field_group( array (
+			'id' => '247',
+			'title' => '公共字段',
+			'fields' => array (
+				array (
+					'key' => 'field_53def322e5039',
+					'label' => '文章标记',
+					'name' => 'new-article-flags',
+					'type' => 'checkbox',
+					'instructions' => '为你的文章添加标记，使之在页面中特殊的地方或以特殊的形式展示出来',
+					'choices' => array (
+						'headline' => '头条',
+						'recommend' => '推荐',
+						'slider' => '幻灯',
+						'special' => '特别推荐',
+						'roll' => '滚动',
+						'bold' => '加粗',
+					),
+					'default_value' => '',
+					'layout' => 'horizontal',
+				),
+				array (
+					'key' => 'field_53df3aadae5b3',
+					'label' => '文章来源',
+					'name' => 'new-article-source',
+					'type' => 'text',
+					'instructions' => '显示文章来源',
+					'required' => 1,
+					'default_value' => 'www.jiehengsen.org',
+					'placeholder' => '',
+					'prepend' => '',
+					'append' => '',
+					'formatting' => 'html',
+					'maxlength' => '',
+				),
+				array (
+					'key' => 'field_53df244673d32',
+					'label' => '访问次数',
+					'name' => 'new-article-views',
+					'type' => 'number',
+					'instructions' => '文章的已访问次数',
+					'default_value' => '',
+					'placeholder' => '',
+					'prepend' => '',
+					'append' => '',
+					'min' => '',
+					'max' => '',
+					'step' => '',
+				),
+			),
+			'location' => array (
+				array (
+					array (
+						'param' => 'post_type',
+						'operator' => '==',
+						'value' => 'post',
+						'order_no' => 0,
+						'group_no' => 0,
+					),
+				),
+				array (
+					array (
+						'param' => 'post_type',
+						'operator' => '==',
+						'value' => 'page',
+						'order_no' => 0,
+						'group_no' => 1,
+					),
+				),
+				array (
+					array (
+						'param' => 'post_type',
+						'operator' => '==',
+						'value' => 'gallery',
+						'order_no' => 0,
+						'group_no' => 2,
+					),
+				),
+				array (
+					array (
+						'param' => 'post_type',
+						'operator' => '==',
+						'value' => 'download',
+						'order_no' => 0,
+						'group_no' => 3,
+					),
+				),
+			),
+			'options' => array (
+				'position' => 'acf_after_title',
+				'layout' => 'default',
+				'hide_on_screen' => array (
+				),
+			),
+			'menu_order' => 0,
+		) );
+	}
+}
+
+add_action( 'init', 'new_field_init' );
+
+function new_post_type_init() {
+    // Gallery
+    register_post_type( 'gallery', 
+        array(
+            'labels' => array(
+                'name' => __( 'Galleries', 'new' ),
+                'singular_name' => __( 'Gallery', 'new' ),
+            ),
+            'public' => true,
+            'supports' => array(
+                'title',
+                'editor',
+                'thumbnail',
+                'excerpt',
+                'trackbacks',
+                'comments',
+                'revisions',
+                'page-attributes',
+            ),
+            'taxonomies' => array(
+                'category',
+                'post_tag'
+            ),
+            'query_var' => 'g'
+        )
+    );
+
+    // Downloads center
+    register_post_type( 'download',
+        array(
+            'labels' =>array(
+                'name' => __( 'Downloads', 'new' ),
+                'singular_name' => __( 'Download', 'new' ),
+            ),
+            'public' => true,
+            'supports' => array(
+                'title',
+                'editor',
+                'thumbnail',
+                'excerpt',
+                'trackbacks',
+                'comments',
+                'revisions',
+                'page-attributes'
+            ),
+            'taxonomies' => array(
+                'category',
+                'post_tag'
+            ),
+            'query_var' => 'd'
+        )
+    );
+}
+
+add_action( 'init', 'new_post_type_init' );
 
 function new_setup() {
 	load_theme_textdomain( 'new', get_template_directory() . '/languages' );
@@ -71,6 +235,7 @@ add_filter( 'nav_menu_link_attributes', 'new_filter_menu_link_attributes', 10, 3
 */
 function new_scripts_styles() {
 	global $wp_styles;
+    wp_enqueue_style( 'google-fonts', 'http://fonts.useso.com/css?family=Merriweather+Sans:400,300,700,800', array(), null );
 	wp_enqueue_style( 'new-style-superfish', get_template_directory_uri() . '/css/superfish.css' );
 	wp_enqueue_style( 'new-style-fontello', get_template_directory_uri() . '/css/fontello/fontello.css' );
 	wp_enqueue_style( 'new-style-flexslider', get_template_directory_uri() . '/css/flexslider.css' );
@@ -102,7 +267,7 @@ function new_scripts_styles() {
 add_action( 'wp_enqueue_scripts', 'new_scripts_styles' );
 
 /**
- * Register our menus.
+ * Register menus.
  */
 function new_register_my_menus() {
   register_nav_menus(
@@ -266,37 +431,27 @@ background: -o-linear-gradient(top, <?php echo $color_primary_2; ?>, <?php echo 
 
 add_action('wp_head', 'new_add_css_styles');
 
-// register click times to every posts' head;
+// increase click times to every posts' head;
 function set_post_views() {
     global $post;
     if ( ! isset ( $post->ID ) )
         return;
 
     $post_ID = $post->ID;
+    $post_views = get_field( 'new-article-views', $post_ID );
 	if ( is_singular() ) {
 		if( $post_ID )	{
-			$post_views = ( int )get_post_meta( $post_ID, 'views', true );
-			if( !update_post_meta( $post_ID, 'views', ( $post_views + 1 ) ) ) {
-				add_post_meta( $post_ID, 'views', rand( 50, 300 ), true );
-			}
+            update_field( 'new-article-views', $post_views + 1, $post_ID );
 		}
 	} else if ( is_admin() ) {
-        if ( $post_ID && ! get_post_meta( $post_ID, 'views', true ) && ! isset( $_REQUEST['views'] ) )
-            add_post_meta( $post_ID, 'views', rand( 50, 300 ), true );
-        if ( $post_ID && !get_post_meta( $post_ID, 'source', true ) && ! isset( $_REQUEST['source'] ) )
-            add_post_meta( $post_ID, 'source', get_option( 'new_theme_default_source' ), true );
+        if ( $post_ID && empty( $post_views ) ) {
+            update_field( 'new-article-views', rand( 50, 300 ), $post_ID );
+        }
     }
 }
 
 add_action('wp_head', 'set_post_views'); 
 add_action('save_post', 'set_post_views'); 
-
-function get_post_views() {
-	global $post;
-	$post_ID = $post->ID;
-	$views = ( int ) get_post_meta( $post_ID, 'views', true );
-	return $views;
-}
 
 function new_register_custom_background() {
     $args = array(
@@ -311,11 +466,10 @@ function new_register_custom_background() {
 
 add_action( 'after_setup_theme', 'new_register_custom_background' );
 
-
+// 去除移动端浏览时的背景，减少流量
 function new_filter_background_color( $classes ) {
-    var_dump($classes);
-    if ( ! wp_is_mobile() ) {
-        unset( $classes['custom-background'] );
+    if ( wp_is_mobile() ) {
+        unset( $classes[ array_search( 'custom-background', $classes ) ] );
     }
     return $classes;
 }

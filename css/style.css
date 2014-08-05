@@ -574,7 +574,7 @@ h6.regular{
 	margin:-20px 0 0 0;
 	*position: static;
 }
-.prev{
+.navbar .prev{
 	
 	background: -webkit-gradient(linear, 0% 0%, 0% 100%, from(#878787), to(#565656)); /* Safari 4-5, Chrome 1-9 */ 
 	background: -webkit-linear-gradient(top, #878787, #565656);/* Safari 5.1, Chrome 10+ */  
@@ -588,7 +588,7 @@ h6.regular{
 	float:right;
 	margin:0 2px 0 0;
 }
-.prev span{
+.navbar .prev span{
 	width:19px;
 	height:19px;
 	background-image:url(../img/slider-nav2.png);
@@ -596,7 +596,7 @@ h6.regular{
 	background-repeat:no-repeat;
 	float:left;
 }
-.next{
+.navbar .next{
 	background: -webkit-gradient(linear, 0% 0%, 0% 100%, from(#878787), to(#565656)); /* Safari 4-5, Chrome 1-9 */ 
 	background: -webkit-linear-gradient(top, #878787, #565656);/* Safari 5.1, Chrome 10+ */  
 	background: -moz-linear-gradient(top, #878787, #565656); /* Firefox 3.6+ */ 
@@ -608,7 +608,7 @@ h6.regular{
 	display:block;
 	float:right;
 }
-.next:hover, .prev:hover {
+.navbar .next:hover, .prev:hover {
 	background: -webkit-gradient(linear, 0% 0%, 0% 100%, from(#ee6c6d), to(#bd3a3b)); /* Safari 4-5, Chrome 1-9 */ 
 	background: -webkit-linear-gradient(top, #ee6c6d, #bd3a3b);/* Safari 5.1, Chrome 10+ */  
 	background: -moz-linear-gradient(top, #ee6c6d, #bd3a3b); /* Firefox 3.6+ */ 
@@ -616,7 +616,7 @@ h6.regular{
 	background: -o-linear-gradient(top, #ee6c6d, #bd3a3b);/* Opera 11.10+ */ 
 	background-color:#ea4748;
 }
-.next span{
+.navbar .next span{
 	width:19px;
 	height:19px;
 	background:url(../img/slider-nav2.png) no-repeat;

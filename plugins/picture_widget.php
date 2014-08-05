@@ -8,7 +8,7 @@ class WP_Widget_Picture extends WP_Widget {
     }
 
     function widget( $args, $instance ) {
-        global $size_enum;
+        global $size_enum, $post_types;
         $title      = apply_filters( 'widget_title', _filter_empty( $instance['title'], __( 'Pictures', 'new' ), $instance, $this->id_base ) );
         $posts_per_page = _filter_empty( $instance['posts_per_page'], 8 );
         $category_id= _filter_empty( $instance['category_id'], '' );
@@ -18,7 +18,8 @@ class WP_Widget_Picture extends WP_Widget {
         $query = new WP_Query( array(
             'posts_per_page' => $posts_per_page,
             'page' => 1,
-            'cat' => $category_id
+            'cat' => $category_id,
+            'post_type' => $post_types
         ) );
 
         echo $args['before_widget'];

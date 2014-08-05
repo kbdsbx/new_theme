@@ -14,6 +14,8 @@ get_header(); ?>
                 <div class="outerwide">
                     <ul class="block2">
 <?php
+global $wp_query, $post_types;
+query_posts( array_merge( $wp_query->query_vars, array( 'post_type' => $post_types ) ) );
 while ( have_posts() ) : the_post();
     get_template_part( 'content', 'category' );
 endwhile;

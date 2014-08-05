@@ -9,38 +9,36 @@ class WP_Widget_Tabs extends WP_Widget {
 	}
 
 	function widget( $args, $instance ) {
-
+        global $post_types;
 		$title      = apply_filters( 'widget_title', _filter_empty( $instance['title'], __( 'Ads Pictures', 'new' ), $instance, $this->id_base ) );
 
 		$posts_per_page = _filter_empty_numeric( $instance['posts_per_page'], 4 );
 
 		$args_rank = array(
             'posts_per_page'=> $posts_per_page,
-            'page'          => 1,
-			'order'			=> 'DESC',
-			'meta_key'		=> 'views',
-			'orderby'		=> 'meta_value_num'
+			'orderby'		=> 'meta_value_num',
+            'meta_key'      => 'new-article-views',
+            'post_type'     => $post_types
 		);
 		$args_recommend = array(
             'posts_per_page'=> $posts_per_page,
-            'page'          => 1,
-			'order'			=> 'DESC',
-			'meta_key'		=> '_new_meta_article_recommend',
-			'meta_value'	=> 'true',
-			'orderby'		=> 'post_date'
+            'meta_query'    => array( array( 'key' => 'new-article-flags', 'value' => 'recommend', 'compare' => 'LIKE' ) ),
+			'orderby'		=> 'date',
+            'post_type'     => $post_types
 		);
 		$args_random = array(
             'posts_per_page'=> $posts_per_page,
-            'page'          => 1,
-			'order'			=> 'DESC',
-			'orderby'		=> 'rand'
+			'orderby'		=> 'rand',
+            'post_type'     => $post_types
 		);
 
+        $cat = 0;
         if ( is_category() ) {
             $cat = get_cat_ID( single_cat_title( '', false ) );
         } else if ( is_single() ) {
             $category = get_the_category();
-            $cat = $category[0]->cat_ID;
+            if ( ! empty( $category ) )
+                $cat = $category[0]->cat_ID;
         }
         if ( ! empty( $cat ) ) {
             $args_rank[ 'cat' ] = $cat;

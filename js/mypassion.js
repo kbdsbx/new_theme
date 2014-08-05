@@ -116,7 +116,7 @@ jQuery(document).ready(function(){
 	jQuery('#nav ul.sf-menu').superfish({
 		delay: 250,
 		animation: {opacity:'show', height:'show'},
-		speed: 'slow',
+		speed: 300,
 		autoArrows: true,
 		dropShadows: false
 	});

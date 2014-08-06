@@ -11,16 +11,15 @@ class WP_Widget_ads extends WP_Widget {
     function widget( $args, $instance ) {
         global $size_enum;
 
-        $title      = apply_filters( 'widget_title', _filter_empty( $instance['title'], __( 'Ads Pictures', 'new' ), $instance, $this->id_base ) );
-        $size       = _filter_empty( $instance['size'], 'x' );
-        $count      = _filter_empty_numeric( $instance['count'], 1 );
-        $ads_img    = _filter_empty_array( $instance['ads_img'], array() );
+        $title      = apply_filters( 'widget_title', _filter_object_empty( $instance, 'title', __( 'Ads Pictures', 'new' ), $instance, $this->id_base ) );
+        $size       = _filter_object_empty( $instance, 'size', 'x' );
+        $count      = _filter_object_empty_numeric( $instance, 'count', 1 );
+        $ads_img    = _filter_object_empty_array( $instance, 'ads_img', array() );
 
         if ( $size == 'auto' ) {
-            $width = _filter_empty( $instance['width'], '' );
-            $height = _filter_empty( $instance['height'], '');
+            $width = _filter_object_empty( $instance, 'width', '' );
+            $height = _filter_object_empty( $instance, 'height', '');
             $img_size = array( $width, $height );
-            add_image_size( $size, $width, $height, true );
         } else {
             $img_size = $size_enum[ $instance['size'] ];
         }
@@ -30,12 +29,12 @@ class WP_Widget_ads extends WP_Widget {
 <?php if ( $count > 1 ) : ?>
 <ul class="ads125">
     <?php for( $i = 0; $i < $count; $i++ ) : $img = $ads_img[$i]; ?>
-    <li><a href="<?php echo _filter_empty( $img['link'], '#' ); ?>"><img width="<?php echo $img_size[0]; ?>" height="<?php echo $img_size[1]; ?>" src="<?php echo wp_get_attachment_image_src( $img['src'], $size )[0]; ?>" alt="<?php echo $img['name']; ?>" /></a></li>
+        <li><a href="<?php echo _filter_empty( $img['link'], '#' ); ?>"><img width="<?php echo $img_size[0]; ?>" height="<?php echo $img_size[1]; ?>" src="<?php echo wp_get_attachment_image_src( $img['src'], $size )[0]; ?>" alt="<?php echo $img['name']; ?>" title="<?php echo $img['name']; ?>" /></a></li>
     <?php endfor; ?>
 </ul>
-<?php else : ?>
-<a href="<?php echo _filter_empty( $ads_img[0]['link'], '#' ); ?>"><img width="<?php echo $img_size[0]; ?>" height="<?php echo $img_size[1]; ?>" src="<?php echo wp_get_attachment_image_src( $ads_img[0]['src'], $size )[0]; ?>" alt="<?php echo $ads_img[0]['name']; ?>" /></a>
-<?php endif; ?>
+    <?php else : ?>
+    <a href="<?php echo _filter_empty( $ads_img[0]['link'], '#' ); ?>"><img width="<?php echo $img_size[0]; ?>" height="<?php echo $img_size[1]; ?>" src="<?php echo wp_get_attachment_image_src( $ads_img[0]['src'], $size )[0]; ?>" alt="<?php echo $ads_img[0]['name']; ?>" title="<?php echo $ads_img[0]['name']; ?>" /></a>
+    <?php endif; ?>
 <?php
         echo $args[ 'after_widget' ];
     }
@@ -43,18 +42,18 @@ class WP_Widget_ads extends WP_Widget {
     function update( $new_instance, $old_instance ) {
         $instance = array();
 
-        $instance['size']   = _filter_empty( $new_instance['size'], $old_instance['size'] );
-        $instance['title']  = _filter_empty( $new_instance['title'], $old_instance['title'] );
-        $instance['count']  = _filter_empty_numeric( $new_instance['count'], $old_instance['count'] );
-        $instance['width']  = _filter_empty( $new_instance['width'], $old_instance['width'] );
-        $instance['height']  = _filter_empty( $new_instance['height'], $old_instance['height'] );
+        $instance['size']   = _filter_empty( $new_instance['size'], '' );
+        $instance['title']  = _filter_empty( $new_instance['title'], '' );
+        $instance['count']  = _filter_empty_numeric( $new_instance['count'], '' );
+        $instance['width']  = _filter_empty( $new_instance['width'], '' );
+        $instance['height']  = _filter_empty( $new_instance['height'], '' );
         $ads_img = array();
         $i = 0;
         while( isset( $new_instance[ 'ads_src_' . $i ] ) ) {
             $ads_img[] = array(
-                'name' => _filter_empty( $new_instance[ 'ads_name_' . $i ], $old_instance[ 'ads_img' ][$i]['name'] ),
-                'src' => _filter_empty( $new_instance[ 'ads_src_' . $i ], $old_instance[ 'ads_img' ][$i]['src'] ),
-                'link' => _filter_empty( $new_instance[ 'ads_link_' . $i ], $old_instance[ 'ads_img' ][$i]['link'] ),
+                'name' => _filter_empty( $new_instance[ 'ads_name_' . $i ], '' ),
+                'src' => _filter_empty( $new_instance[ 'ads_src_' . $i ], '' ),
+                'link' => _filter_empty( $new_instance[ 'ads_link_' . $i ], '' ),
             );
             $i++;
         }
@@ -109,7 +108,7 @@ class WP_Widget_ads extends WP_Widget {
         <div class="img-div" <?php if ( $i >= $count ) : echo 'style="display:none;"'; endif; ?>>
         <p>
 	        <label for="<?php echo $this->get_field_id( 'ads_src_' . $i ); ?>"><?php printf( __( 'Image No.%s:', 'new' ), $i + 1 ) ?></label>
-	        <a class="button choose-from-library-link"
+	        <a class="button choose-from-library-link right"
 				data-update-url="<?php echo get_admin_url() . 'admin-ajax.php'; ?>"
 				data-update-action="img_widget_update"
 	            data-update-preview=".preview_<?php echo $i; ?>_src"
@@ -122,11 +121,11 @@ class WP_Widget_ads extends WP_Widget {
 	        <input class="<?php echo $this->get_field_id( 'ads_src_' . $i ); ?>" name="<?php echo $this->get_field_name( 'ads_src_' . $i ); ?>" type="hidden" value="<?php if ( ! empty( $ads_img[ $i ] ) ) echo $ads_img[ $i ][ 'src' ]; ?>" />
         </p>
         <p>
-            <label for="<?php echo $this->get_field_id( 'ads_name_' . $i ); ?>"><?php printf( __( 'Name No.%s:', 'new' ), $i + 2 ); ?></label>
+            <label for="<?php echo $this->get_field_id( 'ads_name_' . $i ); ?>"><?php printf( __( 'Name No.%s:', 'new' ), $i + 1 ); ?></label>
             <input id="<?php echo $this->get_field_id( 'ads_name_' . $i ); ?>" name="<?php echo $this->get_field_name( 'ads_name_' . $i ); ?>" type="text" value="<?php if ( ! empty( $ads_img[ $i ] ) ) echo $ads_img[ $i ][ 'name' ]; ?>" /> 
         </p>
         <p>
-            <label for="<?php echo $this->get_field_id( 'ads_link_' . $i ); ?>"><?php printf( __( 'Link No.%s:', 'new' ), $i + 3 ); ?></label>
+            <label for="<?php echo $this->get_field_id( 'ads_link_' . $i ); ?>"><?php printf( __( 'Link No.%s:', 'new' ), $i + 1 ); ?></label>
             <input id="<?php echo $this->get_field_id( 'ads_link_' . $i ); ?>" name="<?php echo $this->get_field_name( 'ads_link_' . $i ); ?>" type="text" value="<?php if ( ! empty( $ads_img[ $i ] ) ) echo $ads_img[ $i ][ 'link' ]; ?>" /> 
         </p>
         <hr/>

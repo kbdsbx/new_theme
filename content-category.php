@@ -4,7 +4,7 @@
         <a href="<?php the_permalink(); ?>"><?php the_title(); ?></a>
         <span class="meta"><?php the_time( get_option( 'date_format' ) ); ?></span>
         <?php if ( function_exists( 'get_field' ) ) : ?>
-        <span class="rating"><span style="width:<?php echo ( ( get_field( 'new-article-views' ) / 350 ) > 1 ? 100 : ( get_field( 'new-article-views' ) / 3.5 ) ) ?>%;"></span></span>
+        <span class="rating" title="<?php echo get_field( 'new-article-views' ); ?>"><span style="width:<?php echo ( ( get_field( 'new-article-views' ) / 350 ) > 1 ? 100 : ( get_field( 'new-article-views' ) / 3.5 ) ) ?>%;"></span></span>
         <?php endif; ?>
     </p>
 </li>

@@ -55,7 +55,7 @@ class NEW_Flink_List_Table extends WP_List_Table {
 
     function get_items() {
         $args = $this->callback_args;
-        $flink_data = get_option( 'flink_data' );
+        $flink_data = _filter_empty( get_option( 'flink_data' ), array() );
 
         foreach ( $flink_data as $f => $link ) {
             $flink_data[$f]['link_date_str'] = date( 'Y-m-d', $link['link_date'] );

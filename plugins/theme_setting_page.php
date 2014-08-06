@@ -27,6 +27,17 @@ function new_theme_setting_admin() {
                     <p><?php _e( 'Share javascript.', 'new' ); ?></p>
                 </td>
             </tr>
+            <tr>
+                <td scope="row"><label for="new_theme_latest"><?php _e( 'Latest', 'new' ); ?></label></td>
+                <td>
+                    <textarea name="new_theme_latest" rows="10" cols="35" id="new_theme_latest" class="large-text code"><?php form_option( 'new_theme_latest' ); ?></textarea>
+                    <p><?php _e( 'Your latest developments from twitter, facebook, weibo, weixin or other.', 'new' ); ?></p>
+                </td>
+            </tr>
+            <tr>
+                <td><label></label></td>
+                <td></td>
+            </tr>
         </table>
         <?php submit_button(); ?>
         <input type="hidden" name="action" value="edit" />
@@ -38,11 +49,13 @@ function new_theme_setting_admin() {
 function new_theme_setting_page() {
     if ( isset( $_REQUEST['action'] ) && $_REQUEST['action'] == 'edit' ) {
         $new_theme_about = _filter_object_empty( $_REQUEST, 'new_theme_about', get_option( 'new_theme_about' ) );
-        update_option( 'new_theme_about', esc_html( $new_theme_about ) );
+        update_option( 'new_theme_about', wp_unslash( $new_theme_about ) );
         $new_theme_license = _filter_object_empty( $_REQUEST, 'new_theme_license', get_option( 'new_theme_license' ) );
-        update_option( 'new_theme_license', esc_html( $new_theme_license ) );
+        update_option( 'new_theme_license', wp_unslash( $new_theme_license ) );
         $new_theme_share = _filter_object_empty( $_REQUEST, 'new_theme_share', get_option( 'new_theme_share' ) );
         update_option( 'new_theme_share', wp_unslash( $new_theme_share ) );
+        $new_theme_latest = _filter_object_empty( $_REQUEST, 'new_theme_latest', get_option( 'new_theme_latest' ) );
+        update_option( 'new_theme_latest', wp_unslash( $new_theme_latest ) );
     }
 
     add_theme_page( 'new_theme_setting', 'Theme Setting', 'manage_options', basename( __FILE__ ), 'new_theme_setting_admin' );

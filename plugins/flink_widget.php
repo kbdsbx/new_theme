@@ -13,15 +13,15 @@ class WP_Widget_flink extends WP_Widget {
     }
 
     function widget( $args, $instance ) {
-        $title = apply_filters( 'widget_title', _filter_empty( $instance['title'], __( 'Friendly links', 'new' ) ), $instance, $this->id_base );
-        $count      = _filter_empty( $instance[ 'flink_count' ], 64 );
-        $orderby    = _filter_empty( $instance[ 'orderby'], 'link_name' );
+        $title = apply_filters( 'widget_title', _filter_object_empty( $instance, 'title', __( 'Friendly links', 'new' ) ), $instance, $this->id_base );
+        $count      = _filter_object_empty( $instance, 'flink_count', 64 );
+        $orderby    = _filter_object_empty( $instance, 'orderby', 'link_name' );
 
         $this->callback_args = array(
             'orderby'   => $orderby
         );
 
-        $flink_data = get_option( 'flink_data' );
+        $flink_data = _filter_empty_array( get_option( 'flink_data' ), array() );
         // 使用指定的属性排序
         usort( $flink_data, array( $this, '_sort' ) );
         array_splice( $flink_data, $count );
@@ -30,11 +30,11 @@ class WP_Widget_flink extends WP_Widget {
 ?>
 <h5 class="line"><span><?php echo $title; ?></span></h5>
 <ul class="block4">
-<?php foreach ( $flink_data as $link ) : ?>
-<?php if ( $link['link_status'] ) : ?>
+    <?php foreach ( $flink_data as $link ) : ?>
+    <?php if ( $link['link_status'] ) : ?>
     <li><a href="<?php echo $link['link_url']; ?>" target="_blank"><?php echo $link['link_name']; ?></a></li>
-<?php endif; ?>
-<?php endforeach; ?>
+    <?php endif; ?>
+    <?php endforeach; ?>
 </ul>
 <?php
         echo $args[ 'after_widget' ];
@@ -43,9 +43,9 @@ class WP_Widget_flink extends WP_Widget {
     function update( $new_instance, $old_instance ) {
         $instance = $old_instance;
 
-        $instance['title']          = _filter_empty( $new_instance['title'], $old_instance['title'] );
-        $instance['flink_count']    = _filter_empty_numeric( $new_instance['flink_count'], $old_instance['flink_count'] );
-        $instance['orderby']        = _filter_empty( $new_instance['orderby'], $old_instance['orderby'] );
+        $instance['title']          = _filter_empty( $new_instance['title'], '' );
+        $instance['flink_count']    = _filter_empty_numeric( $new_instance['flink_count'], 64 );
+        $instance['orderby']        = _filter_empty( $new_instance['orderby'], 'link_name' );
 
         return $instance;
     }

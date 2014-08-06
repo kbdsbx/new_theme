@@ -9,15 +9,14 @@ class WP_Widget_Picture extends WP_Widget {
 
     function widget( $args, $instance ) {
         global $size_enum, $post_types;
-        $title      = apply_filters( 'widget_title', _filter_empty( $instance['title'], __( 'Pictures', 'new' ), $instance, $this->id_base ) );
-        $posts_per_page = _filter_empty( $instance['posts_per_page'], 8 );
-        $category_id= _filter_empty( $instance['category_id'], '' );
-        $size       = _filter_empty( $instance['size'], 'xx' );
+        $title      = apply_filters( 'widget_title', _filter_object_empty( $instance, 'title', __( 'Pictures', 'new' ), $instance, $this->id_base ) );
+        $posts_per_page = _filter_object_empty( $instance, 'posts_per_page', 4 );
+        $category_id= _filter_object_empty( $instance, 'category_id', '' );
+        $size       = _filter_object_empty( $instance, 'size', 'xx' );
         $post_size  = _filter_object_empty( $size_enum, $size, $size_enum['xx'] );
 
         $query = new WP_Query( array(
             'posts_per_page' => $posts_per_page,
-            'page' => 1,
             'cat' => $category_id,
             'post_type' => $post_types
         ) );
@@ -43,10 +42,10 @@ class WP_Widget_Picture extends WP_Widget {
     function update( $new_instance, $old_instance ) {
         $instance = array();
 
-        $instance['title']          = _filter_empty( $new_instance['title'], $old_instance['title'] );
-        $instance['posts_per_page'] = _filter_empty_numeric( $new_instance['posts_per_page'], $old_instance['posts_per_page'] );
-        $instance['category_id']    = _filter_empty( $new_instance['category_id'], $old_instance['category_id'] );
-        $instance['size']           = _filter_empty( $new_instance['size'], $old_instance['size'] );
+        $instance['title']          = _filter_empty( $new_instance['title'], '' );
+        $instance['posts_per_page'] = _filter_empty_numeric( $new_instance['posts_per_page'], 4 );
+        $instance['category_id']    = _filter_empty( $new_instance['category_id'], '' );
+        $instance['size']           = _filter_empty( $new_instance['size'], '' );
         
         return $instance;
     }

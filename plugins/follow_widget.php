@@ -10,9 +10,9 @@ class WP_Widget_follow extends WP_Widget {
     }
 
     function widget( $args, $instance ) {
-		$title      = apply_filters( 'widget_title', _filter_empty( $instance['title'], __( 'Follow', 'new' ) ), $instance, $this->id_base );
-        $count      = _filter_empty_numeric( $instance['count'], 3 );
-        $follow_img = _filter_empty_array( $instance['follow_img'], array() );
+		$title      = apply_filters( 'widget_title', _filter_object_empty( $instance, 'title', __( 'Follow', 'new' ) ), $instance, $this->id_base );
+        $count      = _filter_object_empty_numeric( $instance, 'count', 3 );
+        $follow_img = _filter_object_empty_array( $instance, 'follow_img', array() );
 
         echo $args['before_widget'];
 ?>
@@ -35,16 +35,16 @@ class WP_Widget_follow extends WP_Widget {
     function update( $new_instance, $old_instance ) {
         $instance = array();
 
-        $instance['title']  = _filter_empty( $new_instance['title'], $old_instance['title'] );
-        $instance['count']  = _filter_empty_numeric( $new_instance['count'], $old_instance['count'] );
+        $instance['title']  = _filter_empty( $new_instance['title'], '' );
+        $instance['count']  = _filter_empty_numeric( $new_instance['count'], '' );
         $i = 0;
         $follow_img = array();
         while( isset( $new_instance['follow_name_' . $i] ) ) {
             $follow_img[] = array(
-                'name' => _filter_empty( $new_instance[ 'follow_name_' . $i ], $old_instance[ 'follow_img' ][$i]['name'] ),
-                'src' => _filter_empty( $new_instance[ 'follow_src_' . $i ], $old_instance[ 'follow_img' ][$i]['src'] ),
-                'qrcode' => _filter_empty( $new_instance[ 'follow_qrcode_' . $i ], $old_instance[ 'follow_img' ][$i]['qrcode'] ),
-                'color' => _filter_empty( $new_instance[ 'follow_color_' . $i ], $old_instance[ 'follow_img' ][$i]['color'] ),
+                'name' => _filter_empty( $new_instance[ 'follow_name_' . $i ], '' ),
+                'src' => _filter_empty( $new_instance[ 'follow_src_' . $i ], '' ),
+                'qrcode' => _filter_empty( $new_instance[ 'follow_qrcode_' . $i ], '' ),
+                'color' => _filter_empty( $new_instance[ 'follow_color_' . $i ], '' ),
             );
             $i++;
         }
@@ -85,7 +85,7 @@ class WP_Widget_follow extends WP_Widget {
     <div class="img-div" <?php if ( $i >= $count ) : echo 'style="display:none;"'; endif; ?>>
         <p>
 	        <label for="<?php echo $this->get_field_id( 'follow_src_' . $i ); ?>"><?php printf( __( 'Image No.%s:', 'new' ), $i + 1 ) ?></label>
-	        <a class="button choose-from-library-link"
+	        <a class="button choose-from-library-link right"
 				data-update-url="<?php echo get_admin_url() . 'admin-ajax.php'; ?>"
 				data-update-action="img_widget_update"
 	            data-update-preview=".preview_<?php echo $i; ?>_src"
@@ -99,7 +99,7 @@ class WP_Widget_follow extends WP_Widget {
         </p>
         <p>
 	        <label for="<?php echo $this->get_field_id( 'follow_qrcode_' . $i ); ?>"><?php printf( __( 'QR code No.%s:', 'new' ), $i + 1 ) ?></label>
-	        <a class="button choose-from-library-link"
+	        <a class="button choose-from-library-link right"
 				data-update-url="<?php echo get_admin_url() . 'admin-ajax.php'; ?>"
 				data-update-action="img_widget_update"
 	            data-update-preview=".preview_<?php echo $i; ?>_qrcode"

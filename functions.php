@@ -19,6 +19,14 @@ require plugins . '/theme_setting_page.php';
 require_once classes . '/class-new-flink-list-table.php';
 require_once classes . '/class-new-comment-walker.php';
 
+function new_script_init() {
+    wp_deregister_style( 'open-sans' );
+    wp_register_style( 'open-sans', false );
+}
+
+add_action( 'admin_enqueue_scripts', 'new_script_init' );
+add_action( 'wp_enqueue_scripts', 'new_script_init' );
+
 function new_enum_init() {
 	
 	global $size_enum, $post_types;
@@ -37,12 +45,13 @@ function new_enum_init() {
 		add_image_size( $size_key, $size[0], $size[1], true );
 	}
 
-    $post_types = array( 'post', 'page', 'gallery', 'download' );
+    $post_types = array( 'post', 'page', 'gallery', 'resource', 'ware' );
 }
 
 add_action( 'init', 'new_enum_init' );
 
 function new_field_init() {
+    global $post_types;
 	if( function_exists( "register_field_group") )	{
 		register_field_group( array (
 			'id' => '247',
@@ -126,9 +135,18 @@ function new_field_init() {
 					array (
 						'param' => 'post_type',
 						'operator' => '==',
-						'value' => 'download',
+						'value' => 'resource',
 						'order_no' => 0,
 						'group_no' => 3,
+					),
+                ),
+                array (
+					array (
+						'param' => 'post_type',
+						'operator' => '==',
+						'value' => 'ware',
+						'order_no' => 0,
+						'group_no' => 4,
 					),
 				),
 			),
@@ -140,7 +158,48 @@ function new_field_init() {
 			),
 			'menu_order' => 0,
 		) );
+    }
+
+	if(function_exists("register_field_group"))
+	{
+		register_field_group(array (
+			'id' => '285',
+			'title' => '分类目录字段',
+			'fields' => array (
+				array (
+					'key' => 'field_53e19dd6d5ccb',
+					'label' => '所属文章类型',
+					'name' => 'post_type',
+					'type' => 'select',
+					'instructions' => '通过不同文章类型调用不同模板',
+					'required' => 1,
+					'choices' => $post_types,
+					'default_value' => 'post',
+					'allow_null' => 0,
+					'multiple' => 0,
+				),
+			),
+			'location' => array (
+				array (
+					array (
+						'param' => 'ef_taxonomy',
+						'operator' => '==',
+						'value' => 'category',
+						'order_no' => 0,
+						'group_no' => 0,
+					),
+				),
+			),
+			'options' => array (
+				'position' => 'normal',
+				'layout' => 'no_box',
+				'hide_on_screen' => array (
+				),
+			),
+			'menu_order' => 0,
+		));
 	}
+    
 }
 
 add_action( 'init', 'new_field_init' );
@@ -173,11 +232,11 @@ function new_post_type_init() {
     );
 
     // Downloads center
-    register_post_type( 'download',
+    register_post_type( 'resource',
         array(
             'labels' =>array(
-                'name' => __( 'Downloads', 'new' ),
-                'singular_name' => __( 'Download', 'new' ),
+                'name' => __( 'Resources', 'new' ),
+                'singular_name' => __( 'Resource', 'new' ),
             ),
             'public' => true,
             'supports' => array(
@@ -197,6 +256,30 @@ function new_post_type_init() {
             'query_var' => 'd'
         )
     );
+    register_post_type( 'ware',
+        array(
+            'labels' =>array(
+                'name' => __( 'Wares', 'new' ),
+                'singular_name' => __( 'Ware', 'new' ),
+            ),
+            'public' => true,
+            'supports' => array(
+                'title',
+                'editor',
+                'thumbnail',
+                'excerpt',
+                'trackbacks',
+                'comments',
+                'revisions',
+                'page-attributes'
+            ),
+            'taxonomies' => array(
+                'category',
+                'post_tag'
+            ),
+            'query_var' => 'w'
+        )
+    );
 }
 
 add_action( 'init', 'new_post_type_init' );
@@ -209,9 +292,11 @@ function new_setup() {
 }
 add_action( 'after_setup_theme', 'new_setup' );
 
+/* filter */
+
 function new_filter_menu_link_attributes( $atts, $item, $args ) {
     switch ( $args->theme_location ) {
-    case 'navigation':
+    case 'navigation-main':
         if ( $item->menu_item_parent != '0' ) {
 		    $args->before = '<i class="icon-right-open"></i>';
     	} else {
@@ -228,6 +313,15 @@ function new_filter_menu_link_attributes( $atts, $item, $args ) {
 	return $atts;
 }
 add_filter( 'nav_menu_link_attributes', 'new_filter_menu_link_attributes', 10, 3 );
+
+function new_filter_category_template( $a ) {
+    var_dump( $a );
+    exit();
+}
+
+add_filter( 'category_template', 'new_filter_category_template' );
+
+/* !filter */
 
 /**
  * Enqueues scripts and styles for front-end.
@@ -431,6 +525,8 @@ background: -o-linear-gradient(top, <?php echo $color_primary_2; ?>, <?php echo 
 
 add_action('wp_head', 'new_add_css_styles');
 
+if ( function_exists( 'get_field' ) ) {
+
 // increase click times to every posts' head;
 function set_post_views() {
     global $post;
@@ -449,9 +545,9 @@ function set_post_views() {
         }
     }
 }
-
 add_action('wp_head', 'set_post_views'); 
 add_action('save_post', 'set_post_views'); 
+}
 
 function new_register_custom_background() {
     $args = array(

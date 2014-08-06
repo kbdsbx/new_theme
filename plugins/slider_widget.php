@@ -13,17 +13,16 @@ class WP_Widget_Slider extends WP_Widget {
 	function widget( $args, $instance ) {
 		global $size_enum, $post_types;
 
-		$title          = apply_filters( 'widget_title', _filter_empty( $instance['title'], __( 'Ads Pictures', 'new' ), $instance, $this->id_base ) );
-		$posts_per_page = _filter_empty_numeric( $instance['posts_per_page'], 5 );
-		$orderby        = _filter_empty( $instance['orderby'], 'post_date' );
+		$title          = apply_filters( 'widget_title', _filter_object_empty( $instance, 'title', __( 'Ads Pictures', 'new' ) ), $instance, $this->id_base );
+		$posts_per_page = _filter_object_empty_numeric( $instance, 'posts_per_page', 5 );
+		$orderby        = _filter_object_empty( $instance, 'orderby', 'post_date' );
 		$meta_key       = 'new-article-flags';
-		$meta_value     = _filter_empty( $instance['new_meta_article_flag'], '' );
-        $size           = _filter_empty( $instance['size'], 'lg' );
+		$meta_value     = _filter_object_empty( $instance, 'new_meta_article_flag', '' );
+        $size           = _filter_object_empty( $instance, 'size', 'lg' );
         $post_size      = _filter_object_empty( $size_enum, $size, $size_enum['lg'] );
 
 		$query = new WP_Query( array(
             'posts_per_page' => $posts_per_page,
-			'order' => 'DESC',
 			'orderby' => $orderby,
             'meta_query' => array(
                 array( 'key' => $meta_key, 'value' => $meta_value, 'compare' => 'LIKE' )
@@ -77,7 +76,9 @@ class WP_Widget_Slider extends WP_Widget {
 	function form( $instance ) {
 		global $size_enum;
 		//Defaults
-        $posts_flags = get_field_object( 'field_53def322e5039' ); // new-article-flag
+        if ( function_exists( 'get_field_object' ) ) {
+            $posts_flags = get_field_object( 'field_53def322e5039' ); // new-article-flag
+        }
 		$title = esc_attr( _filter_object_empty( $instance, 'title', '' ) );
         $posts_per_page = esc_attr( _filter_object_empty( $instance, 'posts_per_page', '' ) );
 		$orderby = esc_attr( _filter_object_empty( $instance, 'orderby', '' ) );
@@ -96,6 +97,7 @@ class WP_Widget_Slider extends WP_Widget {
 			<label for="<?php echo $this->get_field_id('posts_per_page'); ?>"><?php _e( 'Posts count:', 'new' ); ?></label>
 			<input type="text" value="<?php echo $posts_per_page; ?>" name="<?php echo $this->get_field_name('posts_per_page'); ?>" id="<?php echo $this->get_field_id('posts_per_page'); ?>" size="3" />
 		</p>
+        <?php if ( isset( $posts_flags ) && is_array( $posts_flags ) ) :?>
 		<p>
             <label for="<?php echo $this->get_field_id('new_meta_article_flag'); ?>"><?php echo $posts_flags['label']; ?></label>
             <br />
@@ -107,6 +109,7 @@ class WP_Widget_Slider extends WP_Widget {
                     <?php endforeach; ?>
                 </select>
 		</p>
+        <?php endif; ?>
 		<p>
 			<label for="<?php echo $this->get_field_id( 'size' ); ?>"><?php _e( 'Picture Size:', 'new' ); ?></label>
 			<!--input type="radio" name="<?php echo $this->get_field_name('size'); ?>" id="<?php echo $this->get_field_id('size'); ?>" <?php if ( $article_size == $size_key ) : echo 'checked="checked"'; endif ?> value="<?php echo $size_key; ?>" /-->

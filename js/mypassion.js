@@ -88,7 +88,7 @@ jQuery(document).ready(function(){
 		heightStyle: "content"
 	});
 	
-	jQuery( "#tabs" ).tabs();
+	jQuery( "#new-tabs" ).tabs();
 	
 	jQuery( "#tooltip" ).tooltip({
 		position:{

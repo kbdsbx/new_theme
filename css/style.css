@@ -1482,6 +1482,10 @@ p.copyright{
 	padding:10px;
 }
 
+p.copyright a {
+    color:#FFFFFF;
+}
+
 div#tabs{
     margin-top: -18px;
 }

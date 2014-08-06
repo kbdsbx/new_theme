@@ -17,7 +17,7 @@ get_header(); ?>
 global $wp_query, $post_types;
 query_posts( array_merge( $wp_query->query_vars, array( 'post_type' => $post_types ) ) );
 while ( have_posts() ) : the_post();
-        get_template_part( 'content', 'category' );
+    get_template_part( 'content', 'category-resource' );
 endwhile;
 ?>
                     </ul>
@@ -33,3 +33,4 @@ endwhile;
 </section>
 
 <?php get_footer();?>
+

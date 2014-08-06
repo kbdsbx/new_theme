@@ -2,8 +2,8 @@
 					<div id="footer">
 					    <div class="container">
 					    	<div class="column-one-third">
-                                <h5 class="line"><span><?php _e( 'Weibo', 'new' ); ?></span></h5>
-					            <div id="weibo"><iframe width="100%" height="262" class="share_self"  frameborder="0" scrolling="no" src="http://widget.weibo.com/weiboshow/index.php?language=&width=0&height=262&fansRow=2&ptype=0&speed=100&skin=1&isTitle=0&noborder=0&isWeibo=1&isFans=0&uid=1675939963&verifier=1448dc03&dpc=1"></iframe></div>
+                                <h5 class="line"><span><?php _e( 'The Latest', 'new' ); ?></span></h5>
+                                <div id="latest"><?php echo get_option( 'new_theme_latest' ); ?></div>
 					        </div>
 					        <div class="column-one-third">
                                 <h5 class="line"><span><?php _e( 'Navigation', 'new' ); ?></span></h5>

@@ -90,12 +90,7 @@ function _color_widget_update_js() {
 <script>
 (function ( jQuery) {
     jQuery( function() {
-    jQuery( '.choose-color' ).wpColorPicker( {
-        	change: function( event, ui ) {
-			},
-			clear: function() {
-			}
-    } );
+        jQuery( '.choose-color' ).wpColorPicker();
     } );
 }(jQuery));
 </script>
@@ -136,3 +131,12 @@ function _filter_empty_numeric( $obj, $def ) {
 function _filter_object_empty( $obj, $param, $def ) {
     return isset( $obj[ $param ] ) ? _filter_empty( $obj[ $param ], $def ) : $def;
 }
+
+function _filter_object_empty_array( $obj, $param, $def ) {
+    return isset( $obj[ $param ] ) ? _filter_empty_array( $obj[ $param ], $def ) : $def;
+}
+
+function _filter_object_empty_numeric( $obj, $param, $def ) {
+    return isset( $obj[ $param ] ) ? _filter_empty_numeric( $obj[ $param ], $def ) : $def;
+}
+

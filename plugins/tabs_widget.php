@@ -48,7 +48,7 @@ class WP_Widget_Tabs extends WP_Widget {
 
 		echo $args['before_widget'];
 ?>
-	<div id="tabs">
+	<div id="new-tabs">
         <ul>
 			<li><a href="#tabs1"><?php _e( 'Rank', 'new' ); ?></a></li>
             <li><a href="#tabs2"><?php _e( 'Recommend', 'new' ); ?></a></li>

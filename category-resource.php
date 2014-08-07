@@ -12,10 +12,10 @@ get_header(); ?>
             <!-- Popular News -->	
             <div class="column-two-third">
                 <div class="outerwide">
-                    <ul class="block2">
+                    <ul class="block">
 <?php
-global $wp_query, $post_types;
-query_posts( array_merge( $wp_query->query_vars, array( 'post_type' => $post_types ) ) );
+global $wp_query, $post_types_keys;
+query_posts( array_merge( $wp_query->query_vars, array( 'post_type' => $post_types_keys ) ) );
 while ( have_posts() ) : the_post();
     get_template_part( 'content', 'category-resource' );
 endwhile;

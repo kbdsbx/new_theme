@@ -2,7 +2,7 @@
 /**
  * The main template file
  */
-global $post_types;
+global $post_types_keys;
 get_header(); ?>
 <section class="slider">
     <div class="container">
@@ -25,10 +25,8 @@ get_header(); ?>
 <?php
 $args = array(
     'posts_per_page' => 4,
-    'page'           => 1,
-    'order'          => 'DESC',
     'orderby'        => 'date',
-    'post_type'      => $post_types
+    'post_type'      => $post_types_keys
 );
 $query = new WP_Query( $args );
 while ( $query->have_posts() ) : $query->the_post();
@@ -45,11 +43,9 @@ endwhile;
 <?php
 $args = array(
     'posts_per_page'=> 4,
-    'page'          => 1,
-    'order'         => 'DESC',
     'orderby'       => 'date',
     'category_name' => 'activites',
-    'post_type'     => $post_types
+    'post_type'     => $post_types_keys
 );
 $query = new WP_Query( $args );
 while ( $query->have_posts() ) : $query->the_post();
@@ -71,11 +67,9 @@ endwhile;
 <?php
 $args = array(
     'posts_per_page'=> 1,
-    'page'          => 1,
-    'order'         => 'DESC',
     'orderby'       => 'date',
     'category_name' => 'teachers',
-    'post_type'     => $post_types
+    'post_type'     => $post_types_keys
 );
 $query = new WP_Query( $args );
 ?>
@@ -89,12 +83,10 @@ $query = new WP_Query( $args );
 <?php
 $args = array(
     'posts_per_page'=> 8,
-    'page'          => 1,
     'offset'        => 1,
-    'order'         => 'DESC',
     'orderby'       => 'date',
     'category_name' => 'teachers',
-    'post_type'     => $post_types
+    'post_type'     => $post_types_keys
 );
 $query = new WP_Query( $args );
 ?> 
@@ -120,11 +112,9 @@ $query = new WP_Query( $args );
 <?php
 $args = array(
     'posts_per_page'=> 4,
-    'page'          => 1,
-    'order'         => 'DESC',
     'orderby'       => 'date',
     'category_name' => 'study',
-    'post_type'     => $post_types
+    'post_type'     => $post_types_keys
 );
 $query = new WP_Query( $args );
 while ( $query->have_posts() ) : $query->the_post();
@@ -141,11 +131,9 @@ endwhile;
 <?php
 $args = array(
     'posts_per_page'=> 8,
-    'page'          => 1,
-    'order'         => 'DESC',
     'orderby'       => 'date',
     'category_name' => 'downcenter',
-    'post_type'     => $post_types
+    'post_type'     => $post_types_keys
 );
 $query = new WP_Query( $args );
 while ( $query->have_posts() ) : $query->the_post();

@@ -13,7 +13,7 @@ get_header(); ?>
             <div class="column-two-third single">
 <?php
 while ( have_posts() ) : the_post();
-    get_template_part( 'content', '' );
+    get_template_part( 'content', 'resource' );
 endwhile;
 ?>
             <div class="column-two-third">
@@ -58,3 +58,4 @@ endwhile;
 </section>
 
 <?php get_footer(); ?>
+

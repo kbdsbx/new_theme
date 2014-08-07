@@ -15,9 +15,9 @@ get_header(); ?>
 	            <?php if ( have_posts() ) : ?>
 	            <h5 class="line"><?php printf( __( 'Number of Results: %s.', 'new' ), $wp_query->found_posts ); ?></h5>
 	            <ul class="block">
-	<?php while (have_posts()) : the_post(); ?>
-	<?php get_template_part( 'content', 'category-3' ); ?>
-	<?php endwhile; ?>
+	            <?php while (have_posts()) : the_post(); ?>
+	            <?php get_template_part( 'content', 'category-3' ); ?>
+	            <?php endwhile; ?>
 	            </ul>
 	            <?php else : ?>
 	            <h5 class="line"><?php printf( __( 'Nothing found.', 'new' ), $wp_query->found_posts ); ?></h5>

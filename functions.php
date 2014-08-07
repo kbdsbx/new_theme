@@ -29,7 +29,7 @@ add_action( 'wp_enqueue_scripts', 'new_script_init' );
 
 function new_enum_init() {
 	
-	global $size_enum, $post_types;
+	global $size_enum, $post_types, $post_types_keys;
 	$size_enum = array(
 		'lg' => array( 960, 640 ),
 		'md' => array( 540, 372 ),
@@ -45,7 +45,8 @@ function new_enum_init() {
 		add_image_size( $size_key, $size[0], $size[1], true );
 	}
 
-    $post_types = array( 'post', 'page', 'gallery', 'resource', 'ware' );
+    $post_types = array( 'post' => __( 'Posts', 'new' ), 'page' => __( 'Page', 'new' ), 'gallery' => __( 'Gallery', 'new' ), 'resource' => __( 'Resource', 'new' ), 'ware' => __( 'Ware', 'new' ) );
+    $post_types_keys = array_keys( $post_types );
 }
 
 add_action( 'init', 'new_enum_init' );
@@ -169,7 +170,7 @@ function new_field_init() {
 				array (
 					'key' => 'field_53e19dd6d5ccb',
 					'label' => '所属文章类型',
-					'name' => 'post_type',
+					'name' => 'new-post-type',
 					'type' => 'select',
 					'instructions' => '通过不同文章类型调用不同模板',
 					'required' => 1,
@@ -227,7 +228,7 @@ function new_post_type_init() {
                 'category',
                 'post_tag'
             ),
-            'query_var' => 'g'
+            'query_var' => 'gallery'
         )
     );
 
@@ -253,7 +254,7 @@ function new_post_type_init() {
                 'category',
                 'post_tag'
             ),
-            'query_var' => 'd'
+            'query_var' => 'resource'
         )
     );
     register_post_type( 'ware',
@@ -277,7 +278,7 @@ function new_post_type_init() {
                 'category',
                 'post_tag'
             ),
-            'query_var' => 'w'
+            'query_var' => 'ware'
         )
     );
 }
@@ -314,12 +315,27 @@ function new_filter_menu_link_attributes( $atts, $item, $args ) {
 }
 add_filter( 'nav_menu_link_attributes', 'new_filter_menu_link_attributes', 10, 3 );
 
-function new_filter_category_template( $a ) {
-    var_dump( $a );
-    exit();
+function new_filter_category_template( $template_path ) {
+    $post_type = get_field( 'new-post-type', get_queried_object() );
+    $template = get_template_directory() . '/category-' . $post_type . '.php';
+    if ( $post_type != 'post' && file_exists( $template ) ) {
+        $template_path = $template;
+    }
+    return $template_path;
 }
 
 add_filter( 'category_template', 'new_filter_category_template' );
+
+function new_filter_single_template( $template_path ) {
+    $post_type = get_queried_object()->post_type;
+    $template = get_template_directory() . '/single-' . $post_type . '.php';
+    if ( $post_type != 'post' && file_exists( $template ) ) {
+        $template_path = $template;
+    }
+    return $template_path;
+}
+
+add_filter( 'single_template', 'new_filter_single_template' );
 
 /* !filter */
 
@@ -525,7 +541,50 @@ background: -o-linear-gradient(top, <?php echo $color_primary_2; ?>, <?php echo 
 
 add_action('wp_head', 'new_add_css_styles');
 
-if ( function_exists( 'get_field' ) ) {
+/** 
+* Converts bytes into human readable file size. 
+* 
+* @param string $bytes 
+* @return string human readable file size (2,87)
+* @author Mogilev Arseny 
+*/  
+function FileSizeConvert($bytes)
+{
+    $bytes = floatval($bytes);
+        $arBytes = array(
+            0 => array(
+                "UNIT" => "TB",
+                "VALUE" => pow(1024, 4)
+            ),
+            1 => array(
+                "UNIT" => "GB",
+                "VALUE" => pow(1024, 3)
+            ),
+            2 => array(
+                "UNIT" => "MB",
+                "VALUE" => pow(1024, 2)
+            ),
+            3 => array(
+                "UNIT" => "KB",
+                "VALUE" => 1024
+            ),
+            4 => array(
+                "UNIT" => "B",
+                "VALUE" => 1
+            ),
+        );
+
+    foreach($arBytes as $arItem)
+    {
+        if($bytes >= $arItem["VALUE"])
+        {
+            $result = $bytes / $arItem["VALUE"];
+            $result = str_replace(".", "," , strval(round($result, 2)))." ".$arItem["UNIT"];
+            break;
+        }
+    }
+    return $result;
+}
 
 // increase click times to every posts' head;
 function set_post_views() {
@@ -543,11 +602,17 @@ function set_post_views() {
         if ( $post_ID && empty( $post_views ) ) {
             update_field( 'new-article-views', rand( 50, 300 ), $post_ID );
         }
+        $size = get_field( 'size', $post_ID );
+
+        if ( empty( $size ) ) {
+            $file_path = WP_CONTENT_DIR . '/uploads/' . wp_get_attachment_metadata( get_field( 'file', $post_ID ) )['file'];
+            $file_size = FileSizeConvert( filesize( $file_path ) );
+            update_field( 'size', $file_size, $post_ID );
+        }
     }
 }
 add_action('wp_head', 'set_post_views'); 
 add_action('save_post', 'set_post_views'); 
-}
 
 function new_register_custom_background() {
     $args = array(

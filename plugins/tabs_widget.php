@@ -9,27 +9,26 @@ class WP_Widget_Tabs extends WP_Widget {
 	}
 
 	function widget( $args, $instance ) {
-        global $post_types;
+        global $post_types_keys;
 		$title      = apply_filters( 'widget_title', _filter_empty( $instance['title'], __( 'Ads Pictures', 'new' ), $instance, $this->id_base ) );
-
 		$posts_per_page = _filter_empty_numeric( $instance['posts_per_page'], 4 );
 
 		$args_rank = array(
             'posts_per_page'=> $posts_per_page,
 			'orderby'		=> 'meta_value_num',
             'meta_key'      => 'new-article-views',
-            'post_type'     => $post_types
+            'post_type'     => $post_types_keys
 		);
 		$args_recommend = array(
             'posts_per_page'=> $posts_per_page,
             'meta_query'    => array( array( 'key' => 'new-article-flags', 'value' => 'recommend', 'compare' => 'LIKE' ) ),
 			'orderby'		=> 'date',
-            'post_type'     => $post_types
+            'post_type'     => $post_types_keys
 		);
 		$args_random = array(
             'posts_per_page'=> $posts_per_page,
 			'orderby'		=> 'rand',
-            'post_type'     => $post_types
+            'post_type'     => $post_types_keys
 		);
 
         $cat = 0;

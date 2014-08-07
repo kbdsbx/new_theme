@@ -11,7 +11,7 @@ class WP_Widget_Slider extends WP_Widget {
 	}
 
 	function widget( $args, $instance ) {
-		global $size_enum, $post_types;
+		global $size_enum, $post_types_keys;
 
 		$title          = apply_filters( 'widget_title', _filter_object_empty( $instance, 'title', __( 'Ads Pictures', 'new' ) ), $instance, $this->id_base );
 		$posts_per_page = _filter_object_empty_numeric( $instance, 'posts_per_page', 5 );
@@ -27,7 +27,7 @@ class WP_Widget_Slider extends WP_Widget {
             'meta_query' => array(
                 array( 'key' => $meta_key, 'value' => $meta_value, 'compare' => 'LIKE' )
             ),
-            'post_type' => $post_types
+            'post_type' => $post_types_keys
 		) );
 		
 		echo $args['before_widget'];

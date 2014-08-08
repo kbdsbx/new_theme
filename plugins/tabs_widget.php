@@ -3,14 +3,14 @@
 class WP_Widget_Tabs extends WP_Widget {
 
     function __construct() {
-        $widget_ops = array('classname' => 'widget_tabs', 'description' => __( 'The tabs of posts and incoding ranks, recommends, randoms.', 'new' ) );
+        $widget_ops = array('classname' => 'widget_tabs', 'description' => __( '显示推荐文章，点击排序与随机文章', 'new' ) );
 
-        parent::__construct('tabs', __( 'Tabs', 'new' ), $widget_ops);
+        parent::__construct('tabs', __( '切换控件', 'new' ), $widget_ops);
 	}
 
 	function widget( $args, $instance ) {
         global $post_types_keys;
-		$title      = apply_filters( 'widget_title', _filter_empty( $instance['title'], __( 'Ads Pictures', 'new' ), $instance, $this->id_base ) );
+		$title      = apply_filters( 'widget_title', _filter_empty( $instance['title'], __( '切换控件', 'new' ), $instance, $this->id_base ) );
 		$posts_per_page = _filter_empty_numeric( $instance['posts_per_page'], 4 );
 
 		$args_rank = array(
@@ -49,9 +49,9 @@ class WP_Widget_Tabs extends WP_Widget {
 ?>
 	<div id="new-tabs">
         <ul>
-			<li><a href="#tabs1"><?php _e( 'Rank', 'new' ); ?></a></li>
-            <li><a href="#tabs2"><?php _e( 'Recommend', 'new' ); ?></a></li>
-            <li><a href="#tabs3"><?php _e( 'Random', 'new' ); ?></a></li>
+			<li><a href="#tabs1"><?php _e( '热门', 'new' ); ?></a></li>
+            <li><a href="#tabs2"><?php _e( '推荐', 'new' ); ?></a></li>
+            <li><a href="#tabs3"><?php _e( '随机', 'new' ); ?></a></li>
         </ul>
         <div id="tabs1">
             <ul>
@@ -104,11 +104,11 @@ class WP_Widget_Tabs extends WP_Widget {
         $posts_per_page = esc_attr( _filter_object_empty( $instance, 'posts_per_page', '' ) );
 	?>
 		<p>
-			<label for="<?php echo $this->get_field_id('title'); ?>"><?php _e( 'Title:', 'new' ); ?></label>
+			<label for="<?php echo $this->get_field_id('title'); ?>"><?php _e( '标题:', 'new' ); ?></label>
 			<input class="widefat" id="<?php echo $this->get_field_id('title'); ?>" name="<?php echo $this->get_field_name('title'); ?>" type="text" value="<?php echo $title; ?>" />
 		</p>
 		<p>
-			<label for="<?php echo $this->get_field_id('posts_per_page'); ?>"><?php _e( 'Post count:', 'new' ); ?></label>
+			<label for="<?php echo $this->get_field_id('posts_per_page'); ?>"><?php _e( '文章数量:', 'new' ); ?></label>
 			<input type="text" value="<?php echo $posts_per_page; ?>" name="<?php echo $this->get_field_name('posts_per_page'); ?>" id="<?php echo $this->get_field_id('posts_per_page'); ?>" size="3" />
 		</p>
 <?php

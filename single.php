@@ -18,13 +18,13 @@ endwhile;
 ?>
             <div class="column-two-third">
                 <div class="share">
-                    <h5 class="line"><span><?php _e( 'Share.', 'new' ); ?></span></h5>
+                    <h5 class="line"><span><?php _e( '分享', 'new' ); ?></span></h5>
                     <?php echo get_option( 'new_theme_share' ); ?>
                 </div>
             </div>
             <div class="column-two-third">
                 <div class="relatednews">
-                    <h5 class="line"><span><?php _e( 'Other articles.', 'new' ); ?></span></h5>
+                    <h5 class="line"><span><?php _e( '其他文章', 'new' ); ?></span></h5>
                     <ul>
 <?php
 global $post_types_keys;

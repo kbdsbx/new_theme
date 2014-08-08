@@ -2,8 +2,8 @@
 
 class WP_Widget_flink extends WP_Widget {
     function __construct() {
-        $widget_ops = array( 'classname' => 'widget_flink', 'description' => __( 'Friendly links on the main page.', 'new' ) );
-        parent::__construct( 'flink', __( 'Friendly links', 'new' ), $widget_ops );
+        $widget_ops = array( 'classname' => 'widget_flink', 'description' => __( '再您的页面上显示友情链接', 'new' ) );
+        parent::__construct( 'flink', __( '友情链接', 'new' ), $widget_ops );
     }
 
     function _sort( $a, $b ) {
@@ -13,7 +13,7 @@ class WP_Widget_flink extends WP_Widget {
     }
 
     function widget( $args, $instance ) {
-        $title = apply_filters( 'widget_title', _filter_object_empty( $instance, 'title', __( 'Friendly links', 'new' ) ), $instance, $this->id_base );
+        $title = apply_filters( 'widget_title', _filter_object_empty( $instance, 'title', __( '友情链接', 'new' ) ), $instance, $this->id_base );
         $count      = _filter_object_empty( $instance, 'flink_count', 64 );
         $orderby    = _filter_object_empty( $instance, 'orderby', 'link_name' );
 
@@ -57,21 +57,21 @@ class WP_Widget_flink extends WP_Widget {
         $orderby        = esc_attr( _filter_object_empty( $instance, 'orderby', '' ) );
 ?>
         <p>
-            <label for="<?php echo $this->get_field_id('title'); ?>"><?php _e( 'Title:', 'new' ); ?></label>
+            <label for="<?php echo $this->get_field_id('title'); ?>"><?php _e( '标题:', 'new' ); ?></label>
             <input class="widefat" id="<?php echo $this->get_field_id('title'); ?>" name="<?php echo $this->get_field_name('title'); ?>" type="text" value="<?php echo $title; ?>" />
             </p>
         <p>
-            <label for="<?php echo $this->get_field_id('orderby'); ?>"><?php _e( 'Order by:', 'new' ); ?></label>
+            <label for="<?php echo $this->get_field_id('orderby'); ?>"><?php _e( '排序:', 'new' ); ?></label>
             <select id="<?php echo $this->get_field_id( 'orderby' ); ?>" name="<?php echo $this->get_field_name( 'orderby' ); ?>">
-                <option value=""><?php _e( '&mdash; Select &mdash;', 'new' ) ?></option>
-                <option <?php echo $orderby == 'link_name' ? 'selected="selected"' : ''; ?> value="link_name"><?php _e( 'Name', 'new' ); ?></option>
-                <option <?php echo $orderby == 'link_url' ? 'selected="selected"' : ''; ?> value="link_url"><?php _e( 'Url', 'new' ); ?></option>
-                <option <?php echo $orderby == 'link_date' ? 'selected="selected"' : ''; ?> value="link_date"><?php _e( 'Date', 'new' ); ?></option>
+                <option value=""><?php _e( '&mdash; 选择 &mdash;', 'new' ) ?></option>
+                <option <?php echo $orderby == 'link_name' ? 'selected="selected"' : ''; ?> value="link_name"><?php _e( '名称', 'new' ); ?></option>
+                <option <?php echo $orderby == 'link_url' ? 'selected="selected"' : ''; ?> value="link_url"><?php _e( 'URL', 'new' ); ?></option>
+                <option <?php echo $orderby == 'link_date' ? 'selected="selected"' : ''; ?> value="link_date"><?php _e( '添加时间', 'new' ); ?></option>
             </select>
         </p>
         <p>
-            <label for="<?php echo $this->get_field_id('flink_count'); ?>"><?php _e( 'Friendly links count:', 'new' ); ?></label>
-            <input type="text" value="<?php echo $flink_count; ?>" name="<?php echo $this->get_field_name('flink_count'); ?>" id="<?php echo $this->get_field_id('flink_count'); ?>" size="3" />
+            <label for="<?php echo $this->get_field_id('flink_count'); ?>"><?php _e( '显示友链数量:', 'new' ); ?></label>
+            <input type="text" value="<?php echo $flink_count; ?>" name="<?php echo $this->get_field_name( 'flink_count' ); ?>" id="<?php echo $this->get_field_id('flink_count'); ?>" size="3" />
         </p>
 <?php
     }

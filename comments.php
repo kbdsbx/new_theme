@@ -2,7 +2,7 @@
 if ( post_password_required() )  { return; }
 ?>
 <div class="comment-div-form">
-<h5 class="line"><span><?php _e( 'Comment.', 'new' ); ?></span></h5>
+<h5 class="line"><span><?php _e( '评论', 'new' ); ?></span></h5>
 <?php
 comment_form( array(
     'title_reply'       => '',
@@ -11,7 +11,7 @@ comment_form( array(
 ?>
 </div>
 <div class="comments">
-    <h5 class="line"><span><?php _e( 'Comments list.', 'new' ); ?></span></h5>
+    <h5 class="line"><span><?php _e( '评论列表', 'new' ); ?></span></h5>
     <div class="comments-content">
 <?php if ( have_comments() ) : ?>
         <ul class="comment-list">
@@ -24,11 +24,11 @@ comment_form( array(
 			?>
 		</ul><!-- .comment-list -->
 <?php else : ?>
-<?php _e( 'Empty.', 'new' ); ?>
+<?php _e( '列表为空', 'new' ); ?>
 <?php endif; ?>
 <?php
 if ( ! comments_open() && get_comments_number() ) : 
-    _e( 'Comments are closed.', 'new' );
+    _e( '抱歉，本文章评论已关闭', 'new' );
 endif;
 ?>
     </div>

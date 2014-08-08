@@ -3,35 +3,35 @@
 function new_theme_setting_admin() {
 ?>
 <div class="wrap">
-    <h2><?php _e( 'Theme', 'new' ); ?></h2>
+    <h2><?php _e( '其他设置', 'new' ); ?></h2>
     <form method="post" action="">
         <table class="form-table">
             <tr>
-                <td scope="row"><label for="new_theme_about"><?php _e( 'About', 'new' ); ?></label></td>
+                <td scope="row"><label for="new_theme_about"><?php _e( '关于', 'new' ); ?></label></td>
                 <td>
                     <textarea name="new_theme_about" rows="10" cols="35" id="new_theme_about" class="large-text code"><?php form_option( 'new_theme_about' ); ?></textarea>
-                    <p><?php _e( 'Display on your homepage footer about.', 'new' ); ?></p>
+                    <p><?php _e( '显示主页脚部关于', 'new' ); ?></p>
                 </td>
             </tr>
             <tr>
-                <td scope="row"><label for="new_theme_license"><?php _e( 'License', 'new' ); ?></label></td>
+                <td scope="row"><label for="new_theme_license"><?php _e( '声明', 'new' ); ?></label></td>
                 <td>
                     <textarea name="new_theme_license" rows="3" cols="35" id="new_theme_license" class="large-text code"><?php form_option( 'new_theme_license' ); ?></textarea>
-                    <p><?php _e( 'Show your ICP license.', 'new' ); ?></p>
+                    <p><?php _e( '显示关于本网站的ICP备案信息', 'new' ); ?></p>
                 </td>
             </tr>
             <tr>
-                <td scope="row"><label for="new_theme_share"><?php _e( 'Share', 'new' ); ?></label></td>
+                <td scope="row"><label for="new_theme_share"><?php _e( '分享', 'new' ); ?></label></td>
                 <td>
                     <textarea name="new_theme_share" rows="10" cols="35" id="new_theme_share" class="large-text code"><?php form_option( 'new_theme_share' ); ?></textarea>
-                    <p><?php _e( 'Share javascript.', 'new' ); ?></p>
+                    <p><?php _e( '每一篇文章中显示的分享脚本', 'new' ); ?></p>
                 </td>
             </tr>
             <tr>
-                <td scope="row"><label for="new_theme_latest"><?php _e( 'Latest', 'new' ); ?></label></td>
+                <td scope="row"><label for="new_theme_latest"><?php _e( '最新动态', 'new' ); ?></label></td>
                 <td>
                     <textarea name="new_theme_latest" rows="10" cols="35" id="new_theme_latest" class="large-text code"><?php form_option( 'new_theme_latest' ); ?></textarea>
-                    <p><?php _e( 'Your latest developments from twitter, facebook, weibo, weixin or other.', 'new' ); ?></p>
+                    <p><?php _e( '在脚部中显示的个人或企业最新动态，使用第三方社交平台所提供的脚本', 'new' ); ?></p>
                 </td>
             </tr>
             <tr>
@@ -58,6 +58,6 @@ function new_theme_setting_page() {
         update_option( 'new_theme_latest', wp_unslash( $new_theme_latest ) );
     }
 
-    add_theme_page( 'new_theme_setting', 'Theme Setting', 'manage_options', basename( __FILE__ ), 'new_theme_setting_admin' );
+    add_theme_page( 'new_theme_setting', __( '主题设置', 'new' ), 'manage_options', basename( __FILE__ ), 'new_theme_setting_admin' );
 }
 add_action( 'admin_menu', 'new_theme_setting_page' );

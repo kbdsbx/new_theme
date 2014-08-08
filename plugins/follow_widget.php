@@ -5,12 +5,12 @@ class WP_Widget_follow extends WP_Widget {
         add_action( 'admin_enqueue_scripts', '_add_script' );
         add_action( 'wp_ajax_img_widget_update', '_img_widget_update' );
 
-        $widget_ops = array( 'classname' => 'widget_follow', 'description' => __( 'Follow', 'new' ) );
-        parent::__construct( 'follow', __( 'Follow', 'new' ), $widget_ops );
+        $widget_ops = array( 'classname' => 'widget_follow', 'description' => __( '关注', 'new' ) );
+        parent::__construct( 'follow', __( '关注', 'new' ), $widget_ops );
     }
 
     function widget( $args, $instance ) {
-		$title      = apply_filters( 'widget_title', _filter_object_empty( $instance, 'title', __( 'Follow', 'new' ) ), $instance, $this->id_base );
+		$title      = apply_filters( 'widget_title', _filter_object_empty( $instance, 'title', __( '关注', 'new' ) ), $instance, $this->id_base );
         $count      = _filter_object_empty_numeric( $instance, 'count', 3 );
         $follow_img = _filter_object_empty_array( $instance, 'follow_img', array() );
 
@@ -60,12 +60,12 @@ class WP_Widget_follow extends WP_Widget {
 
 ?>
 	<p>
-		<label for="<?php echo $this->get_field_id('title'); ?>"><?php _e( 'Title:', 'new' ); ?></label>
+		<label for="<?php echo $this->get_field_id('title'); ?>"><?php _e( '标题:', 'new' ); ?></label>
 		<input class="widefat" id="<?php echo $this->get_field_id('title'); ?>" name="<?php echo $this->get_field_name('title'); ?>" type="text" value="<?php echo $title; ?>" />
 		</p>
 	<p>
     <p>
-			<label for="<?php echo $this->get_field_id('count'); ?>"><?php _e( 'Follow count:', 'new' ); ?></label>
+			<label for="<?php echo $this->get_field_id('count'); ?>"><?php _e( '关注模块数量:', 'new' ); ?></label>
             <select class="select-element-count" id="<?php echo $this->get_field_id( 'count' ); ?>" name="<?php echo $this->get_field_name( 'count' ); ?>">
             <?php
             $count_enum = array( 1, 2, 3, 4, 5, 6 );
@@ -84,39 +84,39 @@ class WP_Widget_follow extends WP_Widget {
     <?php for( $i = 0; $i < $count_max; $i++ ) : ?>
     <div class="img-div" <?php if ( $i >= $count ) : echo 'style="display:none;"'; endif; ?>>
         <p>
-	        <label for="<?php echo $this->get_field_id( 'follow_src_' . $i ); ?>"><?php printf( __( 'Image No.%s:', 'new' ), $i + 1 ) ?></label>
+	        <label for="<?php echo $this->get_field_id( 'follow_src_' . $i ); ?>"><?php printf( __( '第%s个模块图片:', 'new' ), $i + 1 ) ?></label>
 	        <a class="button choose-from-library-link right"
 				data-update-url="<?php echo get_admin_url() . 'admin-ajax.php'; ?>"
 				data-update-action="img_widget_update"
 	            data-update-preview=".preview_<?php echo $i; ?>_src"
 				data-update-preview-src=".<?php echo $this->get_field_id( 'follow_src_' . $i ); ?>"
-				data-choose="<?php _e( 'Choose a Image', 'new' ); ?>"
-				data-update="<?php _e( 'Select', 'new' ); ?>"><?php _e( 'Choose Image', 'new' ); ?></a>
+				data-choose="<?php _e( '选择图片', 'new' ); ?>"
+				data-update="<?php _e( '选择', 'new' ); ?>"><?php _e( '选择图片', 'new' ); ?></a>
 	    </p>
         <p>
 	        <img class="preview_<?php echo $i; ?>_src" src="<?php if ( ! empty( $follow_img[ $i ] ) ) echo wp_get_attachment_image_src( $follow_img[ $i ][ 'src' ] )[0]; ?>" />
 	        <input class="<?php echo $this->get_field_id( 'follow_src_' . $i ); ?>" name="<?php echo $this->get_field_name( 'follow_src_' . $i ); ?>" type="hidden" value="<?php if ( ! empty( $follow_img[ $i ] ) ) echo $follow_img[ $i ][ 'src' ]; ?>" />
         </p>
         <p>
-	        <label for="<?php echo $this->get_field_id( 'follow_qrcode_' . $i ); ?>"><?php printf( __( 'QR code No.%s:', 'new' ), $i + 1 ) ?></label>
+	        <label for="<?php echo $this->get_field_id( 'follow_qrcode_' . $i ); ?>"><?php printf( __( '第%s个模块二维码:', 'new' ), $i + 1 ) ?></label>
 	        <a class="button choose-from-library-link right"
 				data-update-url="<?php echo get_admin_url() . 'admin-ajax.php'; ?>"
 				data-update-action="img_widget_update"
 	            data-update-preview=".preview_<?php echo $i; ?>_qrcode"
 				data-update-preview-src=".<?php echo $this->get_field_id( 'follow_qrcode_' . $i ); ?>"
-				data-choose="<?php _e( 'Choose a Image', 'new' ); ?>"
-				data-update="<?php _e( 'Select', 'new' ); ?>"><?php _e( 'Choose Image', 'new' ); ?></a>
+				data-choose="<?php _e( '选择图片', 'new' ); ?>"
+				data-update="<?php _e( '选择', 'new' ); ?>"><?php _e( '选择图片', 'new' ); ?></a>
 	    </p>
         <p>
 	        <img class="preview_<?php echo $i; ?>_qrcode" src="<?php if ( ! empty( $follow_img[ $i ] ) ) echo wp_get_attachment_image_src( $follow_img[ $i ][ 'qrcode' ] )[0]; ?>" />
 	        <input class="<?php echo $this->get_field_id( 'follow_qrcode_' . $i ); ?>" name="<?php echo $this->get_field_name( 'follow_qrcode_' . $i ); ?>" type="hidden" value="<?php if ( ! empty( $follow_img[ $i ] ) ) echo $follow_img[ $i ][ 'qrcode' ]; ?>" />
         </p>
         <p>
-            <label for="<?php echo $this->get_field_id( 'follow_name_' . $i ); ?>"><?php printf( __( 'Name No.%s:', 'new' ), $i + 1 ); ?></label>
+            <label for="<?php echo $this->get_field_id( 'follow_name_' . $i ); ?>"><?php printf( __( '第%s个模块名称:', 'new' ), $i + 1 ); ?></label>
             <input id="<?php echo $this->get_field_id( 'follow_name_' . $i ); ?>" name="<?php echo $this->get_field_name( 'follow_name_' . $i ); ?>" type="text" value="<?php if ( ! empty( $follow_img[ $i ] ) ) echo $follow_img[ $i ][ 'name' ]; ?>" /> 
         </p>
         <p>
-            <label for="<?php echo $this->get_field_id( 'follow_color_' . $i ); ?>"><?php printf( __( 'Color No.%s:', 'new' ), $i + 1 ); ?></label>
+            <label for="<?php echo $this->get_field_id( 'follow_color_' . $i ); ?>"><?php printf( __( '第%s个模块背景色:', 'new' ), $i + 1 ); ?></label>
             <input type="text" name="<?php echo $this->get_field_name( 'follow_color_' . $i ); ?>" id="<?php echo $this->get_field_id( 'follow_color_' . $i ); ?>" class="choose-color" value="<?php if ( ! empty( $follow_img[ $i ] ) ) echo $follow_img[ $i ][ 'color' ]; ?>"/>
         </p>
         <hr/>

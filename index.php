@@ -19,7 +19,7 @@ get_header(); ?>
 
         <div class="main-content">
             <div class="column-one-third">
-                <h5 class="line"><span><?php _e( 'Today\'s news.', 'new' ); ?></span></h5>
+                <h5 class="line"><span><?php _e( '今日最新', 'new' ); ?></span></h5>
                 <div class="outertight">
                     <ul class="block">
 <?php
@@ -37,7 +37,7 @@ endwhile;
                 </div>
             </div>
             <div class="column-one-third">
-            <h5 class="line"><span><?php _e( 'Activites.', 'new' ); ?></span></h5>
+            <h5 class="line"><span><?php _e( '最新活动', 'new' ); ?></span></h5>
                 <div class="outertight">
                     <ul class="block">
 <?php
@@ -58,7 +58,7 @@ endwhile;
 <!-- Teachers -->
 <div class="column-two-third">
 	<h5 class="line">
-        <span><?php _e( 'Teachers.', 'new' ); ?></span>
+        <span><?php _e( '优秀教师', 'new' ); ?></span>
         <div class="navbar">
             <a id="next1" class="next" href="#"><span></span></a>	
             <a id="prev1" class="prev" href="#"><span></span></a>
@@ -106,7 +106,7 @@ $query = new WP_Query( $args );
 </div>
 <!-- /Teachers -->
 			<div class="column-one-third">
-				<h5 class="line"><span><?php _e( 'Spanish study.', 'new' ); ?></span></h5>
+				<h5 class="line"><span><?php _e( '西语学习', 'new' ); ?></span></h5>
                 <div class="outertight">
 					<ul class="block">
 <?php
@@ -125,7 +125,7 @@ endwhile;
 				</div>
 			</div>
 			<div class="column-one-third">
-				<h5 class="line"><span><?php _e( 'Spanish sources.', 'new' ); ?></span></h5>
+				<h5 class="line"><span><?php _e( '西语资源', 'new' ); ?></span></h5>
                 <div class="outertight">
 					<ul class="block">
 <?php

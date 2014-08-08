@@ -45,7 +45,7 @@ function new_enum_init() {
 		add_image_size( $size_key, $size[0], $size[1], true );
 	}
 
-    $post_types = array( 'post' => __( 'Posts', 'new' ), 'page' => __( 'Page', 'new' ), 'gallery' => __( 'Gallery', 'new' ), 'resource' => __( 'Resource', 'new' ), 'ware' => __( 'Ware', 'new' ) );
+    $post_types = array( 'post' => __( '文章', 'new' ), 'page' => __( '页面', 'new' ), 'gallery' => __( '图集', 'new' ), 'resource' => __( '资源', 'new' ), 'ware' => __( '商品', 'new' ) );
     $post_types_keys = array_keys( $post_types );
 }
 
@@ -56,31 +56,31 @@ function new_field_init() {
 	if( function_exists( "register_field_group") )	{
 		register_field_group( array (
 			'id' => '247',
-			'title' => '公共字段',
+			'title' => __( '公共字段', 'new' ),
 			'fields' => array (
 				array (
 					'key' => 'field_53def322e5039',
-					'label' => '文章标记',
+					'label' => __( '文章标记', 'new' ),
 					'name' => 'new-article-flags',
 					'type' => 'checkbox',
-					'instructions' => '为你的文章添加标记，使之在页面中特殊的地方或以特殊的形式展示出来',
+					'instructions' => __( '为你的文章添加标记，使之在页面中特殊的地方或以特殊的形式展示出来', 'new' ),
 					'choices' => array (
-						'headline' => '头条',
-						'recommend' => '推荐',
-						'slider' => '幻灯',
-						'special' => '特别推荐',
-						'roll' => '滚动',
-						'bold' => '加粗',
+						'headline' => __( '头条', 'new' ),
+						'recommend' => __( '推荐', 'new' ),
+						'slider' => __( '幻灯', 'new' ),
+						'special' => __( '特别推荐', 'new' ),
+						'roll' => __( '滚动', 'new' ),
+						'bold' => __( '加粗', 'new' ),
 					),
 					'default_value' => '',
 					'layout' => 'horizontal',
 				),
 				array (
 					'key' => 'field_53df3aadae5b3',
-					'label' => '文章来源',
+					'label' => __( '文章来源', 'new' ),
 					'name' => 'new-article-source',
 					'type' => 'text',
-					'instructions' => '显示文章来源',
+					'instructions' => __( '显示文章来源', 'new' ),
 					'required' => 1,
 					'default_value' => 'www.jiehengsen.org',
 					'placeholder' => '',
@@ -91,10 +91,10 @@ function new_field_init() {
 				),
 				array (
 					'key' => 'field_53df244673d32',
-					'label' => '访问次数',
+					'label' => __( '访问次数', 'new' ),
 					'name' => 'new-article-views',
 					'type' => 'number',
-					'instructions' => '文章的已访问次数',
+					'instructions' => __( '文章的已访问次数', 'new' ),
 					'default_value' => '',
 					'placeholder' => '',
 					'prepend' => '',
@@ -165,14 +165,14 @@ function new_field_init() {
 	{
 		register_field_group(array (
 			'id' => '285',
-			'title' => '分类目录字段',
+			'title' => __( '分类目录字段', 'new' ),
 			'fields' => array (
 				array (
 					'key' => 'field_53e19dd6d5ccb',
-					'label' => '所属文章类型',
+					'label' => __( '所属文章类型', 'new' ),
 					'name' => 'new-post-type',
 					'type' => 'select',
-					'instructions' => '通过不同文章类型调用不同模板',
+					'instructions' => __( '通过不同文章类型调用不同模板', 'new' ),
 					'required' => 1,
 					'choices' => $post_types,
 					'default_value' => 'post',
@@ -210,8 +210,9 @@ function new_post_type_init() {
     register_post_type( 'gallery', 
         array(
             'labels' => array(
-                'name' => __( 'Galleries', 'new' ),
-                'singular_name' => __( 'Gallery', 'new' ),
+                'name' => __( '图片集', 'new' ),
+                'singular_name' => __( '图片集', 'new' ),
+                'add_new' => __( '添加图片集', 'new' ),
             ),
             'public' => true,
             'supports' => array(
@@ -236,8 +237,9 @@ function new_post_type_init() {
     register_post_type( 'resource',
         array(
             'labels' =>array(
-                'name' => __( 'Resources', 'new' ),
-                'singular_name' => __( 'Resource', 'new' ),
+                'name' => __( '资源', 'new' ),
+                'singular_name' => __( '资源', 'new' ),
+                'add_new' => __( '添加新资源', 'new' ),
             ),
             'public' => true,
             'supports' => array(
@@ -260,8 +262,9 @@ function new_post_type_init() {
     register_post_type( 'ware',
         array(
             'labels' =>array(
-                'name' => __( 'Wares', 'new' ),
-                'singular_name' => __( 'Ware', 'new' ),
+                'name' => __( '商品', 'new' ),
+                'singular_name' => __( '商品', 'new' ),
+                'add_new' => __( '添加新商品', 'new' ),
             ),
             'public' => true,
             'supports' => array(
@@ -382,8 +385,8 @@ add_action( 'wp_enqueue_scripts', 'new_scripts_styles' );
 function new_register_my_menus() {
   register_nav_menus(
     array(
-      'navigation-main' => __( 'Main Header Menu', 'new' ),
-      'navigation-footer' => __( 'Foot Navigation Menu', 'new' ),
+      'navigation-main' => __( '主导航栏', 'new' ),
+      'navigation-footer' => __( '脚部附加导航栏', 'new' ),
     )
   );
 }
@@ -394,7 +397,7 @@ function new_widgets_init() {
 		'name'          => 'sidebar-main-slider',
 		'id'            => 'sidebar-main-slider',
 		'class'			=> '',
-		'description'   => __( 'The main slider of the home page.', 'new' ),
+		'description'   => __( '在你的主页左侧显示的控件', 'new' ),
 		'before_widget' => '<div class="main-slider">',
 		'after_widget'  => '</div>',
 		'before_title'  => '',
@@ -404,7 +407,7 @@ function new_widgets_init() {
 		'name'          => 'sidebar-slider2',
 		'id'            => 'sidebar-slider2',
 		'class'			=> '',
-		'description'   => __( 'The main slider2 of the home page.', 'new' ),
+		'description'   => __( '在你的主页右侧显示的控件', 'new' ),
 		'before_widget' => '<div class="slider2">',
 		'after_widget'  => '</div>',
 		'before_title'  => '',
@@ -414,7 +417,7 @@ function new_widgets_init() {
 		'name'          => 'sidebar-home-footer',
 		'id'            => 'sidebar-home-footer',
 		'class'			=> '',
-		'description'   => __( 'The main slider of the home page.', 'new' ),
+		'description'   => __( '在你的主页脚部显示的控件', 'new' ),
 		'before_widget' => '<div class="column-two-third">',
 		'after_widget'  => '</div>',
 		'before_title'  => '',
@@ -424,7 +427,7 @@ function new_widgets_init() {
 		'name'          => 'sidebar-category-side',
 		'id'            => 'sidebar-category-side',
 		'class'			=> '',
-		'description'   => __( 'The right slider of the category page.', 'new' ),
+		'description'   => __( '在你所有的分类中显示的控件', 'new' ),
 		'before_widget' => '<div class="sidebar">',
 		'after_widget'  => '</div>',
 		'before_title'  => '',
@@ -434,7 +437,7 @@ function new_widgets_init() {
 		'name'          => 'sidebar-side',
 		'id'            => 'sidebar-side',
 		'class'			=> '',
-		'description'   => __( 'The right slider of the homepage.', 'new' ),
+		'description'   => __( '在你主页右侧显示的控件', 'new' ),
 		'before_widget' => '<div class="sidebar">',
 		'after_widget'  => '</div>',
 		'before_title'  => '',
@@ -449,7 +452,7 @@ function new_custom_color_register( $wp_customize ) {
 	$colors[] = array(
 		'slug'=>'color_primary', 
 		'default' => '#ea4748',
-		'label' => __('Primary Color ', 'new')
+		'label' => __('主色调', 'new')
 	);
 	
 	foreach( $colors as $color ) {

@@ -5,15 +5,15 @@ function new_flink_admin () {
     $flink_table -> prepare_items();
 ?>
 <div class="wrap" >
-    <h2><?php _e( 'Friendly links', 'new' ); ?></h2>
+    <h2><?php _e( '友情链接', 'new' ); ?></h2>
     <div class="manage-menus">
-        <span><?php _e( 'Be use friendly links widget to show your links.', 'new' ); ?><a href="<?php echo esc_url( admin_url( 'widgets.php' ) ); ?>" ><?php _e( 'Check it to edit.', 'new' ); ?></a></span>
+        <span><?php _e( '使用友情链接控件显示你的友情链接', 'new' ); ?><a href="<?php echo esc_url( admin_url( 'widgets.php' ) ); ?>" ><?php _e( '点击编辑', 'new' ); ?></a></span>
     </div>
     <div id="ajax-response"></div>
     <hr/>
     <form class="search-form" action="" method="get">
         <input type="hidden" name="page" id="page" value="<?php echo basename( __FILE__ ); ?>" />
-        <?php $flink_table -> search_box( 'Search Friendly links', 'flink_search' ); ?>
+        <?php $flink_table -> search_box( '搜索友情链接', 'flink_search' ); ?>
     </form>
     <br class="clear" />
     <div id="col-container" />
@@ -27,21 +27,21 @@ function new_flink_admin () {
         <div id="col-left">
             <div class="col-wrap">
                 <div class="form-wrap">
-                    <h3><?php _e( 'Add new friend link', 'new' ); ?></h3>
+                    <h3><?php _e( '新增友情链接', 'new' ); ?></h3>
                     <form id="addflink" method="post" class="validate">
                         <input type="hidden" name="action" value="save" />
                         <div class="form-field" >
-                            <label for="link_name"><?php _e( 'Web site name', 'new' ); ?></label>
+                            <label for="link_name"><?php _e( '网站名称', 'new' ); ?></label>
                             <input name="link_name" id="link_name" type="text" value="" size="40" aria-required="true" />
-                            <p><?php _e( 'This is name when it view in your site', 'new' ); ?></p>
+                            <p><?php _e( '显示友情链接的网站名称', 'new' ); ?></p>
                         </div>
                         <div class="form-field" >
-                            <label for="link_url"><?php _e( 'Web site link', 'new' ); ?></label>
+                            <label for="link_url"><?php _e( '网站链接', 'new' ); ?></label>
                             <input name="link_url" id="link_url" type="text" value="" size="40" aria-required="true" />
-                            <p><?php _e( 'The friend link true url', 'new' ); ?></p>
+                            <p><?php _e( '友情链接所跳转到的网站链接', 'new' ); ?></p>
                         </div>
                         <p>
-                            <input type="submit" name="submit" id="submit" class="button button-primary" value="<?php _e( 'Add new friend link', 'new' ); ?>" />
+                            <input type="submit" name="submit" id="submit" class="button button-primary" value="<?php _e( '新增友链', 'new' ); ?>" />
                         </p>
                     </form>
                 </div>

@@ -16,10 +16,10 @@ class NEW_Flink_List_Table extends WP_List_Table {
     function get_columns() {
         $columns = array(
             'cb'            => '<input type="checkbox" />',
-            'link_name'     => __( 'Friendly link title', 'new' ),
-            'link_url'      => __( 'Friendly link url', 'new' ),
-            'link_date'     => __( 'Date', 'new' ),
-            'link_status'   => __( 'Status', 'new' )
+            'link_name'     => __( '友链名称', 'new' ),
+            'link_url'      => __( '友链链接', 'new' ),
+            'link_date'     => __( '添加时间', 'new' ),
+            'link_status'   => __( '友链状态', 'new' )
         );
 
         return $columns;
@@ -38,9 +38,9 @@ class NEW_Flink_List_Table extends WP_List_Table {
 
     function get_bulk_actions() {
         $actions = array(
-            'delete'        => __( 'Delete', 'new' ),
-            'disabled'      => __( 'Disabled', 'new' ),
-            'enabled'       => __( 'Enabled', 'new' ),
+            'delete'        => __( '删除', 'new' ),
+            'disabled'      => __( '禁用', 'new' ),
+            'enabled'       => __( '启用', 'new' ),
         );
 
         return $actions;
@@ -79,9 +79,9 @@ class NEW_Flink_List_Table extends WP_List_Table {
         case 'link_status' :
             switch( $item[$column_name] ) {
             case '1' :
-                return __( 'Enabled', 'new' );
+                return __( '启用', 'new' );
             case '0' :
-                return __( 'Disabled', 'new' );
+                return __( '禁用', 'new' );
             }
         default :
             return $item[$column_name];

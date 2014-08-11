@@ -12,15 +12,16 @@ function new_flink_admin () {
     <div id="ajax-response"></div>
     <hr/>
     <form class="search-form" action="" method="get">
-        <input type="hidden" name="page" id="page" value="<?php echo basename( __FILE__ ); ?>" />
+        <input type="hidden" name="page" value="<?php echo basename( __FILE__ ); ?>" />
         <?php $flink_table -> search_box( '搜索友情链接', 'flink_search' ); ?>
     </form>
     <br class="clear" />
-    <div id="col-container" />
+    <div id="col-container">
         <div id="col-right">
             <div id="col-wrap">
                 <form id="flink-form" method="post" action="">
-<?php $flink_table->Display(); ?>
+                    <input type="hidden" name="page" value="<?php echo basename( __FILE__ ); ?>" />
+                    <?php $flink_table->Display(); ?>
                 </form>
             </div> 
         </div>
@@ -29,6 +30,7 @@ function new_flink_admin () {
                 <div class="form-wrap">
                     <h3><?php _e( '新增友情链接', 'new' ); ?></h3>
                     <form id="addflink" method="post" class="validate">
+                        <input type="hidden" name="page" value="<?php echo basename( __FILE__ ); ?>" />
                         <input type="hidden" name="action" value="save" />
                         <div class="form-field" >
                             <label for="link_name"><?php _e( '网站名称', 'new' ); ?></label>
@@ -52,7 +54,7 @@ function new_flink_admin () {
 <?php 
 }
 function new_flink_page () {
-    if ( isset( $_REQUEST['action'] ) ) {
+    if ( isset( $_REQUEST['page'] ) && $_REQUEST['page'] == basename( __FILE__ ) ) {
         $flink_data = get_option( 'flink_data' );
 
         switch ( $_REQUEST['action'] ) {
@@ -110,7 +112,7 @@ function new_flink_page () {
         update_option( 'flink_data', $flink_data );
     }
 
-    add_options_page( 'new_flink_options', 'Friendly links', 'manage_options', basename( __FILE__ ), 'new_flink_admin' );
+    add_options_page( 'new_flink_options', __( '友情链接', 'new' ), 'manage_options', basename( __FILE__, '.php' ), 'new_flink_admin' );
 }
 add_action( 'admin_menu', 'new_flink_page' );
 ?>

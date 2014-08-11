@@ -14,10 +14,12 @@ require plugins . '/follow_widget.php';
 require plugins . '/picture_widget.php';
 require plugins . '/ads_widget.php';
 require plugins . '/flink_page.php';
+require plugins . '/modules_page.php';
 require plugins . '/theme_setting_page.php';
 
 require_once classes . '/class-new-flink-list-table.php';
 require_once classes . '/class-new-comment-walker.php';
+require_once classes . '/class-new-modules-list-table.php';
 
 /* init */
 
@@ -40,7 +42,7 @@ add_action( 'wp_enqueue_scripts', 'new_filter_style_init' );
  */
 function new_enum_init() {
 	
-	global $size_enum, $post_types, $post_types_keys;
+	global $size_enum, $post_types, $post_types_keys, $new_module_type;
 	$size_enum = array(
 		'lg' => array( 960, 640 ),
 		'md' => array( 540, 372 ),
@@ -58,6 +60,15 @@ function new_enum_init() {
 
     $post_types = array( 'post' => __( '文章', 'new' ), 'page' => __( '页面', 'new' ), 'gallery' => __( '图集', 'new' ), 'resource' => __( '资源', 'new' ), 'ware' => __( '商品', 'new' ) );
     $post_types_keys = array_keys( $post_types );
+
+    $new_module_type = array(
+        '0' => __( '图文简介', 'new' ),
+        '1' => __( '仅图文', 'new' ),
+        '2' => __( '仅标题和简介', 'new' ),
+        '3' => __( '重点与滚动（纵向）', 'new' ),
+        '4' => __( '重点与滚动（横向）', 'new' ),
+        '5' => __( '幻灯', 'new' ),
+    );
 }
 
 add_action( 'init', 'new_enum_init' );
@@ -672,7 +683,7 @@ function new_filter_background_color( $classes ) {
 add_filter( 'body_class', 'new_filter_background_color' );
 
 function new_filter_the_title( $title, $id = null ) {
-    $flags = get_field( 'new-article-flags', get_queried_object() );
+    $flags = get_field( 'new-article-flags' );
     if ( is_array( $flags ) ) {
         if ( array_search( 'bold', $flags) !== false ) {
             $title = '<strong>' . $title . '</strong>';

@@ -60,7 +60,7 @@ endwhile;
 	<h5 class="line">
         <span><?php _e( '优秀教师', 'new' ); ?></span>
         <div class="navbar">
-            <a id="next1" class="next" href="#"><span></span></a>	
+            <a id="next1" class="next" href="#"><span></span></a>
             <a id="prev1" class="prev" href="#"><span></span></a>
         </div>
     </h5>

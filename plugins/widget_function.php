@@ -116,6 +116,19 @@ function _add_script() {
     wp_enqueue_style('wp-color-picker');
 }
 
+function _get_cat() {
+    $cat = 0;
+    if ( is_category() ) {
+        $cat = get_cat_ID( single_cat_title( '', false ) );
+    } else if ( is_single() ) {
+        $category = get_the_category();
+        if ( ! empty( $category ) ) {
+            $cat = $category[0]->cat_ID;
+        }
+    }
+    return $cat;
+}
+
 function _filter_empty( $obj, $def ) {
     return empty( $obj ) ? $def : $obj;
 }

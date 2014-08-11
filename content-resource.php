@@ -11,7 +11,7 @@
 </div>
 <div class="column-one-third">
     <div class="center-block">
-        <img src="<?php echo wp_get_attachment_image_src( get_post_thumbnail_id( get_the_ID() ), 'xs' )[0];?>" alt="<?php the_title(); ?> " width="300" height="162" />
+        <img src="<?php echo new_get_thumbnail_src( 'xs' ) ?>" alt="<?php the_title(); ?> " width="300" height="162" />
     </div>
 </div>
 <div class="column-two-third">

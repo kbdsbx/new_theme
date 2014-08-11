@@ -27,7 +27,7 @@ class WP_Widget_Picture extends WP_Widget {
 <ul class="picbox">
 <?php while( $query->have_posts() ) : $query->the_post(); ?>
     <li>
-        <a href="<?php the_permalink(); ?>"><img src="<?php echo wp_get_attachment_image_src( get_post_thumbnail_id( get_the_ID() ), $size )[0]; ?>" alt="<?php the_title(); ?>" /></a>
+        <a href="<?php the_permalink(); ?>"><img src="<?php echo new_get_thumbnail_src( $size ); ?>" alt="<?php the_title(); ?>" /></a>
         <h6><?php the_title(); ?></h6>
         <p>
 <?php echo strip_tags( get_the_excerpt() ); ?>

@@ -13,7 +13,7 @@ class WP_Widget_Slider extends WP_Widget {
 	function widget( $args, $instance ) {
 		global $size_enum, $post_types_keys;
 
-		$title          = apply_filters( 'widget_title', _filter_object_empty( $instance, 'title', __( '幻灯', 'new' ) ), $instance, $this->id_base );
+		$title          = apply_filters( 'widget_title', _filter_object_empty( $instance, 'title', ''), $instance, $this->id_base );
 		$posts_per_page = _filter_object_empty_numeric( $instance, 'posts_per_page', 5 );
 		$orderby        = _filter_object_empty( $instance, 'orderby', 'post_date' );
 		$meta_key       = 'new-article-flags';
@@ -22,12 +22,11 @@ class WP_Widget_Slider extends WP_Widget {
         $post_size      = _filter_object_empty( $size_enum, $size, $size_enum['lg'] );
 
 		$query = new WP_Query( array(
-            'posts_per_page' => $posts_per_page,
-			'orderby' => $orderby,
-            'meta_query' => array(
-                array( 'key' => $meta_key, 'value' => $meta_value, 'compare' => 'LIKE' )
-            ),
-            'post_type' => $post_types_keys
+            'posts_per_page'    => $posts_per_page,
+			'orderby'           => $orderby,
+            'meta_query'        => array( array( 'key' => $meta_key, 'value' => $meta_value, 'compare' => 'LIKE' ) ),
+            'post_type'         => $post_types_keys,
+            'cat'               => _get_cat()
 		) );
 		
 		echo $args['before_widget'];
@@ -45,7 +44,7 @@ class WP_Widget_Slider extends WP_Widget {
 				<a href="<?php the_permalink(); ?>">
                 <?php if ( has_post_thumbnail() ) : ?>
                 <!-- width="<?php echo $post_size[0]; ?>" height="<?php echo $post_size[1]; ?>"  -->
-					<img src="<?php echo wp_get_attachment_image_src( get_post_thumbnail_id( get_the_ID() ), $size )[0]; ?>" alt="<?php the_title(); ?>" />
+					<img src="<?php echo new_get_thumbnail_src( $size ); ?>" alt="<?php the_title(); ?>" />
                 <?php endif; ?>
 				</a>
 				<p class="flex-caption">

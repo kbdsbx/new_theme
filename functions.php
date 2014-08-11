@@ -19,14 +19,25 @@ require plugins . '/theme_setting_page.php';
 require_once classes . '/class-new-flink-list-table.php';
 require_once classes . '/class-new-comment-walker.php';
 
-function new_script_init() {
+/* init */
+
+/**
+ * 关闭google fonts api，或启用360源 
+ */
+function new_filter_style_init() {
     wp_deregister_style( 'open-sans' );
     wp_register_style( 'open-sans', false );
 }
 
-add_action( 'admin_enqueue_scripts', 'new_script_init' );
-add_action( 'wp_enqueue_scripts', 'new_script_init' );
+add_action( 'admin_enqueue_scripts', 'new_filter_style_init' );
+add_action( 'wp_enqueue_scripts', 'new_filter_style_init' );
 
+/**
+ * 全局变量
+ * @size_enum 自定义图片规格
+ * @post_types 自定义文章类型
+ * @post_types_keys 文章类型部分API调用需要
+ */
 function new_enum_init() {
 	
 	global $size_enum, $post_types, $post_types_keys;
@@ -51,6 +62,9 @@ function new_enum_init() {
 
 add_action( 'init', 'new_enum_init' );
 
+/**
+ * 自定义字段
+ */
 function new_field_init() {
     global $post_types;
 	if( function_exists( "register_field_group") )	{
@@ -200,13 +214,15 @@ function new_field_init() {
 			'menu_order' => 0,
 		));
 	}
-    
 }
 
 add_action( 'init', 'new_field_init' );
 
+/**
+ * 自定义文章类型
+ */
 function new_post_type_init() {
-    // Gallery
+    // 图片集
     register_post_type( 'gallery', 
         array(
             'labels' => array(
@@ -233,7 +249,7 @@ function new_post_type_init() {
         )
     );
 
-    // Downloads center
+    // 资源
     register_post_type( 'resource',
         array(
             'labels' =>array(
@@ -259,6 +275,7 @@ function new_post_type_init() {
             'query_var' => 'resource'
         )
     );
+    // 商品
     register_post_type( 'ware',
         array(
             'labels' =>array(
@@ -288,66 +305,40 @@ function new_post_type_init() {
 
 add_action( 'init', 'new_post_type_init' );
 
+
+/* !init */
+
+
+/* action */
+
+/**
+ * 添加默认主题支持
+ */
 function new_setup() {
 	load_theme_textdomain( 'new', get_template_directory() . '/languages' );
 	add_theme_support( 'custom-header' );
 	add_theme_support( 'custom-background' );
 	add_theme_support( 'post-thumbnails' );
+    $args = array(
+        'default-color' => '',
+        'default-image' => '',
+    );
+    $args = apply_filters( 'new_custom_background_args', $args );
+    add_theme_support( 'custom-background', $args );
+
+    register_nav_menus(
+        array(
+            'navigation-main' => __( '主导航栏', 'new' ),
+            'navigation-footer' => __( '脚部附加导航栏', 'new' ),
+        )
+    );
 }
 add_action( 'after_setup_theme', 'new_setup' );
 
-/* filter */
-
-function new_filter_menu_link_attributes( $atts, $item, $args ) {
-    switch ( $args->theme_location ) {
-    case 'navigation-main':
-        if ( $item->menu_item_parent != '0' ) {
-		    $args->before = '<i class="icon-right-open"></i>';
-    	} else {
-    		$args->before = '';
-        }
-        break;
-    case 'navigation-footer':
-        $args->before = '<i class="icon-right-open"></i>';
-        break;
-    default:
-        break;
-    }
-    
-	return $atts;
-}
-add_filter( 'nav_menu_link_attributes', 'new_filter_menu_link_attributes', 10, 3 );
-
-function new_filter_category_template( $template_path ) {
-    $post_type = get_field( 'new-post-type', get_queried_object() );
-    $template = get_template_directory() . '/category-' . $post_type . '.php';
-    if ( $post_type != 'post' && file_exists( $template ) ) {
-        $template_path = $template;
-    }
-    return $template_path;
-}
-
-add_filter( 'category_template', 'new_filter_category_template' );
-
-function new_filter_single_template( $template_path ) {
-    $post_type = get_queried_object()->post_type;
-    $template = get_template_directory() . '/single-' . $post_type . '.php';
-    if ( $post_type != 'post' && file_exists( $template ) ) {
-        $template_path = $template;
-    }
-    return $template_path;
-}
-
-add_filter( 'single_template', 'new_filter_single_template' );
-
-/* !filter */
-
 /**
- * Enqueues scripts and styles for front-end.
- *
-*/
+ * 添加模板样式及脚本
+ */
 function new_scripts_styles() {
-	global $wp_styles;
     wp_enqueue_style( 'google-fonts', 'http://fonts.useso.com/css?family=Merriweather+Sans:400,300,700,800', array(), null );
 	wp_enqueue_style( 'new-style-superfish', get_template_directory_uri() . '/css/superfish.css' );
 	wp_enqueue_style( 'new-style-fontello', get_template_directory_uri() . '/css/fontello/fontello.css' );
@@ -380,18 +371,8 @@ function new_scripts_styles() {
 add_action( 'wp_enqueue_scripts', 'new_scripts_styles' );
 
 /**
- * Register menus.
+ * 小部件注册
  */
-function new_register_my_menus() {
-  register_nav_menus(
-    array(
-      'navigation-main' => __( '主导航栏', 'new' ),
-      'navigation-footer' => __( '脚部附加导航栏', 'new' ),
-    )
-  );
-}
-add_action( 'after_setup_theme', 'new_register_my_menus' );
-
 function new_widgets_init() {
 	register_sidebar( array(
 		'name'          => 'sidebar-main-slider',
@@ -446,6 +427,9 @@ function new_widgets_init() {
 }
 add_action( 'widgets_init', 'new_widgets_init' );
 
+/**
+ * 主色调颜色注册
+ */
 function new_custom_color_register( $wp_customize ) {
 	$colors = array();
 	
@@ -475,11 +459,12 @@ function new_custom_color_register( $wp_customize ) {
 		);
 	}
 }
-
 add_action( 'customize_register', 'new_custom_color_register' );
 
+/**
+ * 主色调颜色调用
+ */
 function new_add_css_styles() { 
-	global $size_enum;
 	$color_primary = get_option('color_primary');
     $color_primary_2 = '#' . _filter_empty( dechex( hexdec( $color_primary ) - 0x323333 ), '000000' );
 	
@@ -541,7 +526,6 @@ background: -o-linear-gradient(top, <?php echo $color_primary_2; ?>, <?php echo 
 
     <?php
 }
-
 add_action('wp_head', 'new_add_css_styles');
 
 /** 
@@ -589,7 +573,9 @@ function FileSizeConvert($bytes)
     return $result;
 }
 
-// increase click times to every posts' head;
+/**
+ * 文章默认属性计算，累计及赋值
+ */
 function set_post_views() {
     global $post;
     if ( ! isset ( $post->ID ) )
@@ -603,7 +589,7 @@ function set_post_views() {
 		}
 	} else if ( is_admin() ) {
         if ( $post_ID && empty( $post_views ) ) {
-            update_field( 'new-article-views', rand( 50, 300 ), $post_ID );
+            update_field( 'new-article-views', rand( 0, get_option( 'new_theme_heat_limit' ) ), $post_ID );
         }
         $size = get_field( 'size', $post_ID );
 
@@ -617,20 +603,65 @@ function set_post_views() {
 add_action('wp_head', 'set_post_views'); 
 add_action('save_post', 'set_post_views'); 
 
-function new_register_custom_background() {
-    $args = array(
-        'default-color' => '',
-        'default-image' => '',
-    );
+/* !action */
 
-    $args = apply_filters( 'new_custom_background_args', $args );
 
-    add_theme_support( 'custom-background', $args );
+/* filter */
+
+/**
+ * 导航样式设置
+ */
+function new_filter_menu_link_attributes( $atts, $item, $args ) {
+    switch ( $args->theme_location ) {
+    case 'navigation-main':
+        if ( $item->menu_item_parent != '0' ) {
+		    $args->before = '<i class="icon-right-open"></i>';
+    	} else {
+    		$args->before = '';
+        }
+        break;
+    case 'navigation-footer':
+        $args->before = '<i class="icon-right-open"></i>';
+        break;
+    default:
+        break;
+    }
+    
+	return $atts;
+}
+add_filter( 'nav_menu_link_attributes', 'new_filter_menu_link_attributes', 10, 3 );
+
+/**
+ * 分类目录针对不同文章类型的模板筛选
+ */
+function new_filter_category_template( $template_path ) {
+    $post_type = get_field( 'new-post-type', get_queried_object() );
+    $template = get_template_directory() . '/category-' . $post_type . '.php';
+    if ( $post_type != 'post' && file_exists( $template ) ) {
+        $template_path = $template;
+    }
+    return $template_path;
+}
+add_filter( 'category_template', 'new_filter_category_template' );
+
+/**
+ * 文章针对不同文章类型的模板筛选
+ */
+function new_filter_single_template( $template_path ) {
+    $post_type = get_queried_object()->post_type;
+    $template = get_template_directory() . '/single-' . $post_type . '.php';
+    if ( $post_type != 'post' && file_exists( $template ) ) {
+        $template_path = $template;
+    }
+    return $template_path;
 }
 
-add_action( 'after_setup_theme', 'new_register_custom_background' );
+add_filter( 'single_template', 'new_filter_single_template' );
 
-// 去除移动端浏览时的背景，减少流量
+
+/**
+ * 去除移动端浏览时的背景，减少流量
+ */
 function new_filter_background_color( $classes ) {
     if ( wp_is_mobile() ) {
         unset( $classes[ array_search( 'custom-background', $classes ) ] );
@@ -640,3 +671,32 @@ function new_filter_background_color( $classes ) {
 
 add_filter( 'body_class', 'new_filter_background_color' );
 
+function new_filter_the_title( $title, $id = null ) {
+    $flags = get_field( 'new-article-flags', get_queried_object() );
+    if ( is_array( $flags ) ) {
+        if ( array_search( 'bold', $flags) !== false ) {
+            $title = '<strong>' . $title . '</strong>';
+        }
+    }
+    return $title;
+}
+
+add_filter( 'the_title', 'new_filter_the_title' );
+
+/* !filter */
+
+
+/* other function */
+
+function new_get_thumbnail_src( $size ) {
+    $src = wp_get_attachment_image_src( '' == get_post_thumbnail_id() ? get_option( 'new_theme_default_thumbnail_id' ) : get_post_thumbnail_id(), $size )[0]; 
+    return $src;
+}
+
+function new_get_rating() {
+    $w = get_field( 'new-article-views' ) / _filter_empty_numeric( get_option( 'new_theme_heat_limit' ), 400 );
+    $w = $w > 1 ? 100 : $w * 100;
+    return $w;
+}
+
+/* !other function */

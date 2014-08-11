@@ -17,69 +17,61 @@ class WP_Widget_Tabs extends WP_Widget {
             'posts_per_page'=> $posts_per_page,
 			'orderby'		=> 'meta_value_num',
             'meta_key'      => 'new-article-views',
-            'post_type'     => $post_types_keys
+            'post_type'     => $post_types_keys,
+            'cat'           => _get_cat()
 		);
 		$args_recommend = array(
             'posts_per_page'=> $posts_per_page,
             'meta_query'    => array( array( 'key' => 'new-article-flags', 'value' => 'recommend', 'compare' => 'LIKE' ) ),
 			'orderby'		=> 'date',
-            'post_type'     => $post_types_keys
+            'post_type'     => $post_types_keys,
+            'cat'           => _get_cat()
 		);
 		$args_random = array(
             'posts_per_page'=> $posts_per_page,
 			'orderby'		=> 'rand',
-            'post_type'     => $post_types_keys
+            'post_type'     => $post_types_keys,
+            'cat'           => _get_cat()
 		);
-
-        $cat = 0;
-        if ( is_category() ) {
-            $cat = get_cat_ID( single_cat_title( '', false ) );
-        } else if ( is_single() ) {
-            $category = get_the_category();
-            if ( ! empty( $category ) )
-                $cat = $category[0]->cat_ID;
-        }
-        if ( ! empty( $cat ) ) {
-            $args_rank[ 'cat' ] = $cat;
-            $args_recommend[ 'cat' ] = $cat;
-            $args_random[ 'cat' ] = $cat;
-        }
 
 		echo $args['before_widget'];
 ?>
 	<div id="new-tabs">
         <ul>
-			<li><a href="#tabs1"><?php _e( '热门', 'new' ); ?></a></li>
-            <li><a href="#tabs2"><?php _e( '推荐', 'new' ); ?></a></li>
-            <li><a href="#tabs3"><?php _e( '随机', 'new' ); ?></a></li>
+			<li><a href="#new-tabs1"><?php _e( '热门', 'new' ); ?></a></li>
+            <li><a href="#new-tabs2"><?php _e( '推荐', 'new' ); ?></a></li>
+            <li><a href="#new-tabs3"><?php _e( '随机', 'new' ); ?></a></li>
         </ul>
-        <div id="tabs1">
+        <div id="new-tabs1">
             <ul>
 <?php
 				$query = new WP_Query( $args_rank );
 			 	while( $query->have_posts() ) : $query->the_post();
                     get_template_part( 'content', 'category-2' );
                 endwhile;
+                wp_reset_query();
 ?>
             </ul>
         </div>
-        <div id="tabs2">
+        <div id="new-tabs2">
             <ul>
 <?php
 				$query = new WP_Query( $args_recommend );
 			 	while( $query->have_posts() ) : $query->the_post();
                     get_template_part( 'content', 'category-2' );
                 endwhile;
+                wp_reset_query();
 ?>
             </ul>
         </div>
-        <div id="tabs3">
+        <div id="new-tabs3">
             <ul>
 <?php
 				$query = new WP_Query( $args_random );
 			 	while( $query->have_posts() ) : $query->the_post();
                     get_template_part( 'content', 'category-2' );
                 endwhile;
+                wp_reset_query();
 ?>
             </ul>
         </div>

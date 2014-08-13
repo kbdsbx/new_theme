@@ -47,7 +47,7 @@ class WP_Widget_Tabs extends WP_Widget {
 <?php
 				$query = new WP_Query( $args_rank );
 			 	while( $query->have_posts() ) : $query->the_post();
-                    get_template_part( 'content', 'category-2' );
+                    get_template_part( 'content', 'category-td' );
                 endwhile;
                 wp_reset_query();
 ?>
@@ -58,7 +58,7 @@ class WP_Widget_Tabs extends WP_Widget {
 <?php
 				$query = new WP_Query( $args_recommend );
 			 	while( $query->have_posts() ) : $query->the_post();
-                    get_template_part( 'content', 'category-2' );
+                    get_template_part( 'content', 'category-td' );
                 endwhile;
                 wp_reset_query();
 ?>
@@ -69,7 +69,7 @@ class WP_Widget_Tabs extends WP_Widget {
 <?php
 				$query = new WP_Query( $args_random );
 			 	while( $query->have_posts() ) : $query->the_post();
-                    get_template_part( 'content', 'category-2' );
+                    get_template_part( 'content', 'category-td' );
                 endwhile;
                 wp_reset_query();
 ?>

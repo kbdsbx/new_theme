@@ -78,65 +78,66 @@ function new_module_admin() {
 function new_modules_page() {
     if ( isset( $_REQUEST['page'] ) && $_REQUEST['page'] == basename( __FILE__ ) ) {
         $modules_data = get_option( 'modules_data' );
-
-        switch ( $_REQUEST['action'] ) {
-        case 'save':
-            $module_name = sanitize_text_field( $_REQUEST['module_name'] );
-            $module_category = esc_attr( $_REQUEST['module_category'] );
-            $module_post_count = esc_attr( $_REQUEST['module_post_count'] );
-            $module_type = esc_attr( $_REQUEST['module_type'] );
-            $module_weight = esc_attr( $_REQUEST['module_weight'] );
-            $module_status = 1;
-            $module_date = time();
-
-            if ( isset( $module_name) && isset( $module_category ) ) {
-                if ( empty( $modules_data ) ) $modules_data = array();
-
-                $modules_data[ $module_name ] = array(
-                    'module_name'       => $module_name,
-                    'module_category'   => $module_category,
-                    'module_post_count' => _filter_empty( $module_post_count, 4 ),
-                    'module_type'       => _filter_empty( $module_type, '0' ),
-                    'module_weight'     => _filter_empty_numeric( $module_weight, 10 ),
-                    'module_status'     => $module_status,
-                    'module_date'       => $module_date,
-                );
-            }
-            break;
-        case 'delete':
-            $modules = $_REQUEST['module'];
-
-            if ( isset( $modules ) && is_array( $modules ) ) {
-                foreach ( $modules as $m ) {
-                    unset( $modules_data[$m] );
-                }
-            }
-            break;
-        case 'enabled' :
-            $modules = $_REQUEST['module'];
-
-            if ( isset( $modules ) && is_array( $modules ) ) {
-                foreach( $modules as $m ) {
-                    if ( isset( $modules_data[$m] ) ) {
-                        $modules_data[$m]['module_status'] = 1;
-                    }
-                }
-            }
-            break;
-        case 'disabled' :
-            $modules = $_REQUEST['module'];
-
-            if ( isset( $modules ) && is_array( $modules ) ) {
-                foreach ( $modules as $m ) {
-                    if ( isset( $modules_data[$m] ) ) {
-                        $modules_data[$m]['module_status'] = 0;
-                    }
-                }
-            }
-            break;
+        
+        if ( isset( $_REQUEST['action'] ) ) {
+	        switch ( $_REQUEST['action'] ) {
+	        case 'save':
+	            $module_name = sanitize_text_field( $_REQUEST['module_name'] );
+	            $module_category = esc_attr( $_REQUEST['module_category'] );
+	            $module_post_count = esc_attr( $_REQUEST['module_post_count'] );
+	            $module_type = esc_attr( $_REQUEST['module_type'] );
+	            $module_weight = esc_attr( $_REQUEST['module_weight'] );
+	            $module_status = 1;
+	            $module_date = time();
+	
+	            if ( isset( $module_name) && isset( $module_category ) ) {
+	                if ( empty( $modules_data ) ) $modules_data = array();
+	
+	                $modules_data[ $module_name ] = array(
+	                    'module_name'       => $module_name,
+	                    'module_category'   => $module_category,
+	                    'module_post_count' => _filter_empty( $module_post_count, 4 ),
+	                    'module_type'       => _filter_empty( $module_type, '0' ),
+	                    'module_weight'     => _filter_empty_numeric( $module_weight, 10 ),
+	                    'module_status'     => $module_status,
+	                    'module_date'       => $module_date,
+	                );
+	            }
+	            break;
+	        case 'delete':
+	            $modules = $_REQUEST['module'];
+	
+	            if ( isset( $modules ) && is_array( $modules ) ) {
+	                foreach ( $modules as $m ) {
+	                    unset( $modules_data[$m] );
+	                }
+	            }
+	            break;
+	        case 'enabled' :
+	            $modules = $_REQUEST['module'];
+	
+	            if ( isset( $modules ) && is_array( $modules ) ) {
+	                foreach( $modules as $m ) {
+	                    if ( isset( $modules_data[$m] ) ) {
+	                        $modules_data[$m]['module_status'] = 1;
+	                    }
+	                }
+	            }
+	            break;
+	        case 'disabled' :
+	            $modules = $_REQUEST['module'];
+	
+	            if ( isset( $modules ) && is_array( $modules ) ) {
+	                foreach ( $modules as $m ) {
+	                    if ( isset( $modules_data[$m] ) ) {
+	                        $modules_data[$m]['module_status'] = 0;
+	                    }
+	                }
+	            }
+	            break;
+	        }
+	        update_option( 'modules_data', $modules_data );
         }
-
-        update_option( 'modules_data', $modules_data );
     }
     add_options_page( 'new_modules_options', __( '首页模块', 'new' ), 'manage_options', basename( __FILE__, '.php' ), 'new_module_admin' );
 }

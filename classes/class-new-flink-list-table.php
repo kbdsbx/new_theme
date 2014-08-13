@@ -8,7 +8,7 @@ class NEW_Flink_List_Table extends WP_List_Table {
         parent::__construct( array(
             'plural' => 'flinks',
             'singular' => 'flink',
-            'screen' => false,
+            'screen' => 'flink',
             'ajax' => true,
         ) );
     }
@@ -48,9 +48,20 @@ class NEW_Flink_List_Table extends WP_List_Table {
 
     function _filter( $v ) {
         $args = $this->callback_args;
+        $search = $args['search'];
         foreach ( $v as $bs ) {
-            if ( strstr( $bs, $args['search'] ) !== false ) return true;
+            if ( strstr( $bs, $search ) !== false || $bs == $search ) return true;
         } 
+    }
+
+    function _sort( $a, $b ) {
+        $args = $this->callback_args;
+        $orderby = $args['orderby'];
+        $order = strtoupper( $args['order'] ) === 'ASC' ? 1 : -1;
+
+        if ( $a[$orderby] > $b[$orderby] ) return $order;
+        else if ( $a[$orderby] < $b[$orderby] ) return 0 - $order;
+        else return 0;
     }
 
     function get_items() {
@@ -60,8 +71,14 @@ class NEW_Flink_List_Table extends WP_List_Table {
         foreach ( $flink_data as $f => $link ) {
             $flink_data[$f]['link_date_str'] = date( get_option( 'date_format' ), $link['link_date'] );
         }
-    
-        return empty( $args[ 'search' ] ) ? $flink_data : array_filter( $flink_data, array( $this, "_filter" ) );
+
+        if ( !empty( $args['search'] ) )
+            $flink_data = array_filter( $flink_data, array( $this, '_filter' ) );
+
+        if ( isset( $args['orderby'] ) && isset( $args['order'] ) )
+            usort( $flink_data, array( $this, '_sort' ) );
+
+        return $flink_data;
     }
 
     function get_items_count() {
@@ -94,24 +111,28 @@ class NEW_Flink_List_Table extends WP_List_Table {
     }
 
     function prepare_items() {
-        $paged = isset( $paged ) ? intval( $paged ) : 1;
-        $search = !empty( $_REQUEST['s'] ) ? trim( wp_unslash( $_REQUEST['s'] ) ) : '';
-        
+        $paged = $this->get_items_per_page( 'flink_per_page' );
+
         $args = array(
-            'search'    => $search,
-            'page'      => 10,
+            'page'      => $this->get_pagenum(),
             'number'    => $paged
         );
 
+        if ( isset( $_REQUEST['s'] ) )
+            $args['search'] = trim( wp_unslash( $_REQUEST['s'] ) );
+
+        if ( isset( $_REQUEST['orderby'] ) && isset( $_REQUEST['order'] ) ) {
+			$args['orderby'] = trim( wp_unslash( $_REQUEST['orderby'] ) );
+            $args['order'] = trim( wp_unslash( $_REQUEST['order'] ) );
+        }
+
         $this->callback_args = $args;
 
-        $columns = $this->get_columns();
-        $this->_column_headers = array( $columns, array(), array() );
-        $this->set_pagination_args( array (
+        $this->set_pagination_args( array(
             'total_items' => $this->get_items_count(),
-            'per_page' => 20,
-            'total_pages' => $paged
+            'per_page' => $paged,
         ) );
+
         $this->items = $this->get_items();
     }
 }

@@ -16,7 +16,7 @@ get_header(); ?>
 	            <h5 class="line"><?php printf( __( '查找到匹配结果为: %s 条', 'new' ), $wp_query->found_posts ); ?></h5>
 	            <ul class="block">
 	            <?php while (have_posts()) : the_post(); ?>
-	            <?php get_template_part( 'content', 'category-3' ); ?>
+	            <?php get_template_part( 'content', 'category-itd' ); ?>
 	            <?php endwhile; ?>
 	            </ul>
 	            <?php else : ?>

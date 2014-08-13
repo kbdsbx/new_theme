@@ -41,7 +41,7 @@ $args = array(
 );
 $query = new WP_Query( $args );
 while( $query->have_posts() ) : $query->the_post();
-    get_template_part( 'content', 'category' );
+    get_template_part( 'content', 'category-it' );
 endwhile;
 ?>
                     </ul>

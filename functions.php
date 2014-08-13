@@ -62,12 +62,12 @@ function new_enum_init() {
     $post_types_keys = array_keys( $post_types );
 
     $new_module_type = array(
-        '0' => __( '图文简介', 'new' ),
-        '1' => __( '仅图文', 'new' ),
-        '2' => __( '仅标题和简介', 'new' ),
-        '3' => __( '重点与滚动（纵向）', 'new' ),
-        '4' => __( '重点与滚动（横向）', 'new' ),
-        '5' => __( '幻灯', 'new' ),
+        'itd' => __( '图文简介', 'new' ),
+        'it' => __( '仅图文', 'new' ),
+        'td' => __( '仅标题和简介', 'new' ),
+        'rc' => __( '重点与滚动（纵向）', 'new' ),
+        'rr' => __( '重点与滚动（横向）', 'new' ),
+        's' => __( '幻灯', 'new' ),
     );
 }
 
@@ -477,8 +477,9 @@ add_action( 'customize_register', 'new_custom_color_register' );
  */
 function new_add_css_styles() { 
 	$color_primary = get_option('color_primary');
-    $color_primary_2 = '#' . _filter_empty( dechex( hexdec( $color_primary ) - 0x323333 ), '000000' );
-	
+    // $color_primary_2 = '#' . max( dechex( hexdec( $color_primary ) - 0x323333 ), '0x000000' );
+    // $color_primary_2 = '#' . sprintf( '%06X',  max( hexdec( $color_primary ) - 0x323333, 0 ) );
+	$color_primary_2 = $color_primary;
 ?>
 <style type="text/css">
 .badg,
@@ -516,7 +517,9 @@ h5.line>span,
 input#submit,
 input.post-comment,
 .pager a:hover,
-.pager span.current {
+.pager span.current,
+.navbar .next:hover,
+.navbar .prev:hover {
 background: <?php echo $color_primary; ?>;
 background: -webkit-gradient(linear, 0% 0%, 0% 100%, from(<?php echo $color_primary; ?>), to(<?php echo $color_primary_2; ?>)); /* Safari 4-5, Chrome 1-9 */ 
 background: -webkit-linear-gradient(top, <?php echo $color_primary; ?>, <?php echo $color_primary_2; ?>);/* Safari 5.1, Chrome 10+ */  
@@ -525,7 +528,9 @@ background: -ms-linear-gradient(top, <?php echo $color_primary; ?>, <?php echo $
 background: -o-linear-gradient(top, <?php echo $color_primary; ?>, <?php echo $color_primary_2; ?>);/* Opera 11.10+ */ 
 }
 input#submit:hover,
-input.post-comment:hover {
+input.post-comment:hover,
+.navbar .next:hover,
+.navbar .prev:hover {
 background: <?php echo $color_primary_2; ?>;
 background: -webkit-gradient(linear, 0% 0%, 0% 100%, from(<?php echo $color_primary_2; ?>), to(<?php echo $color_primary; ?>)); /* Safari 4-5, Chrome 1-9 */ 
 background: -webkit-linear-gradient(top, <?php echo $color_primary_2; ?>, <?php echo $color_primary; ?>);/* Safari 5.1, Chrome 10+ */  
@@ -602,10 +607,11 @@ function set_post_views() {
         if ( $post_ID && empty( $post_views ) ) {
             update_field( 'new-article-views', rand( 0, get_option( 'new_theme_heat_limit' ) ), $post_ID );
         }
-        $size = get_field( 'size', $post_ID );
 
-        if ( empty( $size ) ) {
-            $file_path = WP_CONTENT_DIR . '/uploads/' . wp_get_attachment_metadata( get_field( 'file', $post_ID ) )['file'];
+        $size = get_field( 'size', $post_ID );
+        $file = get_field( 'file', $post_ID );
+        if ( empty( $size ) && ! empty( $file ) ) {
+            $file_path = WP_CONTENT_DIR . '/uploads/' . wp_get_attachment_metadata( $file )['file'];
             $file_size = FileSizeConvert( filesize( $file_path ) );
             update_field( 'size', $file_size, $post_ID );
         }
@@ -697,6 +703,30 @@ add_filter( 'the_title', 'new_filter_the_title' );
 /* !filter */
 
 
+/* shortcode */
+
+function new_shortcode_gallery( $atts ) {
+    $atts = shortcode_atts( array(
+        'link'  => '',
+        'ids'   => '',
+        'size'  => 'md',
+    ), $atts );
+    $ids = explode( ',', $atts['ids'] );
+?>
+<div class="flexslider">
+    <ul class="slides">
+<?php foreach( $ids as $id ) : ?>
+        <li><?php echo wp_get_attachment_image( $id, $atts['size'] ); ?></li>
+<?php endforeach; ?>
+    </ul>
+</div>
+<?php
+}
+add_shortcode( 'gallery', 'new_shortcode_gallery' );
+
+/* !shortcode */
+
+
 /* other function */
 
 function new_get_thumbnail_src( $size ) {
@@ -708,6 +738,37 @@ function new_get_rating() {
     $w = get_field( 'new-article-views' ) / _filter_empty_numeric( get_option( 'new_theme_heat_limit' ), 400 );
     $w = $w > 1 ? 100 : $w * 100;
     return $w;
+}
+
+function new_get_gallery_shortcode() {
+    $content = get_the_content();
+    $matches = array();
+    $count = preg_match( '/(\[gallery[\s\S]+?\])/', $content, $matches );
+    if ( $count !== 0 ) {
+        // echo do_shortcode( $matches[0] );
+        $shortcode = $matches[0];
+        if ( strpos( $shortcode, 'size' ) === false ) {
+            $shortcode = str_replace( 'gallery', 'gallery size="xs"', $shortcode );
+        }
+        do_shortcode( $shortcode );
+    }
+    //echo $content;
+}
+
+function _new_sort_modules( $a, $b ) {
+    if ( $a['module_weight'] < $b['module_weight'] ) return -1; 
+    elseif ( $a['module_weight'] > $b['module_weight'] ) return 1; 
+    else return 0;
+}
+function _new_filter_modules( $v ) {
+    if ( $v['module_status'] == 0 ) return false;
+    else return true;
+}
+function new_modules() {
+    $modules_data = get_option( 'modules_data' );
+    usort( $modules_data, '_new_sort_modules' );
+    $modules_data = array_filter( $modules_data, '_new_filter_modules' );
+    return $modules_data;
 }
 
 /* !other function */

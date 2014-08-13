@@ -8,8 +8,8 @@ class NEW_Modules_List_Table extends WP_List_Table {
         parent::__construct( array(
             'plural' => 'modules',
             'singular' => 'module',
-            'screen' => false,
             'ajax' => true,
+            'screen' => 'modules',
         ) );
     }
 
@@ -38,6 +38,8 @@ class NEW_Modules_List_Table extends WP_List_Table {
             'module_date'       => 'module_date',
             'module_weight'     => 'module_weight',
         );
+
+        return $columns;
     }
 
     function get_bulk_actions() {
@@ -52,9 +54,20 @@ class NEW_Modules_List_Table extends WP_List_Table {
 
     function _filter( $v ) {
         $args = $this->callback_args;
+        $search = $args['search'];
         foreach ( $v as $bs ) {
-            if ( strstr( $bs, $args['search'] ) !== false ) return true;
+            if ( strstr( $bs, $search ) !== false || $bs == $search ) return true;
         }
+    }
+
+    function _sort( $a, $b ) {
+        $args = $this->callback_args;
+        $orderby = $args['orderby'];
+        $order = strtoupper( $args['order'] ) === 'ASC' ? 1 : -1;
+
+        if ( $a[$orderby] > $b[$orderby] ) return $order;
+        else if ( $a[$orderby] < $b[$orderby] ) return 0 - $order;
+        else return 0;
     }
 
     function get_items() {
@@ -64,8 +77,13 @@ class NEW_Modules_List_Table extends WP_List_Table {
         foreach( $modules_data as $m => $data ) {
             $modules_data[$m]['modules_date_str'] = date( get_option( 'date_format' ), $data['module_date'] );
         }
+        if ( !empty( $args['search'] ) )
+            $modules_data = array_filter( $modules_data, array( $this, '_filter' ) );
 
-        return empty( $args['search'] ) ? $modules_data : array_filter( $modules_data, array( $this, '_filter' ) );
+        if ( isset( $args['orderby'] ) && isset( $args['order'] ) )
+            usort( $modules_data, array( $this, '_sort' ) );
+
+        return $modules_data;
     }
 
     function get_items_count() {
@@ -111,24 +129,28 @@ class NEW_Modules_List_Table extends WP_List_Table {
     }
 
     function prepare_items() {
-        $paged = isset( $paged ) ? intval( $paged ) : 1;
-        $search = !empty( $_REQUEST['s'] ) ? trim( wp_unslash( $_REQUEST['s'] ) ) : '';
+        $paged = $this->get_items_per_page( 'modules_per_page' );
 
         $args = array(
-            'search'    => $search,
-            'page'      => 10,
-            'number'    =>$paged
+            'page'      => $this->get_pagenum(),
+            'number'    => $paged
         );
+
+        if ( isset( $_REQUEST['s'] ) )
+            $args['search'] = trim( wp_unslash( $_REQUEST['s'] ) );
+
+        if ( isset( $_REQUEST['orderby'] ) && isset( $_REQUEST['order'] ) ) {
+			$args['orderby'] = trim( wp_unslash( $_REQUEST['orderby'] ) );
+            $args['order'] = trim( wp_unslash( $_REQUEST['order'] ) );
+        }
 
         $this->callback_args = $args;
 
-        $columns = $this->get_columns();
-        $this->_column_headers = array( $columns ,array(), array() );
         $this->set_pagination_args( array(
             'total_items' => $this->get_items_count(),
-            'per_page' => 20,
-            'total_pages' => $paged
+            'per_page' => $paged,
         ) );
+
         $this->items = $this->get_items();
     }
 }

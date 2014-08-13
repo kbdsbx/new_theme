@@ -6,8 +6,6 @@
         <span class="rating" title="<?php the_field( 'new-article-views' ); ?>"><span style="width:<?php echo new_get_rating(); ?>%;"></span></span>
     </p>
     <br/>
-    <p>
-        <span><?php echo strip_tags( get_the_excerpt() ); ?></span>
-    </p>
+    <p><?php echo strip_tags( get_the_excerpt() ); ?></p>
 </li>
 

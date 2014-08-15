@@ -118,6 +118,8 @@ class NEW_Modules_List_Table extends WP_List_Table {
             }
         case 'module_type' :
             return $new_module_type[$item[$column_name]];
+        case 'module_name' :
+            return '<a href="' . admin_url() . 'options-general.php?page=modules_page&module_id=' . $item['module_id'] . '">' . $item[$column_name] . '</a>';
         default :
             return $item[$column_name];
         }

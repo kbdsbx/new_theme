@@ -256,7 +256,7 @@ function new_post_type_init() {
                 'category',
                 'post_tag'
             ),
-            'query_var' => 'gallery'
+            'query_var' => false
         )
     );
 
@@ -283,7 +283,7 @@ function new_post_type_init() {
                 'category',
                 'post_tag'
             ),
-            'query_var' => 'resource'
+            'query_var' => false
         )
     );
     // 商品
@@ -309,7 +309,7 @@ function new_post_type_init() {
                 'category',
                 'post_tag'
             ),
-            'query_var' => 'ware'
+            'query_var' => false
         )
     );
 }
@@ -672,7 +672,6 @@ function new_filter_single_template( $template_path ) {
     }
     return $template_path;
 }
-
 add_filter( 'single_template', 'new_filter_single_template' );
 
 
@@ -685,7 +684,6 @@ function new_filter_background_color( $classes ) {
     }
     return $classes;
 }
-
 add_filter( 'body_class', 'new_filter_background_color' );
 
 function new_filter_the_title( $title, $id = null ) {
@@ -697,8 +695,18 @@ function new_filter_the_title( $title, $id = null ) {
     }
     return $title;
 }
-
 add_filter( 'the_title', 'new_filter_the_title' );
+
+/**
+ * 针对中文链接与文章采集防范所设置的固定连接更改
+ */
+function new_filter_permalink( $link ) {
+    if ( preg_match( "/(^[0-9]+$)|([\x80-\xff])/", $link ) )
+        return md5( $link . time() );
+    else
+        return $link;
+}
+add_filter( 'editable_slug', 'new_filter_permalink' );
 
 /* !filter */
 
@@ -771,4 +779,14 @@ function new_modules() {
     return $modules_data;
 }
 
+function new_get_module( $id ) {
+    $modules_data = get_option( 'modules_data' );
+    foreach ( $modules_data as $module ) {
+        if ( $module['module_id'] == $id )
+            return $module;
+    }
+    return false;
+}
+
 /* !other function */
+

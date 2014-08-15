@@ -3,6 +3,10 @@ function new_module_admin() {
     global $new_module_type;
     $module_table = new NEW_Modules_List_Table();
     $module_table->prepare_items();
+
+    if ( isset ( $_REQUEST['module_id'] ) && ( $module = new_get_module( $_REQUEST['module_id'] ) ) !== false ) {
+        extract( $module );
+    }
 ?>
 <div class="wrap">
     <h2><?php _e( '首页模块', 'new' ); ?></h2>
@@ -31,40 +35,41 @@ function new_module_admin() {
 	                <h3><?php _e( '新增首页模块', 'new' ); ?></h3>
                     <form id="addmodule" method="post" action="" class="validate">
                         <input type="hidden" name="page" id="page" value="<?php echo basename( __FILE__ ); ?>" />
-                        <input type="hidden" name="action" value="save" />
+                        <input type="hidden" name="action" value="<?php if ( ! empty( $module ) ) echo 'edit'; else echo 'save'; ?>" />
+                        <input type="hidden" name="module_id" value="<?php if ( isset ( $module_id ) ) echo $module_id; ?>" />
                         <div class="form-field">
                             <label for="module_name"><?php _e( '名称', 'new' ); ?></label>
-                            <input name="module_name" id="module_name" type="text" value="" size="40" aria-required="true" />
+                            <input name="module_name" id="module_name" type="text" value="<?php if ( isset ( $module_name ) ) echo $module_name; ?>" size="40" aria-required="true" />
                             <p><?php _e( '显示模块名称', 'new' ); ?></p>
                         </div>
                         <div class="form-field">
                             <label for="module_category"><?php _e( '分类目录', 'new' );?></label>
                             <!--select name="module_category" id="module_category" aria-required="true"-->
-                            <?php wp_dropdown_categories( array( 'name' => 'module_category', 'id' => 'module_category', 'show_option_all' => __( '全部', 'new' ), 'hide_empty' => '0', 'taxonomy' => 'category' ) ); ?>
+                            <?php wp_dropdown_categories( array( 'name' => 'module_category', 'id' => 'module_category', 'selected' => ( isset ( $module_category ) ? $module_category : 0 ), 'show_option_all' => __( '全部', 'new' ), 'hide_empty' => '0', 'taxonomy' => 'category' ) ); ?>
                             <!--/select-->
                             <p><?php _e( '选择显示某一分类目录下的文章', 'new' );?></p>
                         </div>
                         <div class="form-field">
                             <label for="module_post_count"><?php _e( '显示文章数量', 'new' ); ?></label>
-                            <input name="module_post_count" id="module_post_count" type="text" value="" size="40" aria-required="true" />
+                            <input name="module_post_count" id="module_post_count" type="text" value="<?php if ( isset ( $module_post_count ) ) echo $module_post_count; ?>" size="40" aria-required="true" />
                             <p><?php _e( '显示文章数量', 'new' ); ?></p>
                         </div>
                         <div class="form-field">
                             <label for="module_type"><?php _e( '显示类型', 'new' ); ?></label>
                             <select name="module_type" id="module_type" aria-required="true">
                             <?php foreach( $new_module_type as $key => $type ) : ?>
-                                <option value="<?php echo $key; ?>"><?php echo $type; ?></option>
+                                <option value="<?php echo $key; ?>" <?php if ( isset( $module_type ) && $module_type == $type ) echo 'selected="selected"'; ?>><?php echo $type; ?></option>
                             <?php endforeach; ?>
                             </select>
                             <p><?php _e( '文章的显示类型，包括图文显示，仅文字，滚动，等', 'new' ); ?></p>
                         </div>
                         <div class="form-field">
                             <label for="module_weight"><?php _e( '模块权重', 'new' ); ?></label>
-                            <input name="module_weight" id="module_weight" type="text" value="" size="40" aria-required="true" />
+                            <input name="module_weight" id="module_weight" type="text" value="<?php if ( isset ( $module_weight ) ) echo $module_weight; ?>" size="40" aria-required="true" />
                             <p><?php _e( '模块权重（数字），权重越小所显示的位置越靠前', 'new' ); ?></p>
                         </div>
                         <p>
-                            <input type="submit" name="submit" id="submit" class="button button-primary" value="<?php _e( '新增模块', 'new' ); ?>" />
+                            <input type="submit" name="submit" id="submit" class="button button-primary" value="<?php if ( ! empty( $module ) ) _e( '修改模块', 'new' ); else _e( '新增模块', 'new' ); ?>" />
                         </p>
                     </form>
                 </div>
@@ -81,19 +86,31 @@ function new_modules_page() {
         
         if ( isset( $_REQUEST['action'] ) ) {
 	        switch ( $_REQUEST['action'] ) {
+            case 'edit':
 	        case 'save':
+                if ( isset( $_REQUEST['module_id'] ) && ! empty( $_REQUEST['module_id'] ) ) {
+                    foreach ( $modules_data as $k => $module ) {
+                        if ( $module['module_id'] == $_REQUEST['module_id'] ) {
+                            unset( $modules_data[$k] );
+                        }
+                    }
+                    unset ( $_REQUEST['module_id'] );
+                }
+
 	            $module_name = sanitize_text_field( $_REQUEST['module_name'] );
 	            $module_category = esc_attr( $_REQUEST['module_category'] );
 	            $module_post_count = esc_attr( $_REQUEST['module_post_count'] );
 	            $module_type = esc_attr( $_REQUEST['module_type'] );
 	            $module_weight = esc_attr( $_REQUEST['module_weight'] );
 	            $module_status = 1;
-	            $module_date = time();
+                $module_date = time();
+                $module_id = md5( $module_name );
 	
-	            if ( isset( $module_name) && isset( $module_category ) ) {
+	            if ( isset( $module_name ) && isset( $module_category ) ) {
 	                if ( empty( $modules_data ) ) $modules_data = array();
 	
 	                $modules_data[ $module_name ] = array(
+                        'module_id'         => $module_id,
 	                    'module_name'       => $module_name,
 	                    'module_category'   => $module_category,
 	                    'module_post_count' => _filter_empty( $module_post_count, 4 ),
@@ -141,5 +158,7 @@ function new_modules_page() {
     }
     add_options_page( 'new_modules_options', __( '首页模块', 'new' ), 'manage_options', basename( __FILE__, '.php' ), 'new_module_admin' );
 }
+
+
 add_action( 'admin_menu', 'new_modules_page' );
 ?>

@@ -5,6 +5,9 @@ DEFINE( 'classes_uri', get_template_directory_uri() . '/classes' );
 DEFINE( 'plugins', get_template_directory() . '/plugins' );
 DEFINE( 'classes', get_template_directory() . '/classes' );
 
+require 'advanced-custom-fields/acf.php';
+define( 'ACF_LITE', false );
+
 require plugins . '/widget_function.php';
 
 require plugins . '/slider_widget.php';
@@ -256,7 +259,10 @@ function new_post_type_init() {
                 'category',
                 'post_tag'
             ),
-            'query_var' => false
+            'query_var' => false,
+            'rewrite' => array(
+                'with_front' => false,
+            )
         )
     );
 
@@ -283,7 +289,10 @@ function new_post_type_init() {
                 'category',
                 'post_tag'
             ),
-            'query_var' => false
+            'query_var' => false,
+            'rewrite' => array(
+                'with_front' => false,
+            )
         )
     );
     // 商品
@@ -309,7 +318,10 @@ function new_post_type_init() {
                 'category',
                 'post_tag'
             ),
-            'query_var' => false
+            'query_var' => false,
+            'rewrite' => array(
+                'with_front' => false,
+            )
         )
     );
 }
@@ -447,7 +459,7 @@ function new_custom_color_register( $wp_customize ) {
 	$colors[] = array(
 		'slug'=>'color_primary', 
 		'default' => '#ea4748',
-		'label' => __('主色调', 'new')
+		'label' => __( '主色调', 'new' )
 	);
 	
 	foreach( $colors as $color ) {
@@ -613,7 +625,7 @@ function set_post_views() {
         if ( empty( $size ) && ! empty( $file ) ) {
             $file_path = WP_CONTENT_DIR . '/uploads/' . wp_get_attachment_metadata( $file )['file'];
             $file_size = FileSizeConvert( filesize( $file_path ) );
-            update_field( 'size', $file_size, $post_ID );
+            update_field( 'field_53e2e24507824', $file_size, $post_ID );
         }
     }
 }
@@ -737,11 +749,17 @@ add_shortcode( 'gallery', 'new_shortcode_gallery' );
 
 /* other function */
 
+// in the loop
 function new_get_thumbnail_src( $size ) {
-    $src = wp_get_attachment_image_src( '' == get_post_thumbnail_id() ? get_option( 'new_theme_default_thumbnail_id' ) : get_post_thumbnail_id(), $size )[0]; 
-    return $src;
+    return wp_get_attachment_image_src( '' == get_post_thumbnail_id() ? get_option( 'new_theme_default_thumbnail_id' ) : get_post_thumbnail_id(), $size )[0]; 
 }
 
+// in the loop
+function new_get_thumbnail_alt() {
+    return strip_tags( get_post_meta( get_post_thumbnail_id(), '_wp_attachment_image_alt', true ) );
+}
+
+// in the loop
 function new_get_rating() {
     $w = get_field( 'new-article-views' ) / _filter_empty_numeric( get_option( 'new_theme_heat_limit' ), 400 );
     $w = $w > 1 ? 100 : $w * 100;

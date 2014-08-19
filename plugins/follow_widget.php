@@ -21,7 +21,7 @@ class WP_Widget_follow extends WP_Widget {
     <?php for( $i = 0; $i < $count; $i++ ) : $img = $follow_img[$i]; ?>
     <li>
         <div>
-        <a href="javascript:void(0)" class="follow" style="background-color:<?php echo _filter_object_empty( $img, 'color', '' ); ?>;"><img src="<?php echo wp_get_attachment_image_src( $img['src'], 'full' )[0]; ?>" alt="<?php echo $img['name']; ?>" /></a>
+        <a href="javascript:void(0)" class="follow" style="background-color:<?php echo _filter_object_empty( $img, 'color', '' ); ?>;"><img src="<?php echo wp_get_attachment_image_src( $img['src'], 'full' )[0]; ?>" alt="<?php echo $img['name']; ?>" title="<?php echo $img['name']; ?>" /></a>
         <a href="javascript:void(0)" class="hover" ><img class="hover" src="<?php echo wp_get_attachment_image_src( $img['qrcode'], 'full' )[0];  ?>" /></a>
         </div>
         <span><?php echo $img['name']; ?></span>

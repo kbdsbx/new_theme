@@ -44,7 +44,7 @@ class WP_Widget_Slider extends WP_Widget {
 				<a href="<?php the_permalink(); ?>">
                 <?php if ( has_post_thumbnail() ) : ?>
                 <!-- width="<?php echo $post_size[0]; ?>" height="<?php echo $post_size[1]; ?>"  -->
-					<img src="<?php echo new_get_thumbnail_src( $size ); ?>" alt="<?php the_title(); ?>" />
+					<img src="<?php echo new_get_thumbnail_src( $size ); ?>" alt="<?php echo new_get_thumbnail_alt(); ?>" title="<?php echo new_get_thumbnail_alt(); ?>" />
                 <?php endif; ?>
 				</a>
 				<p class="flex-caption">

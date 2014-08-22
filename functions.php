@@ -1,7 +1,9 @@
 <?php
 
+DEFINE( 'template_uri', get_template_directory_uri() );
 DEFINE( 'plugins_uri', get_template_directory_uri() . '/plugins' );
 DEFINE( 'classes_uri', get_template_directory_uri() . '/classes' );
+DEFINE( 'template', get_template_directory() );
 DEFINE( 'plugins', get_template_directory() . '/plugins' );
 DEFINE( 'classes', get_template_directory() . '/classes' );
 
@@ -361,37 +363,56 @@ add_action( 'after_setup_theme', 'new_setup' );
 /**
  * 添加模板样式及脚本
  */
-function new_scripts_styles() {
-    wp_enqueue_style( 'google-fonts', 'http://fonts.useso.com/css?family=Merriweather+Sans:400,300,700,800', array(), null );
-	wp_enqueue_style( 'new-style-superfish', get_template_directory_uri() . '/css/superfish.css' );
-	wp_enqueue_style( 'new-style-fontello', get_template_directory_uri() . '/css/fontello/fontello.css' );
-	wp_enqueue_style( 'new-style-flexslider', get_template_directory_uri() . '/css/flexslider.css' );
-	wp_enqueue_style( 'new-style-ui', get_template_directory_uri() . '/css/ui.css' );
-	wp_enqueue_style( 'new-style-base', get_template_directory_uri() . '/css/base.css' );
-	wp_enqueue_style( 'new-style-style', get_template_directory_uri() . '/css/style.css' );
-	wp_enqueue_style( 'new-style-960', get_template_directory_uri() . '/css/960.css' );
-	wp_enqueue_style( 'new-style-new', get_template_directory_uri() . '/css/new.css' );
-	wp_enqueue_style( 'new-style-devices-1000', get_template_directory_uri() . '/css/devices/1000.css' );
-	wp_enqueue_style( 'new-style-devices-479', get_template_directory_uri() . '/css/devices/479.css' );
-	wp_enqueue_style( 'new-style-devices-767', get_template_directory_uri() . '/css/devices/767.css' );
-
-
-	wp_enqueue_script( 'new-jquery', get_template_directory_uri() . '/js/jquery.js', array(), '1.9.1' );
-	wp_enqueue_script( 'new-easing', get_template_directory_uri() . '/js/easing.min.js', array(), '1.0' );
-	wp_enqueue_script( 'new-1.8.2', get_template_directory_uri() . '/js/1.8.2.min.js', array(), '1.0' );
-	wp_enqueue_script( 'new-ui', get_template_directory_uri() . '/js/ui.js', array(), '1.0' );
-	wp_enqueue_script( 'new-carouFreSel', get_template_directory_uri() . '/js/carouFredSel.js', array(), '1.0' );
-	wp_enqueue_script( 'new-supserfish', get_template_directory_uri() . '/js/superfish.js', array(), '1.0' );
-	wp_enqueue_script( 'new-customM', get_template_directory_uri() . '/js/customM.js', array(), '1.0' );
-	wp_enqueue_script( 'new-flexslider', get_template_directory_uri() . '/js/flexslider-min.js', array(), '1.0' );
-	wp_enqueue_script( 'new-tweetable', get_template_directory_uri() . '/js/tweetable.js', array(), '1.0' );
-	wp_enqueue_script( 'new-timeago', get_template_directory_uri() . '/js/timeago.js', array(), '1.0' );
-	wp_enqueue_script( 'new-jflickrfeed', get_template_directory_uri() . '/js/jflickrfeed.min.js', array(), '1.0' );
-	wp_enqueue_script( 'new-mobilemenu', get_template_directory_uri() . '/js/mobilemenu.js', array(), '1.0' );
-	wp_enqueue_script( 'new-new', get_template_directory_uri() . '/js/new.js', array(), '1.0' );
-	wp_enqueue_script( 'new-passion', get_template_directory_uri() . '/js/mypassion.js', array(), '1.0' );
+function new_add_styles() {
+    // 仅单页（page / singular）不使用模板
+    if ( is_home()
+      || is_preview()
+      || is_archive()
+      || is_attachment()
+      || is_author()
+      || is_category()
+      || is_search()
+      || is_single()
+      || is_tag() ) {
+        wp_enqueue_style( 'google-fonts', 'http://fonts.useso.com/css?family=Merriweather+Sans:400,300,700,800', array(), null );
+        wp_enqueue_style( 'new-style', get_stylesheet_uri(), array(), null );
+        if ( wp_style_is( 'jquery-ui' ) ) {
+        wp_dequeue_style( 'jquery-ui' );
+        }
+    }
+    if ( is_singular()
+      || is_page() ) {
+        
+    }
 }
-add_action( 'wp_enqueue_scripts', 'new_scripts_styles' );
+add_action( 'wp_enqueue_scripts', 'new_add_styles' );
+
+function new_add_scripts() {
+    if ( is_home()
+      || is_preview()
+      || is_archive()
+      || is_attachment()
+      || is_author()
+      || is_category()
+      || is_search()
+      || is_single()
+      || is_tag() ) {
+	wp_enqueue_script( 'new-jquery', get_template_directory_uri() . '/js/jquery.js', array(), '1.9.1' );
+	wp_enqueue_script( 'new-ui', get_template_directory_uri() . '/js/ui.js', array(), '1.10.2' );
+	wp_enqueue_script( 'new-carouFreSel', get_template_directory_uri() . '/js/carouFredSel.js', array(), '6.0.4' );
+	wp_enqueue_script( 'new-supserfish', get_template_directory_uri() . '/js/superfish.js', array(), '1.4.8' );
+	wp_enqueue_script( 'new-customM', get_template_directory_uri() . '/js/customM.js', array(), '2.6.2' );
+	wp_enqueue_script( 'new-flexslider', get_template_directory_uri() . '/js/flexslider-min.js', array(), '2.1' );
+	wp_enqueue_script( 'new-mobilemenu', get_template_directory_uri() . '/js/mobilemenu.js', array(), '1.0' );
+    wp_enqueue_script( 'new', get_template_directory_uri() . '/js/new.js', array(), '1.0' );
+    }
+
+    if ( is_singular()
+      || is_page() ) {
+        
+    }
+}
+add_action( 'wp_enqueue_scripts', 'new_add_scripts' );
 
 /**
  * 小部件注册

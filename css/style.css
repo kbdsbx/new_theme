@@ -20,6 +20,7 @@
 		5)  FOOTER
 
 /**************************************************/
+        
 body{
 	/* background:#CCC url(../img/bg.jpg) no-repeat fixed center top; */
 	/* background-size:cover; */
@@ -1489,3 +1490,4 @@ p.copyright a {
 div#tabs{
     margin-top: -18px;
 }
+

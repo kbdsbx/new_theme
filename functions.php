@@ -40,10 +40,28 @@ add_action( 'admin_enqueue_scripts', 'new_filter_style_init' );
 add_action( 'wp_enqueue_scripts', 'new_filter_style_init' );
 
 /**
+ * 使用smtp发邮件
+ */
+
+function new_mail_smtp( $phpmailer ) {
+
+    $phpmailer->IsSMTP();
+    $phpmailer->From = "kbdsbx@qq.com";
+    $phpmailer->SMTPAuth = true;//启用SMTPAuth服务
+    $phpmailer->Port = 25;//MTP邮件发送端口，这个和下面的对应，如果这里填写25，则下面为空白
+    $phpmailer->SMTPSecure = "";//是否验证 ssl，这个和上面的对应，如果不填写，则上面的端口须为25
+    $phpmailer->Host = "smtp.qq.com";//邮箱的SMTP服务器地址，如果是QQ的则为：smtp.exmail.qq.com
+    $phpmailer->Username = "kbdsbx@qq.com";//你的邮箱地址
+    $phpmailer->Password ="mtzk9b";//你的邮箱登陆密码
+}
+add_action( 'phpmailer_init', 'new_mail_smtp' );
+
+/**
  * 全局变量
  * @size_enum 自定义图片规格
  * @post_types 自定义文章类型
  * @post_types_keys 文章类型部分API调用需要
+ * @new_module_type 首页模块类型
  */
 function new_enum_init() {
 	
@@ -342,7 +360,7 @@ add_action( 'init', 'new_post_type_init' );
 function new_setup() {
 	load_theme_textdomain( 'new', get_template_directory() . '/languages' );
 	add_theme_support( 'custom-header' );
-	add_theme_support( 'custom-background' );
+    add_theme_support( 'custom-background' );
 	add_theme_support( 'post-thumbnails' );
     $args = array(
         'default-color' => '',
@@ -377,12 +395,12 @@ function new_add_styles() {
         wp_enqueue_style( 'google-fonts', 'http://fonts.useso.com/css?family=Merriweather+Sans:400,300,700,800', array(), null );
         wp_enqueue_style( 'new-style', get_stylesheet_uri(), array(), null );
         if ( wp_style_is( 'jquery-ui' ) ) {
-        wp_dequeue_style( 'jquery-ui' );
+            wp_dequeue_style( 'jquery-ui' );
         }
     }
     if ( is_singular()
       || is_page() ) {
-        
+        wp_enqueue_style( 'member-style', get_template_directory_uri() . '/css/member.style.css', array(), null );
     }
 }
 add_action( 'wp_enqueue_scripts', 'new_add_styles' );
@@ -397,19 +415,19 @@ function new_add_scripts() {
       || is_search()
       || is_single()
       || is_tag() ) {
-	wp_enqueue_script( 'new-jquery', get_template_directory_uri() . '/js/jquery.js', array(), '1.9.1' );
-	wp_enqueue_script( 'new-ui', get_template_directory_uri() . '/js/ui.js', array(), '1.10.2' );
-	wp_enqueue_script( 'new-carouFreSel', get_template_directory_uri() . '/js/carouFredSel.js', array(), '6.0.4' );
-	wp_enqueue_script( 'new-supserfish', get_template_directory_uri() . '/js/superfish.js', array(), '1.4.8' );
-	wp_enqueue_script( 'new-customM', get_template_directory_uri() . '/js/customM.js', array(), '2.6.2' );
-	wp_enqueue_script( 'new-flexslider', get_template_directory_uri() . '/js/flexslider-min.js', array(), '2.1' );
-	wp_enqueue_script( 'new-mobilemenu', get_template_directory_uri() . '/js/mobilemenu.js', array(), '1.0' );
-    wp_enqueue_script( 'new', get_template_directory_uri() . '/js/new.js', array(), '1.0' );
+	wp_enqueue_script( 'new-jquery', get_template_directory_uri() . '/js/new/jquery.js', array(), '1.9.1' );
+	wp_enqueue_script( 'new-ui', get_template_directory_uri() . '/js/new/ui.js', array(), '1.10.2' );
+	wp_enqueue_script( 'new-carouFreSel', get_template_directory_uri() . '/js/new/carouFredSel.js', array(), '6.0.4' );
+	wp_enqueue_script( 'new-supserfish', get_template_directory_uri() . '/js/new/superfish.js', array(), '1.4.8' );
+	wp_enqueue_script( 'new-customM', get_template_directory_uri() . '/js/new/customM.js', array(), '2.6.2' );
+	wp_enqueue_script( 'new-flexslider', get_template_directory_uri() . '/js/new/flexslider-min.js', array(), '2.1' );
+	wp_enqueue_script( 'new-mobilemenu', get_template_directory_uri() . '/js/new/mobilemenu.js', array(), '1.0' );
+    wp_enqueue_script( 'new', get_template_directory_uri() . '/js/new/new.js', array(), '1.0' );
     }
 
     if ( is_singular()
       || is_page() ) {
-        
+
     }
 }
 add_action( 'wp_enqueue_scripts', 'new_add_scripts' );
@@ -657,6 +675,24 @@ add_action('save_post', 'set_post_views');
 
 
 /* filter */
+
+function new_filter_retrieve_password_message( $msg, $key ) {
+	if ( strpos($_POST['user_login'], '@') ) {
+		$user_data = get_user_by('email', trim($_POST['user_login']));
+	} else {
+		$login = trim($_POST['user_login']);
+		$user_data = get_user_by('login', $login);
+	}
+	$user_login = $user_data->user_login;
+	$msg = __('有人要求重设如下帐号的密码：'). "\r\n\r\n";
+	$msg .= network_site_url() . "\r\n\r\n";
+	$msg .= sprintf(__('用户名：%s'), $user_login) . "\r\n\r\n";
+	$msg .= __('若这不是您本人要求的，请忽略本邮件，一切如常。') . "\r\n\r\n";
+	$msg .= __('要重置您的密码，请打开下面的链接：'). "\r\n\r\n";
+	$msg .= network_site_url("login?action=rp&key=$key&login=" . rawurlencode($user_login), 'login') ;
+	return $msg;
+}
+add_filter( 'retrieve_password_message', 'new_filter_retrieve_password_message', null, 2 );
 
 /**
  * 导航样式设置

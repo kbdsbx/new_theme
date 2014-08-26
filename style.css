@@ -7,13 +7,13 @@
  */
 
 /*@import url( "css/reset.css" );*/
-@import url( "css/flexslider.css" );
-@import url( "css/ui.css" );
-@import url( "css/base.css" );
-@import url( "css/style.css" );
-@import url( "css/new.css" );
+@import url( "css/new/flexslider.css" );
+@import url( "css/new/ui.css" );
+@import url( "css/new/base.css" );
+@import url( "css/new/style.css" );
+@import url( "css/new/new.css" );
 
-@import url( "css/960.css" );
-@import url( "css/devices/1000.css" );
-@import url( "css/devices/767.css" );
-@import url( "css/devices/479.css" );
+@import url( "css/new/960.css" );
+@import url( "css/new/devices/1000.css" );
+@import url( "css/new/devices/767.css" );
+@import url( "css/new/devices/479.css" );

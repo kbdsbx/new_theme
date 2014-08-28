@@ -1,21 +1,22 @@
 <!DOCTYPE html>
 <html <?php language_attributes(); ?>>
 <head>
-    <meta http-equiv="Content_Type" content="text/html; charset=<?php bloginfo( 'charset' ); ?>" />
+    <meta http-equiv="Content-Type" content="text/html; charset=<?php bloginfo( 'charset' ); ?>" />
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
     <meta name="keywords" content="<?php bloginfo( 'keyword' ); ?>" />
     <meta name="description" content="<?php bloginfo( 'description' ); ?>" />
     <title><?php wp_title( '|', true, 'right' ); ?></title>
     <?php wp_head(); ?>
     <!-- basic styles -->
+    <link rel="stylesheet" href="<?php echo template_uri; ?>/css/member.style.css" />
     <!--[if IE 7]>
-    <link rel="stylesheet" href="css/member/font-awesome-ie7.min.css" />
+    <link rel="stylesheet" href="<?php echo template_uri; ?>/css/member/font-awesome-ie7.min.css" />
     <![endif]-->
 
     <!-- page specific plugin styles -->
 
     <!--[if lte IE 8]>
-    <link rel="stylesheet" href="css/member/ace-ie.min.css" />
+    <link rel="stylesheet" href="<?php echo template_uri; ?>/css/member/ace-ie.min.css" />
     <![endif]-->
 
     <!-- inline styles related to this page -->
@@ -23,8 +24,8 @@
     <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
 
     <!--[if lt IE 9]>
-    <script src="js/member/html5shiv.js"></script>
-    <script src="js/member/respond.min.js"></script>
+    <script src="<?php echo template_uri; ?>/js/member/html5shiv.js"></script>
+    <script src="<?php echo template_uri; ?>/js/member/respond.min.js"></script>
     <![endif]-->
 </head>
 <body <?php body_class( 'login-layout' ); ?>>
@@ -53,6 +54,9 @@
                                                <h4 class="header blue lighter bigger">
                                                 <i class="icon-coffee green"></i><?php _e( '登陆' ,'new' ); ?>
                                             </h4>
+
+                                            <div class="space-6"></div>
+                                            <p><?php _e( '请输入您的登入账户', 'new' ); ?></p>
 
                                             <form method="post" action="">
                                                 <fieldset>
@@ -216,60 +220,8 @@
                                             </h4>
 
                                             <div class="space-6"></div>
-                                            <p><?php _e( '请输入您的信息', 'new' ); ?>:</p>
-
-                                            <form>
-                                                <fieldset>
-<?php echo do_shortcode( '[wpuf_profile type="registration" id="263"]' ); ?>
-                                                    <label class="block clearfix">
-                                                        <span class="block input-icon input-icon-right">
-                                                            <input type="email" class="form-control" placeholder="Email" />
-                                                            <i class="icon-envelope"></i>
-                                                        </span>
-                                                    </label>
-
-                                                    <label class="block clearfix">
-                                                        <span class="block input-icon input-icon-right">
-                                                            <input type="text" class="form-control" placeholder="Username" />
-                                                            <i class="icon-user"></i>
-                                                        </span>
-                                                    </label>
-
-                                                    <label class="block clearfix">
-                                                        <span class="block input-icon input-icon-right">
-                                                            <input type="password" class="form-control" placeholder="Password" />
-                                                            <i class="icon-lock"></i>
-                                                        </span>
-                                                    </label>
-
-                                                    <label class="block clearfix">
-                                                        <span class="block input-icon input-icon-right">
-                                                            <input type="password" class="form-control" placeholder="Repeat password" />
-                                                            <i class="icon-retweet"></i>
-                                                        </span>
-                                                    </label>
-
-                                                    <label class="block">
-                                                        <input type="checkbox" class="ace" />
-                                                        <span class="lbl">
-                                                            I accept the
-                                                            <a href="#">User Agreement</a>
-                                                        </span>
-                                                    </label>
-
-                                                    <div class="space-24"></div>
-
-                                                    <div class="clearfix">
-                                                        <button type="reset" class="width-30 pull-left btn btn-sm">
-                                                            <i class="icon-refresh"></i><?php _e( '重置', 'new' ); ?>
-                                                        </button>
-
-                                                        <button type="button" class="width-65 pull-right btn btn-sm btn-success">
-                                                            <?php _e( 'Register' ); ?><i class="icon-arrow-right icon-on-right"></i>
-                                                        </button>
-                                                    </div>
-                                                </fieldset>
-                                            </form>
+                                            <p><?php _e( '请输入您的注册信息', 'new' ); ?></p>
+                                            <?php echo do_shortcode( '[wpuf_profile type="registration" id="263"]' ); ?>
                                         </div>
 
                                         <div class="toolbar center">

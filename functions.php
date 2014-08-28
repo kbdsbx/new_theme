@@ -400,7 +400,6 @@ function new_add_styles() {
     }
     if ( is_singular()
       || is_page() ) {
-        wp_enqueue_style( 'member-style', get_template_directory_uri() . '/css/member.style.css', array(), null );
     }
 }
 add_action( 'wp_enqueue_scripts', 'new_add_styles' );
@@ -427,7 +426,6 @@ function new_add_scripts() {
 
     if ( is_singular()
       || is_page() ) {
-
     }
 }
 add_action( 'wp_enqueue_scripts', 'new_add_scripts' );
@@ -776,6 +774,41 @@ function new_filter_permalink( $link ) {
         return $link;
 }
 add_filter( 'editable_slug', 'new_filter_permalink' );
+
+// wpuf
+
+function new_wpuf_filter_post_status( $show_status, $status ) {
+    switch ( $status ) {
+    case 'publish':
+        $title = __( '已发布', 'new' );
+        $fontcolor = "#33CC33";
+        $icon = "icon-ok-circle";
+        break;
+    case 'draft':
+        $title = __( '草稿', 'new' );
+        $fontcolor = "#bbbbbb";
+        $icon = "icon-file-alt";
+        break;
+    case 'pending':
+        $title = __( '等待审核', 'new' );
+        $fontcolor = "#C00202";
+        $icon = "icon-question-sign";
+        break;
+    case 'future':
+        $title = __( '定时发布', 'new' );
+        $fontcolor = "#bbbbbb";
+        $icon = "icon-time";
+        break;
+    case 'private':
+        $title = __( '私人', 'new' );
+        $fontcolor = "#bbbbbb";
+        $icon = "icon-lock";
+        break;
+    }
+    $show_status = '<span style="color:' . $fontcolor . ';"><i class="' . $icon . '"></i>&nbsp;&nbsp;' . $title . '</span>';
+    return $show_status;
+}
+add_filter( 'wpuf_show_post_status', 'new_wpuf_filter_post_status', 10, 2 );
 
 /* !filter */
 

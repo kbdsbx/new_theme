@@ -1,24 +1,3 @@
-<div class="main-content">
-    <div class="breadcrumbs breadcrumbs-fixed" id="breadcrumbs">
-        <ul class="breadcrumb">
-            <li><i class="icon-home home-icon"></i><?php _e( '主页', 'new' ); ?></li>
-            <li class="active"><?php _e( '文章列表', 'new' ); ?></li>
-        </ul>
-        <div class="nav-search" id="nav-search">
-			<form class="form-search">
-				<span class="input-icon">
-                    <input type="text" placeholder="<?php _e( '搜索', 'new' ); ?>" class="nav-search-input" id="nav-search-input" autocomplete="off">
-					<i class="icon-search nav-search-icon"></i>
-				</span>
-			</form>
-		</div>
-    </div>
-    <div class="page-content">
-        <div class="page-header">
-            <h1><?php _e( '文章列表', 'new' ); ?></h1>
-        </div>
-        <div class="row">
-            <div class="col-xs-12 infobox-container">
                 <div class="infobox infobox-green">
 			        <div class="infobox-icon">
 						<i class="icon-file-alt"></i>
@@ -46,11 +25,7 @@ foreach( $dashboard_query->posts as $post ) {
                         <div class="infobox-content"><?php _e( 'Comments' ); ?></div>
 					</div>
                 </div>
-            </div>
-        </div>
-        <div class="space-6"></div>
-        <div class="row">
-            <div class="col-xs-12">
+                <div class="space-6"></div>
 <?php if ( $dashboard_query->have_posts() ) : ?>
                 <div class="table-responsive">
     <?php
@@ -190,7 +165,3 @@ foreach( $dashboard_query->posts as $post ) {
                 <div class="well well-sm"> <?php printf( __( '您还没有创建%s。', 'new' ), $post_type_obj->label ); ?> </div>
                 <?php do_action( 'wpuf_dashboard_nopost', $userdata->ID, $post_type_obj ); ?>
 <?php endif; ?>
-            </div>
-        </div>
-    </div>
-</div>

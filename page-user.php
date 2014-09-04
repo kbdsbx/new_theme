@@ -8,7 +8,7 @@ get_header( 'user' ) ?>
     <div class="breadcrumbs breadcrumbs-fixed" id="breadcrumbs">
         <ul class="breadcrumb">
             <li><i class="icon-home home-icon"></i><?php _e( '主页', 'new' ); ?></li>
-            <li class="active"><?php _e( '投稿', 'new' ); ?></li>
+            <li class="active"><?php the_title(); ?></li>
         </ul>
         <div class="nav-search" id="nav-search">
 			<form class="form-search">
@@ -21,7 +21,7 @@ get_header( 'user' ) ?>
     </div>
     <div class="page-content">
         <div class="page-header">
-            <h1><?php _e( '投稿', 'new' ); ?></h1>
+            <h1><?php the_title(); ?></h1>
         </div>
         <div class="row">
             <div class="col-xs-12">
@@ -37,5 +37,3 @@ while( have_posts() ) {
 </div>
 
 <?php get_footer( 'user' ); ?>
-
-

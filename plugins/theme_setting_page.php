@@ -20,7 +20,7 @@ function new_theme_setting_admin() {
                 <td>
                     <fieldset>
                         <textarea name="new_theme_license" rows="3" cols="35" id="new_theme_license" class="large-text code"><?php form_option( 'new_theme_license' ); ?></textarea>
-                        <p><?php _e( '显示关于本网站的ICP备案信息', 'new' ); ?></p>
+                        <p><?php _e( '显示关于本网站的声明', 'new' ); ?></p>
                     </fieldset>
                 </td>
             </tr>
@@ -99,6 +99,6 @@ function new_theme_setting_page() {
         update_option( 'new_theme_heat_limit', $new_theme_heat_limit );
     }
 
-    add_theme_page( 'new_theme_setting', __( '主题设置', 'new' ), 'manage_options', basename( __FILE__ ), 'new_theme_setting_admin' );
+    add_options_page( 'new_theme_setting', __( '主题设置', 'new' ), 'manage_options', basename( __FILE__ ), 'new_theme_setting_admin' );
 }
 add_action( 'admin_menu', 'new_theme_setting_page' );

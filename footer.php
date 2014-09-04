@@ -16,7 +16,7 @@
 					            </p>
 					        </div>
 					        <br />
-                            <p class="copyright"><?php echo get_option( 'new_theme_license' ); ?></p>
+                            <p class="copyright"><?php echo get_option( 'new_theme_license' ); ?><?php $icp_num = get_option( 'zh_cn_l10n_icp_num' ); if ( ! empty( $icp_num ) ) echo __( 'ICP备案号: ', 'new' ) . $icp_num; ?></p>
 					    </div>
 					</div><!-- / Footer -->
 				</div><!-- end of controller2 -->

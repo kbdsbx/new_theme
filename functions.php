@@ -25,24 +25,23 @@ require plugins . '/theme_setting_page.php';
 require_once classes . '/class-new-flink-list-table.php';
 require_once classes . '/class-new-comment-walker.php';
 require_once classes . '/class-new-modules-list-table.php';
+require_once classes . '/class-new-walker-category-radiolist.php';
 
 /* init */
 
 /**
- * 关闭google fonts api，或启用360源 
+ * 关闭google fonts / ajax apis，或启用360(useso)源 
  */
-function new_filter_style_init() {
-    wp_deregister_style( 'open-sans' );
-    wp_register_style( 'open-sans', false );
+function new_filter_style_init( $src ) {
+    $src = preg_replace( '/([a-z]+?)\\.googleapis\\.com/', '$1.useso.com', $src );
+    return $src;
 }
-
-add_action( 'admin_enqueue_scripts', 'new_filter_style_init' );
-add_action( 'wp_enqueue_scripts', 'new_filter_style_init' );
+add_filter( 'script_loader_src', 'new_filter_style_init' );
+add_filter( 'style_loader_src', 'new_filter_style_init' );
 
 /**
- * 使用smtp发邮件
+ * 使用smtp发送邮件
  */
-
 function new_mail_smtp( $phpmailer ) {
 
     $phpmailer->IsSMTP();
@@ -57,11 +56,12 @@ function new_mail_smtp( $phpmailer ) {
 add_action( 'phpmailer_init', 'new_mail_smtp' );
 
 /**
- * 全局变量
- * @size_enum 自定义图片规格
- * @post_types 自定义文章类型
- * @post_types_keys 文章类型部分API调用需要
- * @new_module_type 首页模块类型
+ * 初始化全局变量
+ *
+ * @global array $size_enum 自定义图片规格
+ * @global array $post_types 自定义文章类型
+ * @global array $post_types_keys 文章类型部分API调用需要
+ * @global array $new_module_type 首页模块类型
  */
 function new_enum_init() {
 	
@@ -81,7 +81,12 @@ function new_enum_init() {
 		add_image_size( $size_key, $size[0], $size[1], true );
 	}
 
-    $post_types = array( 'post' => __( '文章', 'new' ), 'page' => __( '页面', 'new' ), 'gallery' => __( '图集', 'new' ), 'resource' => __( '资源', 'new' ), 'ware' => __( '商品', 'new' ) );
+    $post_types = array( 
+        'post' => __( '文章', 'new' ), 
+        'gallery' => __( '图集', 'new' ), 
+        'resource' => __( '资源', 'new' ), 
+        'ware' => __( '商品', 'new' ) 
+    );
     $post_types_keys = array_keys( $post_types );
 
     $new_module_type = array(
@@ -282,7 +287,8 @@ function new_post_type_init() {
             'query_var' => false,
             'rewrite' => array(
                 'with_front' => false,
-            )
+            ),
+            'menu_icon' => 'dashicons-format-gallery'
         )
     );
 
@@ -312,7 +318,8 @@ function new_post_type_init() {
             'query_var' => false,
             'rewrite' => array(
                 'with_front' => false,
-            )
+            ),
+            'menu_icon' => 'dashicons-media-archive'
         )
     );
     // 商品
@@ -341,7 +348,8 @@ function new_post_type_init() {
             'query_var' => false,
             'rewrite' => array(
                 'with_front' => false,
-            )
+            ),
+            'menu_icon' => 'dashicons-cart'
         )
     );
 }
@@ -379,7 +387,7 @@ function new_setup() {
 add_action( 'after_setup_theme', 'new_setup' );
 
 /**
- * 添加模板样式及脚本
+ * 添加模板样式
  */
 function new_add_styles() {
     // 仅单页（page / singular）不使用模板
@@ -404,6 +412,9 @@ function new_add_styles() {
 }
 add_action( 'wp_enqueue_scripts', 'new_add_styles' );
 
+/**
+ * 添加模板脚本
+ */
 function new_add_scripts() {
     if ( is_home()
       || is_preview()
@@ -766,6 +777,7 @@ add_filter( 'the_title', 'new_filter_the_title' );
 
 /**
  * 针对中文链接与文章采集防范所设置的固定连接更改
+ * TODO:
  */
 function new_filter_permalink( $link ) {
     if ( preg_match( "/(^[0-9]+$)|([\x80-\xff])/", $link ) )
@@ -775,8 +787,9 @@ function new_filter_permalink( $link ) {
 }
 add_filter( 'editable_slug', 'new_filter_permalink' );
 
-// wpuf
-
+/**
+ * wpuf
+ */
 function new_wpuf_filter_post_status( $show_status, $status ) {
     switch ( $status ) {
     case 'publish':
@@ -809,6 +822,63 @@ function new_wpuf_filter_post_status( $show_status, $status ) {
     return $show_status;
 }
 add_filter( 'wpuf_show_post_status', 'new_wpuf_filter_post_status', 10, 2 );
+
+function new_filter_page_template( $page ) {
+    if ( is_page() ) {
+        if ( is_page( 'dashboard' ) || is_page( 'add_new' ) || is_page( 'edit' ) || is_page( 'favourite' ) || is_page( 'pm' ) || is_page( 'info' ) ) {
+            $new_template = locate_template( array( 'page-user.php' ) );
+            if ( '' != $new_template ) {
+                return $new_template;
+            } else {
+                return $page;
+            }
+        }
+        return $page;
+    }
+    return $page;
+}
+add_filter( 'template_include', 'new_filter_page_template' );
+
+/**
+ * 仅更改私人会话（站内信）会员头像
+ */
+function new_filter_avatar( $avatar ) {
+    if ( ! empty( $avatar ) && is_page( 'pm' ) ) {
+        return str_replace( 'photo', 'photo pull-left', $avatar );
+    }
+    return $avatar;
+}
+add_filter( 'get_avatar', 'new_filter_avatar' );
+
+/**
+ * 修改文章分类目录选择形式，使用自定义new_walker_category_radiolist将其更改为单项选择
+ */
+function wp_terms_checklist_args( $args ) {
+    if ( $args['taxonomy'] == 'category' ) {
+        $args['walker'] = new New_Walker_Category_Radiolist();
+    }
+
+    return $args;
+}
+add_filter( 'wp_terms_checklist_args', 'wp_terms_checklist_args' );
+
+/**
+ * 过滤文章分类目录选择形式
+ */
+function wp_filter_get_terms( $terms, $taxonomies, $args ) {
+    global $post;
+    $post_type = isset( $post->post_type ) ? $post->post_type : ( isset( $_REQUEST['post_type'] ) ? $_REQUEST['post_type'] : '' );
+    if ( in_array( 'category', $taxonomies ) ) {
+        for( $i = 0, $max = count( $terms ); $i < $max; $i++ ) {
+            $category_post_type = get_field( 'new-post-type', 'category_' . $terms[ $i ]->term_id );
+            if ( ! empty( $post_type ) && ! empty( $category_post_type ) && $post_type != $category_post_type ) {
+                unset( $terms[ $i ] );
+            }
+        }
+    }
+    return $terms;
+}
+add_filter( 'get_terms', 'wp_filter_get_terms', 10, 3 );
 
 /* !filter */
 
@@ -895,6 +965,24 @@ function new_get_module( $id ) {
     }
     return false;
 }
+
+
+    /**
+     * The main logging function
+     *
+     * @uses error_log
+     * @param string $type type of the error. e.g: debug, error, info
+     * @param string $msg
+     */
+    function new_log( $msg, $type = '' ) {
+        if ( WP_DEBUG == true ) {
+	        if ( ! is_string( $msg ) ) {
+	            $msg = print_r( $msg, true );
+	        }
+            $msg = sprintf( "[%s][%s] %s\n", date( 'd.m.Y h:i:s' ), $type, $msg );
+            error_log( $msg, 3, dirname( __FILE__ ) . '/log.txt' );
+        }
+    }
 
 /* !other function */
 

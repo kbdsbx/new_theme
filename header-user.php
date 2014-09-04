@@ -3,12 +3,12 @@
 $categories = array(
     'dashboard' => array( 'slug' => 'dashboard', 'title' => __( '我的文章', 'new' ), 'icon' => 'icon-dashboard' ),
     'add_new' => array( 'slug' => 'add_new', 'title' => __( '发布文章', 'new' ), 'icon' => 'icon-edit' ),
-    'a' => array( 'slug' => 'a', 'title' => __( '我的收藏', 'new' ), 'icon' => 'icon-heart' ),
-    'b' => array( 'slug' => 'b', 'title' => __( '站内信息', 'new' ), 'icon' => 'icon-envelope' ),
+    'favourite' => array( 'slug' => 'favourite', 'title' => __( '我的收藏', 'new' ), 'icon' => 'icon-heart' ),
+    'pm' => array( 'slug' => 'pm', 'title' => __( '站内信息', 'new' ), 'icon' => 'icon-envelope' ),
     'c' => array( 'slug' => 'c', 'title' => __( '消费清单', 'new' ), 'icon' => 'icon-shopping-cart' ),
     'd' => array( 'slug' => 'd', 'title' => __( '订单查询', 'new' ), 'icon' => 'icon-list' ),
     'e' => array( 'slug' => 'e', 'title' => __( '账户充值', 'new' ), 'icon' => 'icon-jpy' ),
-    'f' => array( 'slug' => 'f', 'title' => __( '编辑资料', 'new' ), 'icon' => 'icon-cog' ),
+    'info' => array( 'slug' => 'info', 'title' => __( '编辑资料', 'new' ), 'icon' => 'icon-cog' ),
 );
 
 ?><!DOCTYPE html>

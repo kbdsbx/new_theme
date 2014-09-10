@@ -1,31 +1,37 @@
 <?php
 
-DEFINE( 'template_uri', get_template_directory_uri() );
-DEFINE( 'plugins_uri', get_template_directory_uri() . '/plugins' );
-DEFINE( 'classes_uri', get_template_directory_uri() . '/classes' );
-DEFINE( 'template', get_template_directory() );
-DEFINE( 'plugins', get_template_directory() . '/plugins' );
-DEFINE( 'classes', get_template_directory() . '/classes' );
+DEFINE( 'new_template_uri', get_template_directory_uri() );
+DEFINE( 'new_plugins_uri', get_template_directory_uri() . '/plugins' );
+DEFINE( 'new_classes_uri', get_template_directory_uri() . '/classes' );
+DEFINE( 'new_inc_uri', get_template_directory_uri(). '/includes' );
+DEFINE( 'new_template', get_template_directory() );
+DEFINE( 'new_plugins', get_template_directory() . '/plugins' );
+DEFINE( 'new_classes', get_template_directory() . '/classes' );
+DEFINE( 'new_inc', get_template_directory(). '/includes' );
 
 require 'advanced-custom-fields/acf.php';
 define( 'ACF_LITE', false );
 
-require plugins . '/widget_function.php';
+require new_inc . '/external_functions.php';
+require new_inc . '/widget_functions.php';
+require new_inc . '/filter_functions.php';
+require new_inc . '/post_functions.php';
 
-require plugins . '/slider_widget.php';
-require plugins . '/tabs_widget.php';
-require plugins . '/flink_widget.php';
-require plugins . '/follow_widget.php';
-require plugins . '/picture_widget.php';
-require plugins . '/ads_widget.php';
-require plugins . '/flink_page.php';
-require plugins . '/modules_page.php';
-require plugins . '/theme_setting_page.php';
+require new_plugins . '/slider_widget.php';
+require new_plugins . '/tabs_widget.php';
+require new_plugins . '/flink_widget.php';
+require new_plugins . '/follow_widget.php';
+require new_plugins . '/picture_widget.php';
+require new_plugins . '/ads_widget.php';
 
-require_once classes . '/class-new-flink-list-table.php';
-require_once classes . '/class-new-comment-walker.php';
-require_once classes . '/class-new-modules-list-table.php';
-require_once classes . '/class-new-walker-category-radiolist.php';
+require new_plugins . '/flink_page.php';
+require new_plugins . '/modules_page.php';
+require new_plugins . '/theme_setting_page.php';
+
+require_once new_classes . '/class-new-flink-list-table.php';
+require_once new_classes . '/class-new-comment-walker.php';
+require_once new_classes . '/class-new-modules-list-table.php';
+require_once new_classes . '/class-new-walker-category-radiolist.php';
 
 /* init */
 
@@ -399,7 +405,8 @@ function new_add_styles() {
       || is_category()
       || is_search()
       || is_single()
-      || is_tag() ) {
+      || is_tag()
+      || is_404() ) {
         wp_enqueue_style( 'google-fonts', 'http://fonts.useso.com/css?family=Merriweather+Sans:400,300,700,800', array(), null );
         wp_enqueue_style( 'new-style', get_stylesheet_uri(), array(), null );
         if ( wp_style_is( 'jquery-ui' ) ) {
@@ -424,7 +431,8 @@ function new_add_scripts() {
       || is_category()
       || is_search()
       || is_single()
-      || is_tag() ) {
+      || is_tag()
+      || is_404() ) {
 	wp_enqueue_script( 'new-jquery', get_template_directory_uri() . '/js/new/jquery.js', array(), '1.9.1' );
 	wp_enqueue_script( 'new-ui', get_template_directory_uri() . '/js/new/ui.js', array(), '1.10.2' );
 	wp_enqueue_script( 'new-carouFreSel', get_template_directory_uri() . '/js/new/carouFredSel.js', array(), '6.0.4' );
@@ -604,51 +612,6 @@ background: -o-linear-gradient(top, <?php echo $color_primary_2; ?>, <?php echo 
 }
 add_action('wp_head', 'new_add_css_styles');
 
-/** 
-* Converts bytes into human readable file size. 
-* 
-* @param string $bytes 
-* @return string human readable file size (2,87)
-* @author Mogilev Arseny 
-*/  
-function FileSizeConvert($bytes)
-{
-    $bytes = floatval($bytes);
-        $arBytes = array(
-            0 => array(
-                "UNIT" => "TB",
-                "VALUE" => pow(1024, 4)
-            ),
-            1 => array(
-                "UNIT" => "GB",
-                "VALUE" => pow(1024, 3)
-            ),
-            2 => array(
-                "UNIT" => "MB",
-                "VALUE" => pow(1024, 2)
-            ),
-            3 => array(
-                "UNIT" => "KB",
-                "VALUE" => 1024
-            ),
-            4 => array(
-                "UNIT" => "B",
-                "VALUE" => 1
-            ),
-        );
-
-    foreach($arBytes as $arItem)
-    {
-        if($bytes >= $arItem["VALUE"])
-        {
-            $result = $bytes / $arItem["VALUE"];
-            $result = str_replace(".", "," , strval(round($result, 2)))." ".$arItem["UNIT"];
-            break;
-        }
-    }
-    return $result;
-}
-
 /**
  * 文章默认属性计算，累计及赋值
  */
@@ -776,12 +739,12 @@ function new_filter_the_title( $title, $id = null ) {
 add_filter( 'the_title', 'new_filter_the_title' );
 
 /**
- * 针对中文链接与文章采集防范所设置的固定连接更改
- * TODO:
+ * 针对中文链接与文章采集防范所设置的固定链接更改
+ * 使用Unix时间戳防止相同标题导致相同固定链接
  */
 function new_filter_permalink( $link ) {
     if ( preg_match( "/(^[0-9]+$)|([\x80-\xff])/", $link ) )
-        return md5( $link . time() );
+        return CUtf8_PY::encode( $link, '' ) . date( 'Ymdhis', time() );
     else
         return $link;
 }
@@ -869,10 +832,10 @@ function wp_filter_get_terms( $terms, $taxonomies, $args ) {
     global $post;
     $post_type = isset( $post->post_type ) ? $post->post_type : ( isset( $_REQUEST['post_type'] ) ? $_REQUEST['post_type'] : '' );
     if ( in_array( 'category', $taxonomies ) ) {
-        for( $i = 0, $max = count( $terms ); $i < $max; $i++ ) {
-            $category_post_type = get_field( 'new-post-type', 'category_' . $terms[ $i ]->term_id );
+        foreach ( $terms as $key => $term ) {
+            $category_post_type = get_field( 'new-post-type', 'category_' . $terms[ $key ]->term_id );
             if ( ! empty( $post_type ) && ! empty( $category_post_type ) && $post_type != $category_post_type ) {
-                unset( $terms[ $i ] );
+                unset( $terms[ $key ] );
             }
         }
     }
@@ -906,83 +869,4 @@ add_shortcode( 'gallery', 'new_shortcode_gallery' );
 
 /* !shortcode */
 
-
-/* other function */
-
-// in the loop
-function new_get_thumbnail_src( $size ) {
-    return wp_get_attachment_image_src( '' == get_post_thumbnail_id() ? get_option( 'new_theme_default_thumbnail_id' ) : get_post_thumbnail_id(), $size )[0]; 
-}
-
-// in the loop
-function new_get_thumbnail_alt() {
-    return strip_tags( get_post_meta( get_post_thumbnail_id(), '_wp_attachment_image_alt', true ) );
-}
-
-// in the loop
-function new_get_rating() {
-    $w = get_field( 'new-article-views' ) / _filter_empty_numeric( get_option( 'new_theme_heat_limit' ), 400 );
-    $w = $w > 1 ? 100 : $w * 100;
-    return $w;
-}
-
-function new_get_gallery_shortcode() {
-    $content = get_the_content();
-    $matches = array();
-    $count = preg_match( '/(\[gallery[\s\S]+?\])/', $content, $matches );
-    if ( $count !== 0 ) {
-        // echo do_shortcode( $matches[0] );
-        $shortcode = $matches[0];
-        if ( strpos( $shortcode, 'size' ) === false ) {
-            $shortcode = str_replace( 'gallery', 'gallery size="xs"', $shortcode );
-        }
-        do_shortcode( $shortcode );
-    }
-    //echo $content;
-}
-
-function _new_sort_modules( $a, $b ) {
-    if ( $a['module_weight'] < $b['module_weight'] ) return -1; 
-    elseif ( $a['module_weight'] > $b['module_weight'] ) return 1; 
-    else return 0;
-}
-function _new_filter_modules( $v ) {
-    if ( $v['module_status'] == 0 ) return false;
-    else return true;
-}
-function new_modules() {
-    $modules_data = get_option( 'modules_data' );
-    usort( $modules_data, '_new_sort_modules' );
-    $modules_data = array_filter( $modules_data, '_new_filter_modules' );
-    return $modules_data;
-}
-
-function new_get_module( $id ) {
-    $modules_data = get_option( 'modules_data' );
-    foreach ( $modules_data as $module ) {
-        if ( $module['module_id'] == $id )
-            return $module;
-    }
-    return false;
-}
-
-
-    /**
-     * The main logging function
-     *
-     * @uses error_log
-     * @param string $type type of the error. e.g: debug, error, info
-     * @param string $msg
-     */
-    function new_log( $msg, $type = '' ) {
-        if ( WP_DEBUG == true ) {
-	        if ( ! is_string( $msg ) ) {
-	            $msg = print_r( $msg, true );
-	        }
-            $msg = sprintf( "[%s][%s] %s\n", date( 'd.m.Y h:i:s' ), $type, $msg );
-            error_log( $msg, 3, dirname( __FILE__ ) . '/log.txt' );
-        }
-    }
-
-/* !other function */
 

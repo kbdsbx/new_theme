@@ -8,15 +8,15 @@
     <title><?php wp_title( '|', true, 'right' ); ?></title>
     <?php wp_head(); ?>
     <!-- basic styles -->
-    <link rel="stylesheet" href="<?php echo template_uri; ?>/css/member.style.css" />
+    <link rel="stylesheet" href="<?php echo new_template_uri; ?>/css/member.style.css" />
     <!--[if IE 7]>
-    <link rel="stylesheet" href="<?php echo template_uri; ?>/css/member/font-awesome-ie7.min.css" />
+    <link rel="stylesheet" href="<?php echo new_template_uri; ?>/css/member/font-awesome-ie7.min.css" />
     <![endif]-->
 
     <!-- page specific plugin styles -->
 
     <!--[if lte IE 8]>
-    <link rel="stylesheet" href="<?php echo template_uri; ?>/css/member/ace-ie.min.css" />
+    <link rel="stylesheet" href="<?php echo new_template_uri; ?>/css/member/ace-ie.min.css" />
     <![endif]-->
 
     <!-- inline styles related to this page -->
@@ -24,8 +24,8 @@
     <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
 
     <!--[if lt IE 9]>
-    <script src="<?php echo template_uri; ?>/js/member/html5shiv.js"></script>
-    <script src="<?php echo template_uri; ?>/js/member/respond.min.js"></script>
+    <script src="<?php echo new_template_uri; ?>/js/member/html5shiv.js"></script>
+    <script src="<?php echo new_template_uri; ?>/js/member/respond.min.js"></script>
     <![endif]-->
 </head>
 <body <?php body_class( 'login-layout' ); ?>>

@@ -1491,3 +1491,52 @@ div#tabs{
     margin-top: -18px;
 }
 
+
+/*------------------------------------------------------------------*/ 
+/*	6) 404
+/*------------------------------------------------------------------*/
+div.text-404{
+    font-size: 220px;
+    text-align: center;
+}
+
+.text-404-description div{   
+    white-space:nowrap;
+    width: 20px;
+    display: inline-block;
+
+    
+    -moz-transform:scaleY(-1);
+    -webkit-transform:scaleY(-1);
+    -o-transform:scaleY(-1);
+    transform:scaleY(-1);
+    /*IE*/
+    filter:FlipV;
+
+    transform-origin:0% 0%;
+    -ms-transform-origin:0% 0%; /* IE 9 */
+    -webkit-transform-origin:0% 0%; /* Safari and Chrome */
+    -moz-transform-origin:0% 0%; /* Firefox */
+    -o-transform-origin:0% 0%; /* Opera */
+
+    transform: rotate(90deg);
+    -ms-transform: rotate(90deg);		/* IE 9 */
+    -webkit-transform: rotate(90deg);	/* Safari and Chrome */
+    -o-transform: rotate(90deg);		/* Opera */
+    -moz-transform: rotate(90deg);		/* Firefox */
+
+}
+
+.text-404-description div.odd{
+    transform-origin:700% 850%;
+    -ms-transform-origin:700% 850%; /* IE 9 */
+    -webkit-transform-origin:700% 850%; /* Safari and Chrome */
+    -moz-transform-origin:700% 850%; /* Firefox */
+    -o-transform-origin:700% 850%; /* Opera */
+
+    transform: rotate(-90deg);
+    -ms-transform: rotate(-90deg);		/* IE 9 */
+    -webkit-transform: rotate(-90deg);	/* Safari and Chrome */
+    -o-transform: rotate(-90deg);		/* Opera */
+    -moz-transform: rotate(-90deg);		/* Firefox */
+}

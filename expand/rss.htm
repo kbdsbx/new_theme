@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="{dede:global.cfg_soft_lang /}"?>
+<rss version="2.0">
+<channel>
+<title>{dede:field name='typename' function='gb2utf8(@me)'/}</title>
+<description>{dede:field name='title' function='gb2utf8(@me)'/}</description>
+<link>{dede:field name='typelink' function='gb2utf8(@me)'/}</link>
+<language>zh-cn</language>
+<docs></docs>
+<generator>www.jiehengsen.org</generator>
+{dede:rssitem}
+<item>
+    <title><![CDATA[[field:title function='gb2utf8(@me)'/]]]></title>
+    <link><![CDATA[[field:fullurl function='gb2utf8(@me)'/]]]></link>
+    <pubdate>[field:stime function='gb2utf8(@me)'/]</pubdate>
+    <enclosure>[field:litpic function='gb2utf8(@me)'/]</enclosure>
+    <tags><![CDATA[[field:keywords function='gb2utf8(@me)'/]]]></tags>
+    <category>[field:typename function='gb2utf8(@me)'/]</category>
+    <source><![CDATA[[field:source function='gb2utf8(@me)'/]]]></source>
+    <author><![CDATA[[field:writer function='gb2utf8(@me)'/]]]></author>
+    <description><![CDATA[[field:body function='gb2utf8(@me)'/]]]></description>
+</item>
+{/dede:rssitem}
+</channel>
+</rss>

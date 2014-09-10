@@ -21,15 +21,15 @@ $categories = array(
     <title><?php wp_title( '|', true, 'right' ); ?></title>
     <?php wp_head(); ?>
     <!-- basic styles -->
-    <link rel="stylesheet" href="<?php echo template_uri; ?>/css/member.style.css" />
+    <link rel="stylesheet" href="<?php echo new_template_uri; ?>/css/member.style.css" />
     <!--[if IE 7]>
-    <link rel="stylesheet" href="<?php echo template_uri; ?>/css/member/font-awesome-ie7.min.css" />
+    <link rel="stylesheet" href="<?php echo new_template_uri; ?>/css/member/font-awesome-ie7.min.css" />
     <![endif]-->
 
     <!-- page specific plugin styles -->
 
     <!--[if lte IE 8]>
-    <link rel="stylesheet" href="<?php echo template_uri; ?>/css/member/ace-ie.min.css" />
+    <link rel="stylesheet" href="<?php echo new_template_uri; ?>/css/member/ace-ie.min.css" />
     <![endif]-->
 
     <!-- inline styles related to this page -->

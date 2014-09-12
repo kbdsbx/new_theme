@@ -27,6 +27,7 @@ require new_plugins . '/ads_widget.php';
 require new_plugins . '/flink_page.php';
 require new_plugins . '/modules_page.php';
 require new_plugins . '/theme_setting_page.php';
+require new_plugins . '/rss-importer.php';
 
 require_once new_classes . '/class-new-flink-list-table.php';
 require_once new_classes . '/class-new-comment-walker.php';
@@ -648,6 +649,9 @@ add_action('save_post', 'set_post_views');
 
 /* filter */
 
+/**
+ * 重制修改密码发送邮件
+ */
 function new_filter_retrieve_password_message( $msg, $key ) {
 	if ( strpos($_POST['user_login'], '@') ) {
 		$user_data = get_user_by('email', trim($_POST['user_login']));
@@ -744,7 +748,7 @@ add_filter( 'the_title', 'new_filter_the_title' );
  */
 function new_filter_permalink( $link ) {
     if ( preg_match( "/(^[0-9]+$)|([\x80-\xff])/", $link ) )
-        return CUtf8_PY::encode( $link, '' ) . date( 'Ymdhis', time() );
+        return CUtf8_PY::encode( $link, '', 'head' ) . date( 'Ymdhis', time() );
     else
         return $link;
 }
@@ -786,6 +790,10 @@ function new_wpuf_filter_post_status( $show_status, $status ) {
 }
 add_filter( 'wpuf_show_post_status', 'new_wpuf_filter_post_status', 10, 2 );
 
+/**
+ * 修改页面模板，未完成
+ * TODO:
+ */
 function new_filter_page_template( $page ) {
     if ( is_page() ) {
         if ( is_page( 'dashboard' ) || is_page( 'add_new' ) || is_page( 'edit' ) || is_page( 'favourite' ) || is_page( 'pm' ) || is_page( 'info' ) ) {

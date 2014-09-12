@@ -110,12 +110,12 @@ jQuery(document).ready(function(){
 	});
 // -----------------------------------------------------  
     jQuery( "ul.social li" ).mouseenter( function() {
-        $this = jQuery(this);
+        var $this = jQuery(this);
         $this.find( '.follow' ).stop( true, false ).animate( { 'top': '-98px' }, 400 );
         $this.find( '.hover' ).stop( true, false ).css( { 'display': 'block' } ).animate( { 'top': '-98px' }, 400 );
     } );
     jQuery( "ul.social li" ).mouseleave( function() {
-        $this = jQuery(this);
+        var $this = jQuery(this);
         $this.find( '.follow' ).stop( true, false ).css( { 'display': 'block' } ).animate( { 'top': '0px' }, 400 );
         $this.find( '.hover' ).stop( true, false).animate( { 'top': '0px' }, 400 );
     } );

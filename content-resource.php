@@ -21,5 +21,5 @@
 </div>
 <div class="column-two-third">
 <h5 class="line"><span><?php _e( '下载', 'new' ); ?></span></h5>
-<a href="<?php echo wp_get_attachment_url( get_field( 'file' ) ); ?>" target="_blank"><?php _e( '下载地址', 'new' ); ?></a>
+<a href="<?php echo wp_get_attachment_url( get_field( 'field_53e1810d8dd21' ) ); ?>" target="_blank"><?php _e( '下载地址', 'new' ); ?></a>
 </div>

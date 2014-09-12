@@ -30,14 +30,6 @@ function new_get_rating() {
 }
 
 /**
- * in the loop
- */
-function new_get_time() {
-    $date_format = get_option( 'date_format' );
-
-}
-
-/**
  * 获取并解析图片集短代码
  */
 function new_get_gallery_shortcode() {

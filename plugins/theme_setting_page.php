@@ -54,7 +54,7 @@ function new_theme_setting_admin() {
 				        data-update-preview-src="#new_theme_default_thumbnail_id"
 				        data-choose="<?php _e( '请选择默认缩略图', 'new' ); ?>"
 				        data-update="<?php _e( '选择缩略图', 'new' ); ?>"><?php _e( '选择缩略图', 'new' ); ?></a>
-                        <img class="preview_src" src="<?php $default_thumbnail_id = get_option( 'new_theme_default_thumbnail_id' ); if ( ! empty( $default_thumbnail_id ) ) echo wp_get_attachment_image_src( $default_thumbnail_id )[0]; ?>" />
+                        <img class="preview_src" src="<?php $default_thumbnail_id = get_option( 'new_theme_default_thumbnail_id' ); if ( ! empty( $default_thumbnail_id ) ) echo new_get_image_src( $default_thumbnail_id ); ?>" />
                         <?php _img_widget_update_js(); ?>
                     </fieldset>
                 </td>

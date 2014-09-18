@@ -68,6 +68,10 @@ class RSS_Import extends WP_Importer {
 	function get_posts() {
 		global $wpdb;
 
+        $upload = wp_upload_dir();
+        $upload_dir_url = $upload['baseurl'];
+        $upload_dir = $upload['basedir'];
+
 		// set_magic_quotes_runtime(0);
 		$datalines = file($this->file); // Read the file into an array
 		$importdata = implode('', $datalines); // squish it
@@ -116,13 +120,13 @@ class RSS_Import extends WP_Importer {
 
             preg_match( '|<enclosure>(.*?)</enclosure>|is', $post, $thumbnail );
             if ( $thumbnail ) {
-                $new_thumbnail = preg_replace( '|/uploads(.*?)|is', wp_upload_dir()['baseurl'] . '$1', esc_sql(trim($thumbnail[1])) ); 
+                $new_thumbnail = preg_replace( '|/uploads(.*?)|is', $upload_dir . '$1', esc_sql(trim($thumbnail[1])) ); 
                 $thumbnail = ( $thumbnail == $new_thumbnail ? '' : $new_thumbnail );
             }
 
             preg_match( '|<new:resource>(.*?)</new:resource>|is', $post, $resource );
             if ( $resource )
-                $resource = preg_replace( '|/uploads(.*?)|is', wp_upload_dir()['baseurl'] . '$1', esc_sql( trim( $resource[1] ) ) );
+                $resource = preg_replace( '|/uploads(.*?)|is', $upload_dir . '$1', esc_sql( trim( $resource[1] ) ) );
 
 			$post_date_gmt = gmdate('Y-m-d H:i:s', $post_date_gmt);
 			$post_date = get_date_from_gmt( $post_date_gmt );
@@ -163,7 +167,7 @@ class RSS_Import extends WP_Importer {
             } else {
 				// This is for feeds that put content in description
 				preg_match('|<description>(.*?)</description>|is', $post, $post_content);
-                $post_content = preg_replace( '|src="/uploads(.*?)"|is', 'src="' . wp_upload_dir()['baseurl'] . '$1"', $post_content[1] ); 
+                $post_content = preg_replace( '|src="/uploads(.*?)"|is', 'src="' . $upload_dir_url . '$1"', $post_content[1] ); 
 				$post_content = esc_sql( ( trim( $post_content ) ) );
                 $post_content = str_replace(array ('<![CDATA[', ']]>'), '', $post_content);
 			}
@@ -173,8 +177,8 @@ class RSS_Import extends WP_Importer {
                 $gallery = $gallery[1];
                 $attachment_ids = array();
                 foreach ( $gallery as $key => $img ) {
-                    $gallery[$key] = preg_replace( '|/uploads(.*?)|is', wp_upload_dir()['baseurl'] . '$1', esc_sql(trim($gallery[$key])) ); 
-                    $attachment_filename = str_replace( wp_upload_dir()['baseurl'], wp_upload_dir()['basedir'], $gallery[$key] );
+                    $gallery[$key] = preg_replace( '|/uploads(.*?)|is', $upload_dir_url . '$1', esc_sql(trim($gallery[$key])) ); 
+                    $attachment_filename = str_replace( $upload_dir_url, wp_upload_dir()['basedir'], $gallery[$key] );
                     $attachment_args = array(
                         'guid'          => $gallery[$key],
                         'post_mime_type'=> wp_check_filetype( basename( $attachment_filename ), null )['type'],
@@ -223,7 +227,7 @@ class RSS_Import extends WP_Importer {
 				}
                 // 保存缩略图
                 if ('' != $thumbnail){
-                    $attachment_filename = str_replace( wp_upload_dir()['baseurl'], wp_upload_dir()['basedir'], $thumbnail );
+                    $attachment_filename = str_replace( $upload_dir_url, wp_upload_dir()['basedir'], $thumbnail );
                     $attachment_args = array(
                         'guid'          => $thumbnail,
                         'post_mime_type'=> wp_check_filetype( basename( $attachment_filename ), null )['type'],
@@ -240,7 +244,7 @@ class RSS_Import extends WP_Importer {
 
                 // 存在资源则保存资源
                 if ( '' != $resource ) {
-                    $attachment_filename = str_replace( wp_upload_dir()['baseurl'], wp_upload_dir()['basedir'], $resource );
+                    $attachment_filename = str_replace( $upload_dir_url, wp_upload_dir()['basedir'], $resource );
                     $attachment_args = array(
                         'guid'          => $resource,
                         'post_mime_type'=> wp_check_filetype( basename( $attachment_filename ), null )['type'],

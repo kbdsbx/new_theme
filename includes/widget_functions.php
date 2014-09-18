@@ -129,4 +129,7 @@ function _get_cat() {
     return $cat;
 }
 
+function new_get_image_src( $src, $size ) {
+    return ( $image_src = wp_get_attachment_image_src( $src, $size ) ) !== false ? $image_src[0] : '';
+}
 

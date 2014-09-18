@@ -12,27 +12,27 @@ DEFINE( 'new_inc', get_template_directory(). '/includes' );
 require 'advanced-custom-fields/acf.php';
 define( 'ACF_LITE', false );
 
-require new_inc . '/external_functions.php';
-require new_inc . '/widget_functions.php';
-require new_inc . '/filter_functions.php';
-require new_inc . '/post_functions.php';
+include_once new_inc . '/external_functions.php';
+include_once new_inc . '/widget_functions.php';
+include_once new_inc . '/filter_functions.php';
+include_once new_inc . '/post_functions.php';
 
-require new_plugins . '/slider_widget.php';
-require new_plugins . '/tabs_widget.php';
-require new_plugins . '/flink_widget.php';
-require new_plugins . '/follow_widget.php';
-require new_plugins . '/picture_widget.php';
-require new_plugins . '/ads_widget.php';
+include_once new_plugins . '/slider_widget.php';
+include_once new_plugins . '/tabs_widget.php';
+include_once new_plugins . '/flink_widget.php';
+include_once new_plugins . '/follow_widget.php';
+include_once new_plugins . '/picture_widget.php';
+include_once new_plugins . '/ads_widget.php';
 
-require new_plugins . '/flink_page.php';
-require new_plugins . '/modules_page.php';
-require new_plugins . '/theme_setting_page.php';
-require new_plugins . '/rss-importer.php';
+include_once new_plugins . '/flink_page.php';
+include_once new_plugins . '/modules_page.php';
+include_once new_plugins . '/theme_setting_page.php';
+include_once new_plugins . '/rss-importer.php';
 
-require_once new_classes . '/class-new-flink-list-table.php';
-require_once new_classes . '/class-new-comment-walker.php';
-require_once new_classes . '/class-new-modules-list-table.php';
-require_once new_classes . '/class-new-walker-category-radiolist.php';
+include_once new_classes . '/class-new-flink-list-table.php';
+include_once new_classes . '/class-new-comment-walker.php';
+include_once new_classes . '/class-new-modules-list-table.php';
+include_once new_classes . '/class-new-walker-category-radiolist.php';
 
 /* init */
 
@@ -435,6 +435,7 @@ function new_add_scripts() {
       || is_tag()
       || is_404() ) {
 	wp_enqueue_script( 'new-jquery', get_template_directory_uri() . '/js/new/jquery.js', array(), '1.9.1' );
+	wp_enqueue_script( 'new-jquery-migrate', get_template_directory_uri() . '/js/new/jquery-migrate.js', array(), '1.2.1' );
 	wp_enqueue_script( 'new-ui', get_template_directory_uri() . '/js/new/ui.js', array(), '1.10.2' );
 	wp_enqueue_script( 'new-carouFreSel', get_template_directory_uri() . '/js/new/carouFredSel.js', array(), '6.0.4' );
 	wp_enqueue_script( 'new-supserfish', get_template_directory_uri() . '/js/new/superfish.js', array(), '1.4.8' );
@@ -613,36 +614,40 @@ background: -o-linear-gradient(top, <?php echo $color_primary_2; ?>, <?php echo 
 }
 add_action('wp_head', 'new_add_css_styles');
 
-/**
- * 文章默认属性计算，累计及赋值
- */
-function set_post_views() {
-    global $post;
-    if ( ! isset ( $post->ID ) )
-        return;
+if ( function_exists( 'get_field' ) && function_exists( 'update_field' ) ) {
 
-    $post_ID = $post->ID;
-    $post_views = get_field( 'new-article-views', $post_ID );
-	if ( is_singular() ) {
-		if( $post_ID )	{
-            update_field( 'new-article-views', $post_views + 1, $post_ID );
-		}
-	} else if ( is_admin() ) {
-        if ( $post_ID && empty( $post_views ) ) {
-            update_field( 'new-article-views', rand( 0, get_option( 'new_theme_heat_limit' ) ), $post_ID );
-        }
+	/**
+	 * 文章默认属性计算，累计及赋值
+	 */
+	function set_post_views() {
+	    global $post;
+	    if ( ! isset ( $post->ID ) )
+	        return;
+	
+	    $post_ID = $post->ID;
+	    $post_views = get_field( 'new-article-views', $post_ID );
+		if ( is_singular() ) {
+			if( $post_ID )	{
+	            update_field( 'new-article-views', $post_views + 1, $post_ID );
+			}
+		} else if ( is_admin() ) {
+	        if ( $post_ID && empty( $post_views ) ) {
+	            update_field( 'new-article-views', rand( 0, get_option( 'new_theme_heat_limit' ) ), $post_ID );
+	        }
+	
+	        $size = get_field( 'size', $post_ID );
+	        $file = get_field( 'file', $post_ID );
+	        if ( empty( $size ) && ! empty( $file ) ) {
+	            $file_path = WP_CONTENT_DIR . '/uploads/' . wp_get_attachment_metadata( $file )['file'];
+	            $file_size = FileSizeConvert( filesize( $file_path ) );
+	            update_field( 'field_53e2e24507824', $file_size, $post_ID );
+	        }
+	    }
+	}
+	add_action('wp_head', 'set_post_views'); 
+	add_action('save_post', 'set_post_views'); 
 
-        $size = get_field( 'size', $post_ID );
-        $file = get_field( 'file', $post_ID );
-        if ( empty( $size ) && ! empty( $file ) ) {
-            $file_path = WP_CONTENT_DIR . '/uploads/' . wp_get_attachment_metadata( $file )['file'];
-            $file_size = FileSizeConvert( filesize( $file_path ) );
-            update_field( 'field_53e2e24507824', $file_size, $post_ID );
-        }
-    }
 }
-add_action('wp_head', 'set_post_views'); 
-add_action('save_post', 'set_post_views'); 
 
 /* !action */
 
@@ -795,8 +800,25 @@ add_filter( 'wpuf_show_post_status', 'new_wpuf_filter_post_status', 10, 2 );
  * TODO:
  */
 function new_filter_page_template( $page ) {
+    $pages = array(
+        'dashboard',
+        'add_new',
+        'edit',
+        'favourite',
+        'pm',
+        'info',
+        'membership-Account',
+        'membership-billing',
+        'membership-cancel',
+        'membership-checkout',
+        'membership-confirmation',
+        'membership-invoice',
+        'membership-levels',
+        'protected-content',
+        'reigster'
+    );
     if ( is_page() ) {
-        if ( is_page( 'dashboard' ) || is_page( 'add_new' ) || is_page( 'edit' ) || is_page( 'favourite' ) || is_page( 'pm' ) || is_page( 'info' ) ) {
+        if ( is_page( $pages ) ) {
             $new_template = locate_template( array( 'page-user.php' ) );
             if ( '' != $new_template ) {
                 return $new_template;

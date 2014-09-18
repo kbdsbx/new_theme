@@ -7,7 +7,7 @@
     <li><?php _e( '文件大小: ', 'new' ); ?><span><?php the_field( 'size' ); ?></span></li>
     <li><?php _e( '上传日期: ', 'new' ); ?><span><?php the_time( get_option( 'date_format' ) ); ?></span></li>
     <li><?php _e( '下载数量: ', 'new' ); ?><span><?php the_field( 'new-article-views' ); ?></span></li>
-    <li><?php wpfp_link() ?></li>
+    <li><?php if ( function_exists( 'wpfp_link' ) ) { wpfp_link(); } ?></li>
     </ul>
 </div>
 <div class="column-one-third">

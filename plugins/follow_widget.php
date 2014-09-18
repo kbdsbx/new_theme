@@ -21,8 +21,8 @@ class WP_Widget_follow extends WP_Widget {
     <?php for( $i = 0; $i < $count; $i++ ) : $img = $follow_img[$i]; ?>
     <li>
         <div>
-        <a href="javascript:void(0)" class="follow" style="background-color:<?php echo _filter_object_empty( $img, 'color', '' ); ?>;"><img src="<?php echo wp_get_attachment_image_src( $img['src'], 'full' )[0]; ?>" alt="<?php echo $img['name']; ?>" title="<?php echo $img['name']; ?>" /></a>
-        <a href="javascript:void(0)" class="hover" ><img class="hover" src="<?php echo wp_get_attachment_image_src( $img['qrcode'], 'full' )[0];  ?>" /></a>
+        <a href="javascript:void(0)" class="follow" style="background-color:<?php echo _filter_object_empty( $img, 'color', '' ); ?>;"><img src="<?php echo new_get_image_src( $img['src'], 'full' ); ?>" alt="<?php echo $img['name']; ?>" title="<?php echo $img['name']; ?>" /></a>
+        <a href="javascript:void(0)" class="hover" ><img class="hover" src="<?php echo new_get_image_src( $img['qrcode'], 'full' );  ?>" /></a>
         </div>
         <span><?php echo $img['name']; ?></span>
     </li>
@@ -94,7 +94,7 @@ class WP_Widget_follow extends WP_Widget {
 				data-update="<?php _e( '选择', 'new' ); ?>"><?php _e( '选择图片', 'new' ); ?></a>
 	    </p>
         <p>
-	        <img class="preview_<?php echo $i; ?>_src" src="<?php if ( ! empty( $follow_img[ $i ] ) ) echo wp_get_attachment_image_src( $follow_img[ $i ][ 'src' ] )[0]; ?>" />
+	        <img class="preview_<?php echo $i; ?>_src" src="<?php if ( ! empty( $follow_img[ $i ] ) ) echo new_get_image_src( $follow_img[ $i ][ 'src' ], 'thumbnail' ); ?>" />
 	        <input class="<?php echo $this->get_field_id( 'follow_src_' . $i ); ?>" name="<?php echo $this->get_field_name( 'follow_src_' . $i ); ?>" type="hidden" value="<?php if ( ! empty( $follow_img[ $i ] ) ) echo $follow_img[ $i ][ 'src' ]; ?>" />
         </p>
         <p>
@@ -108,7 +108,7 @@ class WP_Widget_follow extends WP_Widget {
 				data-update="<?php _e( '选择', 'new' ); ?>"><?php _e( '选择图片', 'new' ); ?></a>
 	    </p>
         <p>
-	        <img class="preview_<?php echo $i; ?>_qrcode" src="<?php if ( ! empty( $follow_img[ $i ] ) ) echo wp_get_attachment_image_src( $follow_img[ $i ][ 'qrcode' ] )[0]; ?>" />
+	        <img class="preview_<?php echo $i; ?>_qrcode" src="<?php if ( ! empty( $follow_img[ $i ] ) ) echo new_get_image_src( $follow_img[ $i ][ 'qrcode' ], 'thumbnail' ); ?>" />
 	        <input class="<?php echo $this->get_field_id( 'follow_qrcode_' . $i ); ?>" name="<?php echo $this->get_field_name( 'follow_qrcode_' . $i ); ?>" type="hidden" value="<?php if ( ! empty( $follow_img[ $i ] ) ) echo $follow_img[ $i ][ 'qrcode' ]; ?>" />
         </p>
         <p>

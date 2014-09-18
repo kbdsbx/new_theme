@@ -29,11 +29,11 @@ class WP_Widget_ads extends WP_Widget {
 <?php if ( $count > 1 ) : ?>
 <ul class="ads125">
     <?php for( $i = 0; $i < $count; $i++ ) : $img = $ads_img[$i]; ?>
-        <li><a href="<?php echo _filter_empty( $img['link'], '#' ); ?>"><img width="<?php echo $img_size[0]; ?>" height="<?php echo $img_size[1]; ?>" src="<?php echo wp_get_attachment_image_src( $img['src'], $size )[0]; ?>" alt="<?php echo $img['name']; ?>" title="<?php echo $img['name']; ?>" /></a></li>
+        <li><a href="<?php echo _filter_empty( $img['link'], '#' ); ?>"><img width="<?php echo $img_size[0]; ?>" height="<?php echo $img_size[1]; ?>" src="<?php echo new_get_image_src( $img['src'], $size ) ?>" alt="<?php echo $img['name']; ?>" title="<?php echo $img['name']; ?>" /></a></li>
     <?php endfor; ?>
 </ul>
     <?php else : ?>
-    <a href="<?php echo _filter_empty( $ads_img[0]['link'], '#' ); ?>"><img width="<?php echo $img_size[0]; ?>" height="<?php echo $img_size[1]; ?>" src="<?php echo wp_get_attachment_image_src( $ads_img[0]['src'], $size )[0]; ?>" alt="<?php echo $ads_img[0]['name']; ?>" title="<?php echo $ads_img[0]['name']; ?>" /></a>
+    <a href="<?php echo _filter_empty( $ads_img[0]['link'], '#' ); ?>"><img width="<?php echo $img_size[0]; ?>" height="<?php echo $img_size[1]; ?>" src="<?php echo new_get_image_src( $ads_img[0]['src'], $size ); ?>" alt="<?php echo $ads_img[0]['name']; ?>" title="<?php echo $ads_img[0]['name']; ?>" /></a>
     <?php endif; ?>
 <?php
         echo $args[ 'after_widget' ];
@@ -117,7 +117,7 @@ class WP_Widget_ads extends WP_Widget {
 				data-update="<?php _e( '选择', 'new' ); ?>"><?php _e( '选择图片', 'new' ); ?></a>
 	    </p>
         <p>
-            <img class="preview_<?php echo $i; ?>_src" src="<?php if ( ! empty( $ads_img[ $i ] ) ) echo wp_get_attachment_image_src( $ads_img[ $i ][ 'src' ] )[0]; ?>" />
+            <img class="preview_<?php echo $i; ?>_src" src="<?php if ( ! empty( $ads_img[ $i ] ) ) echo new_get_image_src( $ads_img[ $i ][ 'src' ] ); ?>" />
 	        <input class="<?php echo $this->get_field_id( 'ads_src_' . $i ); ?>" name="<?php echo $this->get_field_name( 'ads_src_' . $i ); ?>" type="hidden" value="<?php if ( ! empty( $ads_img[ $i ] ) ) echo $ads_img[ $i ][ 'src' ]; ?>" />
         </p>
         <p>

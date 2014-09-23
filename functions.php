@@ -221,8 +221,7 @@ function new_field_init() {
 		) );
     }
 
-	if(function_exists("register_field_group"))
-	{
+	if(function_exists("register_field_group")) {
 		register_field_group(array (
 			'id' => '285',
 			'title' => __( '分类目录字段', 'new' ),
@@ -260,8 +259,318 @@ function new_field_init() {
 			'menu_order' => 0,
 		));
 	}
+	if(function_exists("register_field_group")) {
+		register_field_group(array (
+			'id' => '296',
+			'title' => '资源字段',
+			'fields' => array (
+				array (
+					'key' => 'field_53e1810d8dd21',
+					'label' => '文件',
+					'name' => 'file',
+					'type' => 'file',
+					'instructions' => '文件在本服务器的网络地址',
+					'required' => 1,
+					'save_format' => 'id',
+					'library' => 'all',
+				),
+				array (
+					'key' => 'field_53e181558dd22',
+					'label' => '文件类型',
+					'name' => 'type',
+					'type' => 'select',
+					'instructions' => '文件类型',
+					'required' => 1,
+					'choices' => array (
+						'rich' => '富文本文件',
+						'zip' => '压缩文件',
+						'software' => '电脑软件',
+						'app' => '手机APP',
+						'audio' => '音频文件',
+						'video' => '视频文件',
+						'picture' => '图片文件',
+						'other' => '其他',
+					),
+					'default_value' => 'other',
+					'allow_null' => 0,
+					'multiple' => 0,
+				),
+				array (
+					'key' => 'field_53e2e24507824',
+					'label' => '文件大小',
+					'name' => 'size',
+					'type' => 'text',
+					'instructions' => '若留空，则自动计算文件大小',
+					'default_value' => '',
+					'placeholder' => '',
+					'prepend' => '',
+					'append' => '',
+					'formatting' => 'none',
+					'maxlength' => '',
+				),
+				array (
+					'key' => 'field_53e182a181b12',
+					'label' => '文件类型-富文本',
+					'name' => 'type-rich',
+					'type' => 'select',
+					'required' => 1,
+					'conditional_logic' => array (
+						'status' => 1,
+						'rules' => array (
+							array (
+								'field' => 'field_53e181558dd22',
+								'operator' => '==',
+								'value' => 'rich',
+							),
+						),
+						'allorany' => 'all',
+					),
+					'choices' => array (
+						'doc' => '.doc',
+						'docx' => '.docx',
+						'txt' => '.txt',
+						'pdf' => '.pdf',
+						'rtf' => '.rtf',
+						'ppt' => '.ppt',
+						'xls' => '.xls',
+						'xlse' => '.xlsx',
+						'other' => '其他',
+					),
+					'default_value' => 'other',
+					'allow_null' => 0,
+					'multiple' => 0,
+				),
+				array (
+					'key' => 'field_53e1833d53393',
+					'label' => '文件类型-压缩文件',
+					'name' => 'type-zip',
+					'type' => 'select',
+					'required' => 1,
+					'conditional_logic' => array (
+						'status' => 1,
+						'rules' => array (
+							array (
+								'field' => 'field_53e181558dd22',
+								'operator' => '==',
+								'value' => 'zip',
+							),
+						),
+						'allorany' => 'all',
+					),
+					'choices' => array (
+						'zip' => '.zip',
+						'7z' => '.7z',
+						'rar' => '.rar',
+						'gz' => '.gz',
+						'iso' => '.iso',
+						'jar' => '.jar',
+						'cab' => '.cab',
+						'tar' => '.tar',
+						'other' => '其他',
+					),
+					'default_value' => 'other',
+					'allow_null' => 0,
+					'multiple' => 0,
+				),
+				array (
+					'key' => 'field_53e183ca53394',
+					'label' => '文件类型-电脑软件',
+					'name' => 'type-software',
+					'type' => 'select',
+					'required' => 1,
+					'conditional_logic' => array (
+						'status' => 1,
+						'rules' => array (
+							array (
+								'field' => 'field_53e181558dd22',
+								'operator' => '==',
+								'value' => 'software',
+							),
+						),
+						'allorany' => 'all',
+					),
+					'choices' => array (
+						'exe' => '.exe',
+						'out' => '.out',
+						'msi' => '.msi',
+						'other' => '其他',
+					),
+					'default_value' => 'other',
+					'allow_null' => 0,
+					'multiple' => 0,
+				),
+				array (
+					'key' => 'field_53e1845353395',
+					'label' => '文件类型-手机APP',
+					'name' => 'type-app',
+					'type' => 'select',
+					'required' => 1,
+					'conditional_logic' => array (
+						'status' => 1,
+						'rules' => array (
+							array (
+								'field' => 'field_53e181558dd22',
+								'operator' => '==',
+								'value' => 'app',
+							),
+						),
+						'allorany' => 'all',
+					),
+					'choices' => array (
+						'apk' => '.akp',
+						'app' => '.app',
+						'other' => '其他',
+					),
+					'default_value' => 'other',
+					'allow_null' => 0,
+					'multiple' => 0,
+				),
+				array (
+					'key' => 'field_53e1849453396',
+					'label' => '文件类型-音频文件',
+					'name' => 'type-audio',
+					'type' => 'select',
+					'required' => 1,
+					'conditional_logic' => array (
+						'status' => 1,
+						'rules' => array (
+							array (
+								'field' => 'field_53e181558dd22',
+								'operator' => '==',
+								'value' => 'audio',
+							),
+						),
+						'allorany' => 'all',
+					),
+					'choices' => array (
+						'wav' => '.wav',
+						'mp3' => '.mp3',
+						'midi' => '.midi',
+						'mid' => '.mid',
+						'mmf' => '.mmf',
+						'wma' => '.wma',
+						'amr' => '.amr',
+						'aac' => '.aac',
+						'flv' => '.flv',
+						'other' => '其他',
+					),
+					'default_value' => 'other',
+					'allow_null' => 0,
+					'multiple' => 0,
+				),
+				array (
+					'key' => 'field_53e1852a53397',
+					'label' => '文件类型-视频文件',
+					'name' => 'type-video',
+					'type' => 'select',
+					'required' => 1,
+					'conditional_logic' => array (
+						'status' => 1,
+						'rules' => array (
+							array (
+								'field' => 'field_53e181558dd22',
+								'operator' => '==',
+								'value' => 'video',
+							),
+						),
+						'allorany' => 'all',
+					),
+					'choices' => array (
+						'wmv' => '.wmv',
+						'rmvb' => '.rmvb',
+						'mpg' => '.mpg',
+						'vod' => '.vod',
+						'mov' => '.mov',
+						'3gp' => '.3gp',
+						'mp4' => '.mp4',
+						'avi' => '.avi',
+						'flv' => '.flv',
+						'other' => '其他',
+					),
+					'default_value' => 'other',
+					'allow_null' => 0,
+					'multiple' => 0,
+				),
+				array (
+					'key' => 'field_53e185a853398',
+					'label' => '文件类型-图片文件',
+					'name' => 'type-picture',
+					'type' => 'select',
+					'required' => 1,
+					'conditional_logic' => array (
+						'status' => 1,
+						'rules' => array (
+							array (
+								'field' => 'field_53e181558dd22',
+								'operator' => '==',
+								'value' => 'picture',
+							),
+						),
+						'allorany' => 'all',
+					),
+					'choices' => array (
+						'bmp' => '.bmp',
+						'png' => '.png',
+						'jpeg' => '.jpeg',
+						'jpg' => '.jpg',
+						'tiff' => '.tiff',
+						'gif' => '.gif',
+						'exif' => '.exif',
+						'psd' => '.psd',
+						'cdr' => '.cdr',
+						'pcd' => '.pcd',
+						'other' => '其他',
+					),
+					'default_value' => 'other',
+					'allow_null' => 0,
+					'multiple' => 0,
+				),
+				array (
+					'key' => 'field_54115caef80b2',
+					'label' => '文件类型-其他',
+					'name' => 'type-other',
+					'type' => 'select',
+					'required' => 1,
+					'conditional_logic' => array (
+						'status' => 1,
+						'rules' => array (
+							array (
+								'field' => 'field_53e181558dd22',
+								'operator' => '==',
+								'value' => 'other',
+							),
+						),
+						'allorany' => 'all',
+					),
+					'choices' => array (
+						'other' => '其他',
+					),
+					'default_value' => 'other',
+					'allow_null' => 0,
+					'multiple' => 0,
+				),
+			),
+			'location' => array (
+				array (
+					array (
+						'param' => 'post_type',
+						'operator' => '==',
+						'value' => 'resource',
+						'order_no' => 0,
+						'group_no' => 0,
+					),
+				),
+			),
+			'options' => array (
+				'position' => 'acf_after_title',
+				'layout' => 'default',
+				'hide_on_screen' => array (
+				),
+			),
+			'menu_order' => 1,
+		));
+	}
 }
-
 add_action( 'init', 'new_field_init' );
 
 /**
@@ -291,10 +600,6 @@ function new_post_type_init() {
                 'category',
                 'post_tag'
             ),
-            'query_var' => false,
-            'rewrite' => array(
-                'with_front' => false,
-            ),
             'menu_icon' => 'dashicons-format-gallery'
         )
     );
@@ -322,10 +627,6 @@ function new_post_type_init() {
                 'category',
                 'post_tag'
             ),
-            'query_var' => false,
-            'rewrite' => array(
-                'with_front' => false,
-            ),
             'menu_icon' => 'dashicons-media-archive'
         )
     );
@@ -351,10 +652,6 @@ function new_post_type_init() {
             'taxonomies' => array(
                 'category',
                 'post_tag'
-            ),
-            'query_var' => false,
-            'rewrite' => array(
-                'with_front' => false,
             ),
             'menu_icon' => 'dashicons-cart'
         )
@@ -408,8 +705,20 @@ function new_add_styles() {
       || is_single()
       || is_tag()
       || is_404() ) {
+        // wp_enqueue_style( 'new-flexslider', new_template_uri . '/css/new/reset.css', array(), '2.0' );
         wp_enqueue_style( 'google-fonts', 'http://fonts.useso.com/css?family=Merriweather+Sans:400,300,700,800', array(), null );
-        wp_enqueue_style( 'new-style', get_stylesheet_uri(), array(), null );
+        wp_enqueue_style( 'new-flexslider', new_template_uri . '/css/new/flexslider.css', array(), '2.0' );
+        wp_enqueue_style( 'new-ui', new_template_uri . '/css/new/ui.css', array(), '1.10.2' );
+        wp_enqueue_style( 'new-base', new_template_uri . '/css/new/base.css', array(), null );
+        wp_enqueue_style( 'new-style', new_template_uri . '/css/new/style.css', array(), '1.0.0' );
+        wp_enqueue_style( 'new-new', new_template_uri . '/css/new/new.css', array(), null );
+
+        wp_enqueue_style( 'new-fontello', new_template_uri . '/css/new/fontello/fontello.css', array(), null );
+
+        wp_enqueue_style( 'new-960', new_template_uri . '/css/new/960.css', array(), '1.0' );
+        wp_enqueue_style( 'new-1000', new_template_uri . '/css/new/devices/1000.css', array(), null );
+        wp_enqueue_style( 'new-767', new_template_uri . '/css/new/devices/767.css', array(), null );
+        wp_enqueue_style( 'new-479', new_template_uri . '/css/new/devices/479.css', array(), null );
         if ( wp_style_is( 'jquery-ui' ) ) {
             wp_dequeue_style( 'jquery-ui' );
         }
@@ -434,15 +743,15 @@ function new_add_scripts() {
       || is_single()
       || is_tag()
       || is_404() ) {
-	wp_enqueue_script( 'new-jquery', get_template_directory_uri() . '/js/new/jquery.js', array(), '1.9.1' );
-	wp_enqueue_script( 'new-jquery-migrate', get_template_directory_uri() . '/js/new/jquery-migrate.js', array(), '1.2.1' );
-	wp_enqueue_script( 'new-ui', get_template_directory_uri() . '/js/new/ui.js', array(), '1.10.2' );
-	wp_enqueue_script( 'new-carouFreSel', get_template_directory_uri() . '/js/new/carouFredSel.js', array(), '6.0.4' );
-	wp_enqueue_script( 'new-supserfish', get_template_directory_uri() . '/js/new/superfish.js', array(), '1.4.8' );
-	wp_enqueue_script( 'new-customM', get_template_directory_uri() . '/js/new/customM.js', array(), '2.6.2' );
-	wp_enqueue_script( 'new-flexslider', get_template_directory_uri() . '/js/new/flexslider-min.js', array(), '2.1' );
-	wp_enqueue_script( 'new-mobilemenu', get_template_directory_uri() . '/js/new/mobilemenu.js', array(), '1.0' );
-    wp_enqueue_script( 'new', get_template_directory_uri() . '/js/new/new.js', array(), '1.0' );
+    wp_enqueue_script( 'jquery-ui-core' );
+    wp_enqueue_script( 'jquery-ui-tabs' );
+    wp_enqueue_script( 'jquery-ui-accordion' );
+	wp_enqueue_script( 'new-carouFreSel', get_template_directory_uri() . '/js/new/carouFredSel.js', array(), '6.0.4', true );
+	wp_enqueue_script( 'new-supserfish', get_template_directory_uri() . '/js/new/superfish.js', array(), '1.4.8', true );
+	wp_enqueue_script( 'new-customM', get_template_directory_uri() . '/js/new/customM.js', array(), '2.6.2', true );
+	wp_enqueue_script( 'new-flexslider', get_template_directory_uri() . '/js/new/flexslider-min.js', array(), '2.1', true );
+	wp_enqueue_script( 'new-mobilemenu', get_template_directory_uri() . '/js/new/mobilemenu.js', array(), '1.0', true );
+    wp_enqueue_script( 'new', get_template_directory_uri() . '/js/new/new.js', array(), '1.0', true );
     }
 
     if ( is_singular()
@@ -655,6 +964,81 @@ if ( function_exists( 'get_field' ) && function_exists( 'update_field' ) ) {
 /* filter */
 
 /**
+ * 处理bloginfo，使之显示更多有利于SEO的相关信息
+ */
+function new_filter_bloginfo( $bloginfo, $keyword ) {
+    switch ( $keyword ) {
+    case 'description':
+        if ( is_category() ) {
+            $category = get_category( get_query_var( 'cat' ), false );
+            if ( ! empty( $category ) ) {
+                $bloginfo = $category->category_description;
+            } 
+        } else if ( is_tag() ) {
+            $tag = get_tag( get_query_var( 'tag' ), false );
+            if ( ! empty ( $category ) ) {
+                $bloginfo = $tag->description;
+            }
+        } else if ( is_single() || is_page() ) {
+            if ( have_posts() ) {
+                the_post();
+                $bloginfo = get_the_excerpt();
+            }
+        }
+        return $bloginfo;
+    case 'keyword':
+        if ( is_single() ) {
+            $tags = get_the_tags();
+            if ( $tags ) {
+                foreach ( $tags as $tag ) {
+                    $bloginfo .= ',' . $tag->name;
+                }
+            }
+        }
+        return $bloginfo;
+    default:
+        return $bloginfo;
+    }
+}
+add_filter( 'bloginfo', 'new_filter_bloginfo', 10, 2 );
+
+/**
+ * 对网站title添加网站名称与URL，利于SEO
+ */
+function new_filter_title_parts( $title ) {
+    if ( is_category() ) {
+    } else if ( is_single() ) {
+        $categories = get_the_category();
+        if ( $categories ) {
+            foreach ( $categories as $category ) {
+                $title[] = $category->name;
+            }
+        }
+    }
+    // $title .= get_bloginfo( 'name' ) . ' ' . $sep . ' ' . get_bloginfo( 'url' );
+    $title[] = get_bloginfo( 'name' );
+    return $title;
+}
+add_filter( 'wp_title_parts', 'new_filter_title_parts', 10, 2 );
+
+function new_filter_title( $title ) {
+    return $title . get_bloginfo( 'url' );
+}
+add_filter( 'wp_title', 'new_filter_title' );
+
+/**
+ * 添加文章主循环中文章类型字段以保证分页时不会由于找不到文件而返回404
+ */
+function new_filter_request( $query_vars ) {
+    global $post_types_keys;
+    if ( ! is_admin() && ! is_page() ) {
+        // $query_vars['post_type'] = $post_types_keys;
+    }
+    return $query_vars;
+}
+add_filter( 'request', 'new_filter_request' );
+
+/**
  * 重制修改密码发送邮件
  */
 function new_filter_retrieve_password_message( $msg, $key ) {
@@ -817,16 +1201,13 @@ function new_filter_page_template( $page ) {
         'protected-content',
         'reigster'
     );
-    if ( is_page() ) {
-        if ( is_page( $pages ) ) {
-            $new_template = locate_template( array( 'page-user.php' ) );
-            if ( '' != $new_template ) {
-                return $new_template;
-            } else {
-                return $page;
-            }
+    if ( is_page( $pages ) ) {
+        $new_template = locate_template( array( 'page-user.php' ) );
+        if ( '' != $new_template ) {
+            return $new_template;
+        } else {
+            return $page;
         }
-        return $page;
     }
     return $page;
 }

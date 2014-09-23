@@ -103,7 +103,8 @@ wp_reset_query();
             <a id="next-<?php echo $module_key; ?>" class="next" href="#"><span></span></a>	
             <a id="prev-<?php echo $module_key; ?>" class="prev" href="#"><span></span></a>
         </div>
-        <script>
+        <script type='text/javascript'>
+            /* <![CDATA[ */
             jQuery(function() {
                 jQuery('#carousel-<?php echo $module_key; ?>').carouFredSel({
 		            width: '100%',
@@ -126,6 +127,7 @@ wp_reset_query();
             		}
                 });
             });
+            /* ]]> */
         </script>
     </h5>
     <div class="outertight">
@@ -174,7 +176,8 @@ wp_reset_query();
             <a id="next-<?php echo $module_key; ?>" class="next" href="#"><span></span></a>
             <a id="prev-<?php echo $module_key; ?>" class="prev" href="#"><span></span></a>
         </div>
-        <script>
+        <script type='text/javascript'>
+            /* <![CDATA[ */
             jQuery(function() {
                 jQuery('#carousel-<?php echo $module_key; ?>').carouFredSel({
 		            width: '100%',
@@ -199,6 +202,7 @@ wp_reset_query();
             		}
                 });
             });
+            /* ]]> */
         </script>
     </h5>
     <div class="outerwide" >    

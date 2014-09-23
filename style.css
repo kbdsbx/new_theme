@@ -1,4 +1,17 @@
 /**
+ * Theme Name: News
+ * Theme URI: https://github.com/kbdsbx/new
+ * Author: kbdsbx
+ * Author URI: http://www.kbdsbx.com/
+ * Description: 本主题以新闻模板NEWS（网络来源）为主，目的在于制作内容管理系统
+ * Version: 1.5.1
+ * License: GNU General Public License v2 or later
+ * License: http://www.gnu.org/licenses/gpl-2.0.html
+ * Tags: News, cms, color, 960, 中文, 新闻, 内容管理系统, 企业, 商业
+ * Text Domain: news
+ */
+
+/**
  * 插件列表：
  * Advanced Custom Fields
  * Breadcrumb NavXT
@@ -6,16 +19,3 @@
  * Quick Cache (非必须)
  */
 
-/*@import url( "css/reset.css" );*/
-@import url( "css/new/flexslider.css" );
-@import url( "css/new/ui.css" );
-@import url( "css/new/base.css" );
-@import url( "css/new/style.css" );
-@import url( "css/new/new.css" );
-
-@import url( "css/new/fontello/fontello.css" );
-
-@import url( "css/new/960.css" );
-@import url( "css/new/devices/1000.css" );
-@import url( "css/new/devices/767.css" );
-@import url( "css/new/devices/479.css" );

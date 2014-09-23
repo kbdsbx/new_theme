@@ -14,7 +14,7 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
 	<meta name="keywords" content="<?php bloginfo( 'keyword' ); ?>" />
 	<meta name="description" content="<?php bloginfo( 'description' ); ?>" />	
-	<title><?php wp_title( '|', true, 'right' ); ?></title>
+	<title><?php wp_title( '_', true, 'right' ); ?></title>
 	<!--[if gt IE 9]>
 	<script src="<?php echo new_template_uri; ?>/js/html5.js"></script>
 	<![endif]-->
@@ -32,9 +32,15 @@
 			        <div class="column">
 			            <div class="logo">
                             <a href="<?php echo esc_url( home_url( '/' ) );?>"><img src="<?php header_image(); ?>" alt="<?php bloginfo( 'name' ); ?>" title="<?php bloginfo( 'name' ); ?>" /></a>
-			            </div>
-			            
+                        </div>
+
 						<?php get_search_form(); ?>	
+			             
+                        <?php if ( get_bloginfo( 'description' ) ) : ?>
+                        <div class="description">
+                        <?php bloginfo( 'description' ); ?>
+                        </div>
+                        <?php endif; ?>
 			            
 			            <!-- Nav -->
 			            <div id="nav">

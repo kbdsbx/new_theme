@@ -21,7 +21,11 @@ $categories = array(
     <title><?php wp_title( '|', true, 'right' ); ?></title>
     <?php wp_head(); ?>
     <!-- basic styles -->
-    <link rel="stylesheet" href="<?php echo new_template_uri; ?>/css/member.style.css" />
+    <link rel="stylesheet" href="<?php echo new_template_uri; ?>/css/member/bootstrap.min.css" />
+    <link rel="stylesheet" href="<?php echo new_template_uri; ?>/css/member/font-awesome.min.css" />
+    <link rel="stylesheet" href="http://fonts.useso.com/css?family=Open+Sans:400,300" />
+    <link rel="stylesheet" href="<?php echo new_template_uri; ?>/css/member/ace.min.css" />
+    <link rel="stylesheet" href="<?php echo new_template_uri; ?>/css/member/ace-rtl.min.css" />
     <!--[if IE 7]>
     <link rel="stylesheet" href="<?php echo new_template_uri; ?>/css/member/font-awesome-ie7.min.css" />
     <![endif]-->

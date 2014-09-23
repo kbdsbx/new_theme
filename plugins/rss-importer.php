@@ -96,6 +96,17 @@ class RSS_Import extends WP_Importer {
             break;
         }
 
+        preg_match( '|<description>(.*?)</description>|is', $importdata, $parent_category );
+        $parent_category = esc_sql( trim( $parent_category[1] ) );
+        $categories = array_map( 'trim', explode( '/', $parent_category ) );
+        $category_id = 0;
+        foreach ( $categories as $category ) {
+            $category_id = wp_create_category( $category, $category_id );
+            if ( function_exists( 'update_field' ) && $category_id )
+                update_field( 'field_53e19dd6d5ccb', $post_type, $category_id );
+        }
+        $post_category = array( $category_id );
+
         preg_match_all('|<item>(.*?)</item>|is', $importdata, $this->posts);
 
 		$this->posts = $this->posts[1];
@@ -121,7 +132,7 @@ class RSS_Import extends WP_Importer {
             preg_match( '|<enclosure>(.*?)</enclosure>|is', $post, $thumbnail );
             if ( $thumbnail ) {
                 $new_thumbnail = preg_replace( '|/uploads(.*?)|is', $upload_dir . '$1', esc_sql(trim($thumbnail[1])) ); 
-                $thumbnail = ( $thumbnail == $new_thumbnail ? '' : $new_thumbnail );
+                $thumbnail = ( $thumbnail[1] == $new_thumbnail ? '' : $new_thumbnail );
             }
 
             preg_match( '|<new:resource>(.*?)</new:resource>|is', $post, $resource );
@@ -202,7 +213,7 @@ class RSS_Import extends WP_Importer {
             }
 			$post_author = 1;
 			$post_status = 'publish';
-			$this->posts[$index] = compact('post_author', 'post_type', 'post_name', 'thumbnail', 'source', 'resource', 'tags_input', 'post_date', 'post_date_gmt', 'post_content', 'post_title', 'post_status', 'guid', 'categories');
+			$this->posts[$index] = compact('post_author', 'post_type', 'post_name', 'thumbnail', 'source', 'resource', 'tags_input', 'post_date', 'post_date_gmt', 'post_content', 'post_title', 'post_status', 'guid', 'categories', 'post_category' );
 			$index++;
 		}
 	}
@@ -263,7 +274,7 @@ class RSS_Import extends WP_Importer {
                 }
                 
                 // 保存栏目并更新栏目字段
-				if (0 != count($categories)) {
+				if (0 != count($categories) && false) {
                     $category_ids = wp_create_categories($categories, $post_id);
                     if ( function_exists( 'update_field' ) && $category_ids )
                         foreach ( $category_ids as $cid )

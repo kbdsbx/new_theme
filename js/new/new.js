@@ -77,13 +77,14 @@ jQuery(document).ready(function(){
 	});
 	
 	jQuery( "#new-tabs" ).tabs();
-	
+	/*
 	jQuery( "#tooltip" ).tooltip({
 		position:{
 			my: "center bottom-5",
 			at: "center top"	
 		}
 	});
+    */
 	
 	
 // -----------------------------------------------------  UI ELEMENTS	
@@ -108,7 +109,7 @@ jQuery(document).ready(function(){
 		autoArrows: true,
 		dropShadows: false
 	});
-// -----------------------------------------------------  
+// -----------------------------------------------------  ABOUT US
     jQuery( "ul.social li" ).mouseenter( function() {
         var $this = jQuery(this);
         $this.find( '.follow' ).stop( true, false ).animate( { 'top': '-98px' }, 400 );

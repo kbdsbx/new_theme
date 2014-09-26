@@ -189,7 +189,7 @@ class RSS_Import extends WP_Importer {
                 $attachment_ids = array();
                 foreach ( $gallery as $key => $img ) {
                     $gallery[$key] = preg_replace( '|/uploads(.*?)|is', $upload_dir_url . '$1', esc_sql(trim($gallery[$key])) ); 
-                    $attachment_filename = str_replace( $upload_dir_url, wp_upload_dir()['basedir'], $gallery[$key] );
+                    $attachment_filename = str_replace( $upload_dir_url, $upload_dir, $gallery[$key] );
                     $attachment_args = array(
                         'guid'          => $gallery[$key],
                         'post_mime_type'=> wp_check_filetype( basename( $attachment_filename ), null )['type'],
@@ -238,7 +238,7 @@ class RSS_Import extends WP_Importer {
 				}
                 // 保存缩略图
                 if ('' != $thumbnail){
-                    $attachment_filename = str_replace( $upload_dir_url, wp_upload_dir()['basedir'], $thumbnail );
+                    $attachment_filename = str_replace( $upload_dir_url, upload_dir, $thumbnail );
                     $attachment_args = array(
                         'guid'          => $thumbnail,
                         'post_mime_type'=> wp_check_filetype( basename( $attachment_filename ), null )['type'],
@@ -255,7 +255,7 @@ class RSS_Import extends WP_Importer {
 
                 // 存在资源则保存资源
                 if ( '' != $resource ) {
-                    $attachment_filename = str_replace( $upload_dir_url, wp_upload_dir()['basedir'], $resource );
+                    $attachment_filename = str_replace( $upload_dir_url, upload_dir, $resource );
                     $attachment_args = array(
                         'guid'          => $resource,
                         'post_mime_type'=> wp_check_filetype( basename( $attachment_filename ), null )['type'],

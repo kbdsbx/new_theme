@@ -980,10 +980,10 @@ function new_filter_bloginfo( $bloginfo, $keyword ) {
                 $bloginfo = $tag->description;
             }
         } else if ( is_single() || is_page() ) {
-            if ( have_posts() ) {
-                the_post();
-                $bloginfo = get_the_excerpt();
-            }
+            // if ( have_posts() ) {
+            //    the_post();
+            //    $bloginfo = get_the_excerpt();
+            // }
         }
         return $bloginfo;
     case 'keyword':
@@ -1003,7 +1003,7 @@ function new_filter_bloginfo( $bloginfo, $keyword ) {
 add_filter( 'bloginfo', 'new_filter_bloginfo', 10, 2 );
 
 /**
- * 对网站title添加网站名称与URL，利于SEO
+ * 对网站title添加网站名称，利于SEO
  */
 function new_filter_title_parts( $title ) {
     if ( is_category() ) {
@@ -1021,6 +1021,9 @@ function new_filter_title_parts( $title ) {
 }
 add_filter( 'wp_title_parts', 'new_filter_title_parts', 10, 2 );
 
+/**
+ * 对网站title添加网站URL，利于SEO
+ */
 function new_filter_title( $title ) {
     return $title . get_bloginfo( 'url' );
 }
@@ -1031,8 +1034,13 @@ add_filter( 'wp_title', 'new_filter_title' );
  */
 function new_filter_request( $query_vars ) {
     global $post_types_keys;
-    if ( ! is_admin() && ! is_page() ) {
-        // $query_vars['post_type'] = $post_types_keys;
+    if ( ! is_admin() && isset( $query_vars['paged'] ) && isset( $query_vars['category_name'] ) ) {
+        if ( function_exists( 'get_field' ) ) {
+            $post_type = get_field( 'new-post-type', get_category_by_slug( $query_vars['category_name'] )->term_id );
+            $query_vars['post_type'] = $post_type;
+        } else {
+            $query_vars['post_type'] = $post_types_keys;
+        }
     }
     return $query_vars;
 }
@@ -1191,7 +1199,8 @@ function new_filter_page_template( $page ) {
         'favourite',
         'pm',
         'info',
-        'membership-Account',
+        'account',
+        'membership-account',
         'membership-billing',
         'membership-cancel',
         'membership-checkout',

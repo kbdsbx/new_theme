@@ -95,7 +95,8 @@ class RSS_Import extends WP_Importer {
             $post_type = 'resource';
             break;
         }
-
+        
+        // 获取分类目录信息
         preg_match( '|<description>(.*?)</description>|is', $importdata, $parent_category );
         $parent_category = esc_sql( trim( $parent_category[1] ) );
         $categories = array_map( 'trim', explode( '/', $parent_category ) );
@@ -106,6 +107,20 @@ class RSS_Import extends WP_Importer {
                 update_field( 'field_53e19dd6d5ccb', $post_type, $category_id );
         }
         $post_category = array( $category_id );
+
+        // 获取并设置分类目录（dede channel）301重定向
+        preg_match( '|<link>(.*?)</link>|is', $importdata, $link );
+        $link = esc_sql( trim( $link[1] ) );
+        if ( class_exists( 'Red_Item' ) ) {
+            Red_Item::create( array(
+                'source'    => $link,
+                'match'     => 'url',
+                'red_action'=> 'url',
+                'target'    => get_category_link( $category_id ),
+                'add'       => '添加转向记录',
+                'group'     => '1',
+            ) );
+        }
 
         preg_match_all('|<item>(.*?)</item>|is', $importdata, $this->posts);
 
@@ -172,6 +187,9 @@ class RSS_Import extends WP_Importer {
 			else
 				$guid = '';
 
+            preg_match( '|<link>(.*?)</link>|is', $post, $link );
+            $link = str_replace( array( '<![CDATA[', ']]>' ), '', esc_sql( trim( $link[1] ) ) );
+
 			preg_match('|<content:encoded>(.*?)</content:encoded>|is', $post, $post_content);
             if ($post_content) {
                 $post_content = str_replace(array ('<![CDATA[', ']]>'), '', esc_sql(trim($post_content[1])));
@@ -213,7 +231,7 @@ class RSS_Import extends WP_Importer {
             }
 			$post_author = 1;
 			$post_status = 'publish';
-			$this->posts[$index] = compact('post_author', 'post_type', 'post_name', 'thumbnail', 'source', 'resource', 'tags_input', 'post_date', 'post_date_gmt', 'post_content', 'post_title', 'post_status', 'guid', 'categories', 'post_category' );
+			$this->posts[$index] = compact('post_author', 'post_type', 'post_name', 'thumbnail', 'source', 'resource', 'tags_input', 'post_date', 'post_date_gmt', 'post_content', 'post_title', 'post_status', 'guid', 'link', 'categories', 'post_category' );
 			$index++;
 		}
 	}
@@ -236,6 +254,17 @@ class RSS_Import extends WP_Importer {
 					_e('Couldn&#8217;t get post ID', 'rss-importer');
 					return;
 				}
+                if ( class_exists( 'Red_Item' ) ) {
+                    Red_Item::create( array(
+                        'source'    => $link,
+                        'match'     => 'url',
+                        'red_action'=> 'url',
+                        'target'    => get_permalink( $post_id ),
+                        'add'       => '添加转向记录',
+                        'group'     => '1',
+                    ) );
+                }
+                
                 // 保存缩略图
                 if ('' != $thumbnail){
                     $attachment_filename = str_replace( $upload_dir_url, upload_dir, $thumbnail );

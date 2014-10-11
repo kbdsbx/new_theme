@@ -25,20 +25,41 @@ if ( ! function_exists ( '_filter_empty_numeric' ) ) {
 if ( ! function_exists ( '_filter_object_empty' ) ) {
 
     function _filter_object_empty( $obj, $param, $def = null ) {
-        return isset( $obj[ $param ] ) ? _filter_empty( $obj[ $param ], $def ) : $def;
+        return isset( $obj->$param ) ? _filter_empty( $obj->$param, $def ) : $def;
     }
 
 }
 if ( ! function_exists ( '_filter_object_empty_array' ) ) {
 
     function _filter_object_empty_array( $obj, $param, $def = array() ) {
-        return isset( $obj[ $param ] ) ? _filter_empty_array( $obj[ $param ], $def ) : $def;
+        return isset( $obj->$param ) ? _filter_empty_array( $obj->$param, $def ) : $def;
     }
 
 }
 if ( ! function_exists ( '_filter_object_empty_numeric' ) ) {
 
     function _filter_object_empty_numeric( $obj, $param, $def = 0 ) {
+        return isset( $obj->$param ) ? _filter_empty_numeric( $obj->$param, $def ) : $def;
+    }
+
+}
+if ( ! function_exists ( '_filter_array_empty' ) ) {
+
+    function _filter_array_empty( $obj, $param, $def = null ) {
+        return isset( $obj[ $param ] ) ? _filter_empty( $obj[ $param ], $def ) : $def;
+    }
+
+}
+if ( ! function_exists ( '_filter_array_empty_array' ) ) {
+
+    function _filter_array_empty_array( $obj, $param, $def = array() ) {
+        return isset( $obj[ $param ] ) ? _filter_empty_array( $obj[ $param ], $def ) : $def;
+    }
+
+}
+if ( ! function_exists ( '_filter_array_empty_numeric' ) ) {
+
+    function _filter_array_empty_numeric( $obj, $param, $def = 0 ) {
         return isset( $obj[ $param ] ) ? _filter_empty_numeric( $obj[ $param ], $def ) : $def;
     }
 

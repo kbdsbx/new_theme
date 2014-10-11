@@ -56,15 +56,16 @@ function new_theme_setting_admin() {
 				        data-update="<?php _e( '选择缩略图', 'new' ); ?>"><?php _e( '选择缩略图', 'new' ); ?></a>
                         <img class="preview_src" src="<?php $default_thumbnail_id = get_option( 'new_theme_default_thumbnail_id' ); if ( ! empty( $default_thumbnail_id ) ) echo new_get_image_src( $default_thumbnail_id ); ?>" />
                         <?php _img_widget_update_js(); ?>
+                        <p><?php _e( '当文章未添加缩略图时显示此缩略图', 'new' ); ?></p>
                     </fieldset>
                 </td>
             </tr>
             <tr>
-                <th scope="row"><label for="new_theme_heat_limit"><?php _e( '文章热度值', 'new' ); ?></label></th>
+                <th scope="row"><label for="new_theme_heat_limit"><?php _e( '文章访问量', 'new' ); ?></label></th>
                 <td>
                     <fieldset>
                         <input name="new_theme_heat_limit" id="new_theme_heat_limit" type="text" value="<?php form_option( 'new_theme_heat_limit' ); ?>" />
-                        <p><?php _e( '即当点击量达到此值时热度为百分之百（五星）', 'new' ); ?></p>
+                        <p><?php _e( '创建的文章将从( 0 ~ 此量 )中随机抽取一个数作为文章的访问量', 'new' ); ?></p>
                     </fieldset>
                 </td>
             </tr>

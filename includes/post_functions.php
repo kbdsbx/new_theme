@@ -24,9 +24,25 @@ function new_get_thumbnail_alt() {
  * in the loop
  */
 function new_get_rating() {
-    $w = get_field( 'new-article-views' ) / _filter_empty_numeric( get_option( 'new_theme_heat_limit' ), 400 );
+    $w = _filter_array_empty_numeric( get_post_meta( get_the_ID(), 'new_post_options', true ), 'new_post_view_count', 0 ) / _filter_empty_numeric( get_option( 'new_theme_heat_limit' ), 400 );
     $w = $w > 1 ? 100 : $w * 100;
     return $w;
+}
+
+/**
+ * 获取文章来源
+ * in the loop
+ */
+function new_get_source() {
+    return _filter_array_empty( get_post_meta( get_the_ID(), 'new_post_options', true ), 'new_post_source', __( '未知来源', 'new' ) );
+}
+
+/**
+ * 获取文章浏览量
+ * in the loop
+ */
+function new_get_view_count() {
+    return _filter_array_empty_numeric( get_post_meta( get_the_ID(), 'new_post_options', true ), 'new_post_view_count', 0 );
 }
 
 /**
@@ -64,9 +80,11 @@ function _new_filter_modules( $v ) {
  * 模块排序
  */
 function new_modules() {
-    $modules_data = get_option( 'modules_data' );
-    usort( $modules_data, '_new_sort_modules' );
-    $modules_data = array_filter( $modules_data, '_new_filter_modules' );
+    $modules_data = _filter_empty_array( get_option( 'modules_data' ) );
+    if ( is_array( $modules_data ) && function_exists( '_new_sort_modules' ) ) {
+        usort( $modules_data, '_new_sort_modules' );
+        $modules_data = array_filter( $modules_data, '_new_filter_modules' );
+    }
     return $modules_data;
 }
 /**

@@ -8,7 +8,8 @@
 /*------------------------------------------------------------------*/
 .logo{margin-left:0; width:100%; text-align:center;}
 .logo img{max-width:300px;}
-.search-form{margin:0 40px 10px 0;}
+.search-form{ /* margin:0 40px 10px 0; */ margin: 0; }
+.user{ margin-top: 0; }
 .device-menu{ display:block; margin-top:10px;}
 ul.sf-menu { display:none; }
 

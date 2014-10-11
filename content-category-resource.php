@@ -3,7 +3,7 @@
     <p>
         <a href="<?php the_permalink(); ?>"><?php the_title(); ?></a>
         <span class="meta"><?php the_time( get_option( 'date_format' ) ); ?>   \\   <?php the_field( 'size' ); ?>   \\   <?php echo get_field_object( 'type' )['choices'][ get_field( 'type' ) ]; ?></span>
-        <span class="rating" title="<?php the_field( 'new-article-views' ); ?>"><span style="width:<?php echo new_get_rating(); ?>%;"></span></span>
+        <span class="rating" title="<?php echo new_get_view_count(); ?>"><span style="width:<?php echo new_get_rating(); ?>%;"></span></span>
     </p>
     <br/>
     <p><?php echo strip_tags( get_the_excerpt() ); ?></p>

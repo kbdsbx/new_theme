@@ -5,7 +5,8 @@
 /*------------------------------------------------------------------*/ 
 /*	1) Header
 /*------------------------------------------------------------------*/
-.logo{margin-left:0;}
+.logo{ margin-left:0; }
+.logo img{ max-width:450px; }
 ul.sf-menu { display:none; }
 .device-menu{ display:block; }
 

@@ -33,7 +33,15 @@
 			            <div class="logo">
                             <a href="<?php echo esc_url( home_url( '/' ) );?>"><img src="<?php header_image(); ?>" alt="<?php bloginfo( 'name' ); ?>" title="<?php bloginfo( 'name' ); ?>" /></a>
                         </div>
-
+                        <?php if ( get_page_by_title( 'dashboard' ) !== null && get_page_by_title( 'login' ) !== null ) : ?>
+                            <div class="user">
+                            <?php if ( is_user_logged_in() ) : ?>
+                                <a href="<?php echo get_page_link( get_page_by_title( 'dashboard' )->ID ); ?>"><?php echo get_avatar( get_current_user_id(), 35 ); ?></a>
+                            <?php else : ?>
+                                <button class="ub" onclick="location.href='<?php echo get_page_link( get_page_by_title( 'login' )->ID ); ?>'"></button>
+                            <?php endif; ?>
+                            </div>
+                        <?php endif; ?>
 						<?php get_search_form(); ?>	
 			             
                         <?php if ( get_bloginfo( 'description' ) ) : ?>

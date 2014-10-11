@@ -6,8 +6,8 @@ global $post_types_keys;
 get_header(); ?>
 <section class="slider">
     <div class="container">
-    <?php dynamic_sidebar( 'sidebar-main-slider' ); ?>
-    <?php dynamic_sidebar( 'sidebar-slider2' ); ?>
+    <?php dynamic_sidebar( 'sidebar-home-left' ); ?>
+    <?php dynamic_sidebar( 'sidebar-home-right' ); ?>
     </div>    
 </section>
 <!-- / Slider -->

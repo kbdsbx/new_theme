@@ -13,9 +13,16 @@
 
 /**
  * 插件列表：
- * Advanced Custom Fields
- * Breadcrumb NavXT
- * WP-PageNavi分页导航
- * Quick Cache (非必须)
+ * Breadcrumb-navxt     ( public )
+ * bwp-minify           ( public )
+ * redirection          ( public )
+ * wp-favorite-posts    ( public )
+ * wp-pagenavi          ( public )
+ * wp-super-cache       ( public ) ( linux )
+ * quick-cache          ( public ) ( windows )
+ *
+ * front-end-pm         ( private )
+ * paid-membership-pro  ( private )
+ * wp-user-frontend-pro ( private )
  */
 

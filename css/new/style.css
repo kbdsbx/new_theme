@@ -18,6 +18,8 @@
 			b) FLICKR
 			
 		5)  FOOTER
+        
+        6)  404
 
 /**************************************************/
         
@@ -72,6 +74,19 @@ body{
     margin:0 0 0 30px;
     text-align: left;
     font-style: italic;
+}
+.user{
+    margin-top:30px;
+    float:right;
+    width:auto;
+    margin-left:10px;
+}
+.user .ub{
+    background: #ea4748 url(../img/user.png) no-repeat center; 
+    border:none;
+    margin:0;
+    height:34px;
+    width:43px;
 }
 .search-form{
 	background:#fafafa;
@@ -531,6 +546,31 @@ h5.line>span{
 .block2 a:hover{
 	text-decoration:underline;
 }
+
+.block3 {
+	padding: 0;
+}
+.block3 > li{
+	margin: 0 0 10px 0;
+	list-style: none;
+}
+.block4 {
+	
+}
+.block4 > li {
+	display: block;
+	width: auto;
+	float: left;
+	list-style: none;
+	margin: 0 10px 0 0;
+}
+.center-block {
+	padding-right: 15px;
+	padding-left: 15px;
+	margin-right: auto;
+	margin-left: auto;
+}
+
 span.rating{
 	background:url(../img/stars2.png) no-repeat;
 	width:53px;
@@ -1548,4 +1588,42 @@ div.text-404{
     -webkit-transform: rotate(-90deg);	/* Safari and Chrome */
     -o-transform: rotate(-90deg);		/* Opera */
     -moz-transform: rotate(-90deg);		/* Firefox */
+}
+
+/* 不同模板之间兼容调整 */
+#eFramePic table td {
+	vertical-align: top;
+	border-right: 0;
+	border-bottom: 0;
+	padding: 0;
+}
+#picCont table {
+	max-width: 108px;
+	max-height: 108px;
+}
+#endSelect {
+	height: 100px;
+}
+#endSelect p {
+	color: #FFFFFF;
+}
+
+/*
+.hover {
+	position: relative;
+	display: none;
+	z-index: 12;
+	top: -54px;
+}
+*/
+
+.left-banner {
+    position: fixed;
+    top: 20%;
+    left: 0;
+}
+.right-banner {
+    position: fixed;
+    top: 20%;
+    right: 0;
 }

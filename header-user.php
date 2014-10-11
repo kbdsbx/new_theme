@@ -1,14 +1,13 @@
 <?php
 
 $categories = array(
-    'dashboard' => array( 'slug' => 'dashboard', 'title' => __( '我的文章', 'new' ), 'icon' => 'icon-dashboard' ),
-    'add_new' => array( 'slug' => 'add_new', 'title' => __( '发布文章', 'new' ), 'icon' => 'icon-edit' ),
-    'favourite' => array( 'slug' => 'favourite', 'title' => __( '我的收藏', 'new' ), 'icon' => 'icon-heart' ),
-    'pm' => array( 'slug' => 'pm', 'title' => __( '站内信息', 'new' ), 'icon' => 'icon-envelope' ),
-    'c' => array( 'slug' => 'c', 'title' => __( '消费清单', 'new' ), 'icon' => 'icon-shopping-cart' ),
-    'd' => array( 'slug' => 'd', 'title' => __( '订单查询', 'new' ), 'icon' => 'icon-list' ),
-    'e' => array( 'slug' => 'e', 'title' => __( '账户充值', 'new' ), 'icon' => 'icon-jpy' ),
-    'info' => array( 'slug' => 'info', 'title' => __( '编辑资料', 'new' ), 'icon' => 'icon-cog' ),
+    'dashboard' => array( 'slug' => 'Dashboard', 'title' => __( '我的文章', 'new' ), 'icon' => 'icon-dashboard' ),
+    'add_new' => array( 'slug' => 'Add New', 'title' => __( '发布文章', 'new' ), 'icon' => 'icon-edit' ),
+    'favourite' => array( 'slug' => 'Favourite', 'title' => __( '我的收藏', 'new' ), 'icon' => 'icon-heart' ),
+    'pm' => array( 'slug' => 'Pm', 'title' => __( '站内信息', 'new' ), 'icon' => 'icon-envelope' ),
+    'membership-account' => array( 'slug' => 'Membership Account', 'title' => __( '会员详情', 'new' ), 'icon' => 'icon-shopping-cart' ),
+    'membership-invoice' => array( 'slug' => 'Membership Invoice', 'title' => __( '订单查询', 'new' ), 'icon' => 'icon-list' ),
+    'info' => array( 'slug' => 'Info', 'title' => __( '编辑资料', 'new' ), 'icon' => 'icon-cog' ),
 );
 
 ?><!DOCTYPE html>
@@ -67,8 +66,8 @@ $categories = array(
             <div class="sidebar sidebar-fixed" id="sidebar">
                 <ul class="nav nav-list">
                     <?php foreach( $categories as $k => $category ) : ?>
-                    <li <?php if ( is_page( $category['slug'] ) ) echo 'class="active"'; ?>>
-                        <a href="<?php echo home_url( '/' . $category['slug'] ); ?>">
+                    <li <?php if ( is_page( $k ) ) echo 'class="active"'; ?>>
+                        <a href="<?php echo get_page_link( get_page_by_title( $category['slug'] )->ID ); ?>">
                             <i class="<?php echo $category['icon']; ?>"></i>
                             <span class="menu-text"><?php echo $category['title']; ?></span>
                         </a>

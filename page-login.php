@@ -43,7 +43,7 @@
                                 <i class="icon-leaf green"></i>
                                 <span class="white"><?php echo get_option( 'blogname' ); ?></span>
                             </h1>
-                            <h4 class="blue">&copy; <?php echo get_option( 'blogdescription' ); ?></h4>
+                            <h6 class="blue">&copy; <?php echo get_option( 'blogdescription' ); ?></h6>
                         </div>
 
                             <div class="space-6"></div>
@@ -225,7 +225,11 @@
 
                                             <div class="space-6"></div>
                                             <p><?php _e( '请输入您的注册信息', 'new' ); ?></p>
-                                            <?php echo do_shortcode( '[wpuf_profile type="registration" id="263"]' ); ?>
+                                            <?php
+                                            $page_id = wpuf_get_option( 'reg_override_page', 'wpuf_profile', false );
+                                            $code = get_post( $page_id )->post_content;
+                                            echo do_shortcode( $code );
+                                            ?>
                                         </div>
 
                                         <div class="toolbar center">

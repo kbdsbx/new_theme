@@ -3,11 +3,15 @@
 DEFINE( 'new_template_uri', get_template_directory_uri() );
 DEFINE( 'new_plugins_uri', get_template_directory_uri() . '/plugins' );
 DEFINE( 'new_classes_uri', get_template_directory_uri() . '/classes' );
+DEFINE( 'new_hooks_uri', get_template_directory_uri(). '/hooks' );
 DEFINE( 'new_inc_uri', get_template_directory_uri(). '/includes' );
+DEFINE( 'new_expand_uri', get_template_directory_uri(). '/expand' );
 DEFINE( 'new_template', get_template_directory() );
 DEFINE( 'new_plugins', get_template_directory() . '/plugins' );
 DEFINE( 'new_classes', get_template_directory() . '/classes' );
+DEFINE( 'new_hooks', get_template_directory(). '/hooks' );
 DEFINE( 'new_inc', get_template_directory(). '/includes' );
+DEFINE( 'new_expand', get_template_directory(). '/expand' );
 
 // require 'advanced-custom-fields/acf.php';
 // define( 'ACF_LITE', false );
@@ -16,6 +20,8 @@ include_once new_inc . '/external_functions.php';
 include_once new_inc . '/widget_functions.php';
 include_once new_inc . '/filter_functions.php';
 include_once new_inc . '/post_functions.php';
+
+include_once new_hooks . '/meta_box.php';
 
 include_once new_plugins . '/slider_widget.php';
 include_once new_plugins . '/tabs_widget.php';
@@ -541,61 +547,6 @@ add_action( 'init', 'new_remove_adminbar' );
 
 /* action */
 
-function new_meta_box_save_post( $post_id ) {
-    global $new_post_flags;
-
-    $new_post_options = array();
-
-    $new_post_options['new_post_flags'] = _filter_array_empty_array( $_POST, 'new_post_flags', array() );
-    $new_post_options['new_post_view_count'] = _filter_array_empty_numeric( $_POST, 'new_post_view_count', 0 );
-    $new_post_options['new_post_source'] = _filter_array_empty( $_POST, 'new_post_source', '' );
-
-    update_post_meta( $post_id, 'new_post_options', $new_post_options );
-}
-add_action( 'save_post', 'new_meta_box_save_post' );
-
-function new_add_meta_box_post_count_html( $post ) {
-    global $new_post_flags;
-    $new_post_options = get_post_meta( $post->ID, 'new_post_options', true );
-    if ( ! is_array( $new_post_options ) ) {
-        $new_post_options = array();
-    }
-    $flags = _filter_array_empty( $new_post_options, 'new_post_flags', array() );
-?>
-    <label><?php _e( '文章标记：', 'new' ); ?></label>
-    <div>
-    <?php foreach( $new_post_flags as $key => $flag ) : ?>
-    <label for="new_post_flags_<?php echo $key; ?>"><input type="checkbox" id="new_post_flags_<?php echo $key; ?>" name="new_post_flags[]" value="<?php echo $key; ?>" <?php if ( array_search( $key, $flags ) !== false ) { echo 'checked="checked"'; } ?> /><?php echo $flag; ?></label>
-    <?php endforeach; ?>
-    </div>
-    <p><?php _e( '为你的文章添加标记，使之在页面中特殊的地方或以特殊的形式展示出来' ); ?></p>
-    <hr />
-    <label for="new_post_view_count"><?php _e( '文章浏览次数：', 'new' ); ?></label>
-    <input type="number" step="1" min="0" id="new_post_view_count" name="new_post_view_count" class="new-post-input" autocomplete="off" value="<?php echo _filter_array_empty_numeric( $new_post_options, 'new_post_view_count', 0 ); ?>" />
-    <p><?php printf( __( '若开启主题的文章浏览次数自动生成，当且仅当创建文章时会随机生成新的文章浏览次数，具体设置及生成数值范围请转至<a href="%s">主题设置</a>', 'new' ), admin_url( 'options-general.php?page=theme_setting_page.php' ) ); ?></p>
-    <hr />
-    <label for="new_post_source"><?php _e( '文章来源：', 'new' ); ?></label>
-    <input type="text" id="new_post_source" name="new_post_source" class="new-post-input" value="<?php echo _filter_array_empty( $new_post_options, 'new_post_source', '' ); ?>" />
-<?php 
-}
-
-/**
- * 添加普通文章所需属性的相关设置框
- */
-function new_add_meta_box() {
-    global $post_types_keys;
-    foreach ( $post_types_keys as $post_type ) {
-        add_meta_box(
-            'new_post_options',
-            __( '相关设置', 'new' ),
-            'new_add_meta_box_post_count_html',
-            $post_type,
-            'advanced'
-        );
-    }
-}
-add_action( 'add_meta_boxes', 'new_add_meta_box' );
-
 /**
  * 添加新增分类目录所需属性相关设置
  */
@@ -673,14 +624,16 @@ function new_setup() {
 add_action( 'after_setup_theme', 'new_setup' );
 
 /**
- * 添加后台样式
+ * 添加后台样式与脚本
  */
-function new_admin_enqueue_styles() {
+function new_admin_enqueue_scripts_styles() {
     if ( is_admin() ) {
         wp_enqueue_style( 'new-admin-style', new_template_uri . '/css/admin/style.css', array(), null );
+
+        wp_enqueue_script( 'new-dc', new_template_uri . '/js/admin/dc.js', array(), '1.4.0', true );
     }
 }
-add_action( 'admin_enqueue_scripts', 'new_admin_enqueue_styles' );
+add_action( 'admin_enqueue_scripts', 'new_admin_enqueue_scripts_styles' );
 
 /**
  * 添加模板样式
@@ -738,12 +691,12 @@ function new_add_scripts() {
         wp_enqueue_script( 'jquery-ui-core' );
         wp_enqueue_script( 'jquery-ui-tabs' );
         wp_enqueue_script( 'jquery-ui-accordion' );
-        wp_enqueue_script( 'new-carouFreSel', get_template_directory_uri() . '/js/new/carouFredSel.min.js', array(), '6.0.4', true );
-        wp_enqueue_script( 'new-supserfish', get_template_directory_uri() . '/js/new/superfish.min.js', array(), '1.4.8', true );
-        wp_enqueue_script( 'new-customM', get_template_directory_uri() . '/js/new/customM.min.js', array(), '2.6.2', true );
-        wp_enqueue_script( 'new-flexslider', get_template_directory_uri() . '/js/new/flexslider.min.js', array(), '2.1', true );
-        wp_enqueue_script( 'new-mobilemenu', get_template_directory_uri() . '/js/new/mobilemenu.min.js', array(), '1.0', true );
-        wp_enqueue_script( 'new', get_template_directory_uri() . '/js/new/new.js', array(), '1.0', true );
+        wp_enqueue_script( 'new-carouFreSel', new_template_uri . '/js/new/carouFredSel.min.js', array(), '6.0.4', true );
+        wp_enqueue_script( 'new-supserfish', new_template_uri . '/js/new/superfish.min.js', array(), '1.4.8', true );
+        wp_enqueue_script( 'new-customM', new_template_uri . '/js/new/customM.min.js', array(), '2.6.2', true );
+        wp_enqueue_script( 'new-flexslider', new_template_uri . '/js/new/flexslider.min.js', array(), '2.1', true );
+        wp_enqueue_script( 'new-mobilemenu', new_template_uri . '/js/new/mobilemenu.min.js', array(), '1.0', true );
+        wp_enqueue_script( 'new', new_template_uri . '/js/new/new.js', array(), '1.0', true );
     }
 
     if ( is_singular()

@@ -1,0 +1,272 @@
+[
+    {
+        "id": "rich",
+        "name": "富文本文件",
+        "children": [
+            {
+                "id": "doc",
+                "name": ".doc"
+            },
+            {
+                "id": "docx",
+                "name": ".docx"
+            },
+            {
+                "id": "txt",
+                "name": ".txt"
+            },
+            {
+                "id": "pdf",
+                "name": ".pdf"
+            },
+            {
+                "id": "rtf",
+                "name": ".rtf"
+            },
+            {
+                "id": "ppt",
+                "name": ".ppt"
+            },
+            {
+                "id": "xls",
+                "name": ".xls"
+            },
+            {
+                "id": "xlsx",
+                "name": ".xlsx"
+            },
+            {
+                "id": "other",
+                "name": "其他"
+            }
+        ]
+    },
+    {
+        "id": "zip",
+        "name": "压缩文件",
+        "children": [
+            {
+                "id": "zip",
+                "name": ".zip"
+            },
+            {
+                "id": "7z",
+                "name": ".7z"
+            },
+            {
+                "id": "rar",
+                "name": ".rar"
+            },
+            {
+                "id": "gz",
+                "name": ".gz"
+            },
+            {
+                "id": "iso",
+                "name": ".iso"
+            },
+            {
+                "id": "jar",
+                "name": ".jar"
+            },
+            {
+                "id": "cab",
+                "name": ".cab"
+            },
+            {
+                "id": "tar",
+                "name": ".tar"
+            },
+            {
+                "id": "other",
+                "name": "其他"
+            }
+        ]
+    },
+    {
+        "id": "software",
+        "name": "电脑软件",
+        "children": [
+            {
+                "id": "exe",
+                "name": ".exe"
+            },
+            {
+                "id": "out",
+                "name": ".out"
+            },
+            {
+                "id": "msi",
+                "name": ".msi"
+            },
+            {
+                "id": "other",
+                "name": "其他"
+            }
+        ]
+    },
+    {
+        "id": "app",
+        "name": "手机APP",
+        "children": [
+            {
+                "id": "apk",
+                "name": ".apk"
+            },
+            {
+                "id": "app",
+                "name": ".app"
+            },
+            {
+                "id": "other",
+                "name": "其他"
+            }
+        ]
+    },
+    {
+        "id": "audio",
+        "name": "音频文件",
+        "children": [
+            {
+                "id": "wav",
+                "name": ".wav"
+            },
+            {
+                "id": "mp3",
+                "name": ".mp3"
+            },
+            {
+                "id": "midi",
+                "name": ".midi"
+            },
+            {
+                "id": "mid",
+                "name": ".mid"
+            },
+            {
+                "id": "mmf",
+                "name": ".mmf"
+            },
+            {
+                "id": "wma",
+                "name": ".wma"
+            },
+            {
+                "id": "amr",
+                "name": ".amr"
+            },
+            {
+                "id": "aac",
+                "name": ".aac"
+            },
+            {
+                "id": "flv",
+                "name": ".flv"
+            },
+            {
+                "id": "other",
+                "name": "其他"
+            }
+        ]
+    },
+    {
+        "id": "video",
+        "name": "视频文件",
+        "children": [
+            {
+                "id": "wmv",
+                "name": ".wmv"
+            },
+            {
+                "id": "rmvb",
+                "name": ".rmvb"
+            },
+            {
+                "id": "mpg",
+                "name": ".mpg"
+            },
+            {
+                "id": "vod",
+                "name": ".vod"
+            },
+            {
+                "id": "mov",
+                "name": ".mov"
+            },
+            {
+                "id": "3gp",
+                "name": ".3gp"
+            },
+            {
+                "id": "mp4",
+                "name": ".mp4"
+            },
+            {
+                "id": "avi",
+                "name": ".avi"
+            },
+            {
+                "id": "flv",
+                "name": ".flv"
+            },
+            {
+                "id": "other",
+                "name": "其他"
+            }
+        ]
+    },
+    {
+        "id": "picture",
+        "name": "图片文件",
+        "children": [
+            {
+                "id": "bmp",
+                "name": ".bmp"
+            },
+            {
+                "id": "png",
+                "name": ".png"
+            },
+            {
+                "id": "jpeg",
+                "name": ".jpeg"
+            },
+            {
+                "id": "jpg",
+                "name": ".jpg"
+            },
+            {
+                "id": "tiff",
+                "name": ".tiff"
+            },
+            {
+                "id": "gif",
+                "name": ".gif"
+            },
+            {
+                "id": "exif",
+                "name": ".exif"
+            },
+            {
+                "id": "psd",
+                "name": ".psd"
+            },
+            {
+                "id": "cdr",
+                "name": ".cdr"
+            },
+            {
+                "id": "pcd",
+                "name": ".pcd"
+            },
+            {
+                "id": "other",
+                "name": "其他"
+            }
+        ]
+    },
+    {
+        "id": "other",
+        "name": "其他"
+    }
+]

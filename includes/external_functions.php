@@ -48,7 +48,6 @@ function FileSizeConvert($bytes)
     return $result;
 }
 
-
 /**
  * The main logging function
  *
@@ -62,7 +61,7 @@ function new_log( $msg, $type = '' ) {
 	        $msg = print_r( $msg, true );
 	    }
         $msg = sprintf( "[%s][%s] %s\n", date( 'd.m.Y h:i:s' ), $type, $msg );
-        error_log( $msg, 3, dirname( __FILE__ ) . '/log.txt' );
+        error_log( $msg, 3, new_template . '/log.txt' );
     }
 }
 
@@ -76,6 +75,7 @@ function new_log( $msg, $type = '' ) {
 function new_breadcrumbs() {
     global $post;
     global $wp_query;
+    global $author;
  
     $delimiter = '&nbsp;&raquo;&nbsp;';
     $home = sprintf( '<a href="%s" >%s</a>', get_bloginfo( 'url' ), __( '主页', 'new' ) ); //text for the 'Home' link
@@ -120,11 +120,10 @@ function new_breadcrumbs() {
                 $breadcrumb_html .= $crumb . $delimiter;
             $breadcrumb_html .= get_the_title();
         } elseif ( is_search() ) {
-            $breadcrumb_html .= sprintf( __( '搜索&#39;%s&#39;的结果', 'new' ), get_search_query() );
+            $breadcrumb_html .= sprintf( __( '搜索“%s’的结果', 'new' ), get_search_query() );
         } elseif ( is_tag() ) {
             $breadcrumb_html .= single_tag_title( '', false );
         } elseif ( is_author() ) {
-            global $author;
             $userdata = get_userdata( $author );
             $breadcrumb_html .= $userdata->display_name;
         } elseif ( is_404() ) {
@@ -133,7 +132,7 @@ function new_breadcrumbs() {
      
         if ( get_query_var('paged') ) {
             if ( is_category() || is_day() || is_month() || is_year() || is_search() || is_tag() || is_author() ) {
-                $breadcrumb_html .= sprintf( __( '(第%s页)', 'new' ), get_query_var( 'paged' ) );
+                $breadcrumb_html .= sprintf( __( '（第%s页）', 'new' ), get_query_var( 'paged' ) );
             }
         }
     }

@@ -24,7 +24,7 @@ get_header(); ?>
 	            <?php _e( '十分抱歉，没有找到您想要的结果，请更换您的关键词重试或喝杯咖啡休息一下', 'new' ); ?>
 	            <?php endif; ?>
                 <div class="pager">
-                <?php wp_pagenavi(); ?>
+                <?php if ( function_exists( 'wp_pagenavi' ) ) : wp_pagenavi(); endif; ?>
                 </div>
             </div>
         </div>

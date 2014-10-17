@@ -86,17 +86,17 @@ function new_theme_setting_admin() {
 
 function new_theme_setting_page() {
     if ( isset( $_REQUEST['action'] ) && $_REQUEST['action'] == 'new_theme_edit' ) {
-        $new_theme_about = _filter_object_empty( $_REQUEST, 'new_theme_about', '' );
+        $new_theme_about = _filter_array_empty( $_REQUEST, 'new_theme_about', '' );
         update_option( 'new_theme_about', wp_unslash( $new_theme_about ) );
-        $new_theme_license = _filter_object_empty( $_REQUEST, 'new_theme_license', '' );
+        $new_theme_license = _filter_array_empty( $_REQUEST, 'new_theme_license', '' );
         update_option( 'new_theme_license', wp_unslash( $new_theme_license ) );
-        $new_theme_share = _filter_object_empty( $_REQUEST, 'new_theme_share', '' );
+        $new_theme_share = _filter_array_empty( $_REQUEST, 'new_theme_share', '' );
         update_option( 'new_theme_share', wp_unslash( $new_theme_share ) );
-        $new_theme_latest = _filter_object_empty( $_REQUEST, 'new_theme_latest', '' );
+        $new_theme_latest = _filter_array_empty( $_REQUEST, 'new_theme_latest', '' );
         update_option( 'new_theme_latest', wp_unslash( $new_theme_latest ) );
-        $new_theme_default_thumbnail_id = _filter_object_empty_numeric( $_REQUEST, 'new_theme_default_thumbnail_id', '' );
+        $new_theme_default_thumbnail_id = _filter_array_empty_numeric( $_REQUEST, 'new_theme_default_thumbnail_id', '' );
         update_option( 'new_theme_default_thumbnail_id', $new_theme_default_thumbnail_id );
-        $new_theme_heat_limit = _filter_object_empty_numeric( $_REQUEST, 'new_theme_heat_limit', '' );
+        $new_theme_heat_limit = _filter_array_empty_numeric( $_REQUEST, 'new_theme_heat_limit', '' );
         update_option( 'new_theme_heat_limit', $new_theme_heat_limit );
     }
 

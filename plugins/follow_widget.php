@@ -10,9 +10,9 @@ class WP_Widget_follow extends WP_Widget {
     }
 
     function widget( $args, $instance ) {
-		$title      = apply_filters( 'widget_title', _filter_object_empty( $instance, 'title', __( '关注', 'new' ) ), $instance, $this->id_base );
-        $count      = _filter_object_empty_numeric( $instance, 'count', 3 );
-        $follow_img = _filter_object_empty_array( $instance, 'follow_img', array() );
+		$title      = apply_filters( 'widget_title', _filter_array_empty( $instance, 'title', __( '关注', 'new' ) ), $instance, $this->id_base );
+        $count      = _filter_array_empty_numeric( $instance, 'count', 3 );
+        $follow_img = _filter_array_empty_array( $instance, 'follow_img', array() );
 
         echo $args['before_widget'];
 ?>
@@ -21,7 +21,7 @@ class WP_Widget_follow extends WP_Widget {
     <?php for( $i = 0; $i < $count; $i++ ) : $img = $follow_img[$i]; ?>
     <li>
         <div>
-        <a href="javascript:void(0)" class="follow" style="background-color:<?php echo _filter_object_empty( $img, 'color', '' ); ?>;"><img src="<?php echo new_get_image_src( $img['src'], 'full' ); ?>" alt="<?php echo $img['name']; ?>" title="<?php echo $img['name']; ?>" /></a>
+        <a href="javascript:void(0)" class="follow" style="background-color:<?php echo _filter_array_empty( $img, 'color', '' ); ?>;"><img src="<?php echo new_get_image_src( $img['src'], 'full' ); ?>" alt="<?php echo $img['name']; ?>" title="<?php echo $img['name']; ?>" /></a>
         <a href="javascript:void(0)" class="hover" ><img class="hover" src="<?php echo new_get_image_src( $img['qrcode'], 'full' );  ?>" /></a>
         </div>
         <span><?php echo $img['name']; ?></span>
@@ -54,9 +54,9 @@ class WP_Widget_follow extends WP_Widget {
     }
 
     function form( $instance ) {
-        $title = esc_attr( _filter_object_empty( $instance, 'title', '' ) );
-        $count = esc_attr( _filter_object_empty( $instance, 'count', 1 ) );
-        $follow_img = _filter_object_empty( $instance, 'follow_img', array() );
+        $title = esc_attr( _filter_array_empty( $instance, 'title', '' ) );
+        $count = esc_attr( _filter_array_empty( $instance, 'count', 1 ) );
+        $follow_img = _filter_array_empty( $instance, 'follow_img', array() );
 
 ?>
 	<p>

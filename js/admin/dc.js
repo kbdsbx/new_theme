@@ -122,7 +122,7 @@
          * @value   : boolean
          * @info    : 是否隐藏不包含元素的下拉列表框
          */
-        cascade_hide_empty      :   false,
+        cascade_hide_empty      :   true,
 
         /***
          * @default : false
@@ -508,6 +508,7 @@
                         }
                         if ( el.is( 'select' ) ) {
                             el.find( 'option' ).remove();
+                            var cascade_default = el.attr( 'data-cascade-default' ) || null;
                             if ( options.cascade_show_default ) {
                                 var default_name = ( typeof options.cascade_show_default == 'string' ? options.cascade_show_default : '-- 请选择 --' );
                                 $( '<option></option>' )
@@ -516,11 +517,14 @@
                                     .appendTo( el );
                             }
                             $.each( vals, function( i, self ) {
-                                $( '<option></option>' )
+                                var option = $( '<option></option>' )
                                     .val( self['id'] )
                                     .html( self['name'] )
-                                    .data( 'children', self['children'] )
-                                    .appendTo( el );
+                                    .data( 'children', self['children'] );
+                                if ( cascade_default && self['id'] == cascade_default ) {
+                                    option.attr( 'selected', 'selected' );
+                                }
+                                option.appendTo( el );
                             } );
                             el.on( 'change', function() {
                                 _fill_element( layer + 1 );

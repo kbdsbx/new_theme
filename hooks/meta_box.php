@@ -13,6 +13,24 @@ function new_meta_box_save_post( $post_id ) {
 }
 add_action( 'save_post', 'new_meta_box_save_post' );
 
+function new_meta_box_save_resource( $post_id ) {
+    $new_resource_options = array();
+
+    $new_resource_options['new_resource_file'] = _filter_array_empty_numeric( $_POST, 'new_resource_file', 0 );
+    $new_resource_options['new_resource_type'] = _filter_array_empty( $_POST, 'new_resource_type', '' );
+    $new_resource_options['new_resource_file_type'] = _filter_array_empty( $_POST, 'new_resource_file_type', '' );
+    $new_resource_options['new_resource_file_size'] = _filter_array_empty( $_POST, 'new_resource_file_size', '' );
+
+    if ( $new_resource_options['new_resource_file'] != 0 && empty( $new_resource_options['new_resource_file_size'] ) ) {
+        $file = get_attached_file( $new_resource_options['new_resource_file'] );
+        $filesize = filesize( $file );
+        $new_resource_options['new_resource_file_size'] = FileSizeConvert( $filesize );
+    }
+
+    update_post_meta( $post_id, 'new_resource_options', $new_resource_options );
+}
+add_action( 'save_post_resource', 'new_meta_box_save_resource' );
+
 function new_add_meta_box_post_setting_html( $post ) {
     global $new_post_flags;
     $new_post_options = get_post_meta( $post->ID, 'new_post_options', true );
@@ -42,40 +60,33 @@ function new_add_meta_box_post_setting_html( $post ) {
 <?php 
 }
 
-function new_add_meta_box_source_setting_html( $post ) {
-    $new_post_options = get_post_meta( $post->ID, 'new_source_options', true );
+function new_add_meta_box_resource_setting_html( $post ) {
+    $new_resource_options = get_post_meta( $post->ID, 'new_resource_options', true );
 ?>
-    <label for="new_source_file"><?php _e( '文件：', 'new' ); ?></label>
+    <label for="new_resource_file"><?php _e( '文件：', 'new' ); ?></label>
     <div>
-        <input type="text" id="new_source_file_name" readonly="readonly" class="new-post-input" />
-        <input type="hidden" id="new_source_file" name="new_source_file" />
+        <input type="text" id="new_resource_file_name" readonly="readonly" class="new-post-input" value="<?php echo $attachment_url = wp_get_attachment_url( _filter_array_empty_numeric( $new_resource_options, 'new_resource_file', 0 ) ); ?>" />
+        <input type="hidden" id="new_resource_file" name="new_resource_file" value="<?php echo _filter_array_empty_numeric( $new_resource_options, 'new_resource_file', 0 ); ?>"/>
         <a class="button choose-from-library-link"
             data-update-url="<?php echo get_admin_url() . 'admin-ajax.php'; ?>"
             data-update-action="file_update"
-            data-update-preview="#new_source_file_name"
-            data-update-preview-id="#new_source_file"
+            data-update-preview="#new_resource_file_name"
+            data-update-preview-id="#new_resource_file"
             data-choose="<?php _e( '选择文件', 'new' ); ?>"
             data-update="<?php _e( '选择', 'new' ); ?>"><?php _e( '选择文件', 'new' ); ?></a>
         <?php _file_update_js(); ?>
     </div>
     <hr />
-    <label for="new_source_type"><?php _e( '文件类型：', 'new' ); ?></label>
-    <div id="new_source_type_div" class="cascade-load-auto" data-url="<?php echo new_expand_uri . '/file_type.json'; ?>" data-target="#new_source_type_div">
-        <select id="new_source_type" name="new_source_type" data-cascade-layer="1"></select>
+    <label for="new_resource_type"><?php _e( '文件类型：', 'new' ); ?></label>
+    <div id="new_resource_type_div" class="cascade-load-auto" data-url="<?php echo new_expand_uri . '/file_type.json'; ?>" data-target="#new_resource_type_div">
+        <select id="new_resource_type" name="new_resource_type" data-cascade-layer="1" data-cascade-default="<?php echo _filter_array_empty( $new_resource_options, 'new_resource_type', '' ); ?>"></select>
          -- 
-        <select id="new_source_file_type" name="new_source_file_type" data-cascade-layer="2"></select>
+         <select id="new_resource_file_type" name="new_resource_file_type" data-cascade-layer="2" data-cascade-default="<?php echo _filter_array_empty( $new_resource_options, 'new_resource_file_type', '' ); ?>"></select>
     </div>
     <hr />
-    <label for="new_source_file_size"><?php _e( '文件大小：', 'new' ); ?></label>
+    <label for="new_resource_file_size"><?php _e( '文件大小：', 'new' ); ?></label>
     <div>
-        <input type="number" id="new_source_file_size" name="new_source_file_size" step="1" min="0" class="new-post-input" />&nbsp;
-        <select id="new_source_file_size_quantity">
-            <option value="Bit">Bit</option>
-            <option value="Byte">Byte</option>
-            <option value="KB">KB</option>
-            <option value="MB">MB</option>
-            <option value="GB">GB</option>
-        </select>
+        <input type="text" id="new_resource_file_size" name="new_resource_file_size" class="new-post-input" value="<?php echo _filter_array_empty( $new_resource_options, 'new_resource_file_size', '' ); ?>" />&nbsp;
     </div>
     <p><?php _e( '若您未填写此值，上传文件后会自动计算并填充，若再次上传文件时需要自动计算文件大小，请清空此值', 'new' ); ?></p>
 <?php
@@ -97,9 +108,9 @@ function new_add_meta_box() {
     }
 
     add_meta_box(
-        'new_source_options',
+        'new_resource_options',
         __( '资源相关设置', 'new' ),
-        'new_add_meta_box_source_setting_html',
+        'new_add_meta_box_resource_setting_html',
         'resource',
         'advanced'
     );

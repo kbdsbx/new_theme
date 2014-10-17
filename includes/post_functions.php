@@ -46,6 +46,47 @@ function new_get_view_count() {
 }
 
 /**
+ * 获取资源字段
+ * in the loop of resource
+ */
+function new_get_resource_field( $field ) {
+    switch ( $field ) {
+    case 'new_resource_type':
+        $file_type = @file_get_contents( new_expand . '/file_type.json' );
+        $field_value = _filter_array_empty( get_post_meta( get_the_ID(), 'new_resource_options', true ), $field, '' );
+        if ( ! empty( $file_type ) && ! empty( $field_value ) ) {
+            $file_type = json_decode( $file_type );
+            foreach( $file_type as $type ) {
+                if ( $type->id == $field_value ) {
+                    return $type->name;
+                }
+            }
+        }
+        return __( '未知资源类型', 'new' );
+    case 'new_resource_file_type':
+        $file_type = @file_get_contents( new_expand . '/file_type.json' );
+        $field_value = _filter_array_empty( get_post_meta( get_the_ID(), 'new_resource_options', true ), $field, '' );
+        if ( ! empty( $file_type ) && ! empty( $field_value ) ) {
+            $file_types = json_decode( $file_type );
+            foreach( $file_types as $type ) {
+                if ( ! empty ( $type->children ) ) {
+                    foreach( $type->children as $file_type ) {
+                        if ( $file_type->id == $field_value ) {
+                            return $file_type->name;
+                        }
+                    }
+                }
+            }
+        }
+        return __( '未知文件类型', 'new' );
+        break;
+    default:
+        return _filter_array_empty( get_post_meta( get_the_ID(), 'new_resource_options', true ), $field, '' );
+    }
+}
+
+
+/**
  * 获取并解析图片集短代码
  */
 function new_get_gallery_shortcode() {

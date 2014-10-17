@@ -92,8 +92,8 @@ class WP_Widget_Tabs extends WP_Widget {
 
 	function form( $instance ) {
 		//Defaults
-		$title = esc_attr( _filter_object_empty( $instance, 'title', '' ) );
-        $posts_per_page = esc_attr( _filter_object_empty( $instance, 'posts_per_page', '' ) );
+		$title = esc_attr( _filter_array_empty( $instance, 'title', '' ) );
+        $posts_per_page = esc_attr( _filter_array_empty( $instance, 'posts_per_page', '' ) );
 	?>
 		<p>
 			<label for="<?php echo $this->get_field_id('title'); ?>"><?php _e( '标题:', 'new' ); ?></label>

@@ -11,14 +11,14 @@ class WP_Widget_ads extends WP_Widget {
     function widget( $args, $instance ) {
         global $size_enum;
 
-        $title      = apply_filters( 'widget_title', _filter_object_empty( $instance, 'title', __( '图片广告控件', 'new' ), $instance, $this->id_base ) );
-        $size       = _filter_object_empty( $instance, 'size', 'x' );
-        $count      = _filter_object_empty_numeric( $instance, 'count', 1 );
-        $ads_img    = _filter_object_empty_array( $instance, 'ads_img', array() );
+        $title      = apply_filters( 'widget_title', _filter_array_empty( $instance, 'title', __( '图片广告控件', 'new' ), $instance, $this->id_base ) );
+        $size       = _filter_array_empty( $instance, 'size', 'x' );
+        $count      = _filter_array_empty_numeric( $instance, 'count', 1 );
+        $ads_img    = _filter_array_empty_array( $instance, 'ads_img', array() );
 
         if ( $size == 'auto' ) {
-            $width = _filter_object_empty( $instance, 'width', '' );
-            $height = _filter_object_empty( $instance, 'height', '');
+            $width = _filter_arrayt_empty( $instance, 'width', '' );
+            $height = _filter_array_empty( $instance, 'height', '');
             $img_size = array( $width, $height );
         } else {
             $img_size = $size_enum[ $instance['size'] ];
@@ -64,12 +64,12 @@ class WP_Widget_ads extends WP_Widget {
 
     function form( $instance ) {
         global $size_enum;
-        $title = esc_attr( _filter_object_empty( $instance, 'title', '' ) );
-        $count = esc_attr( _filter_object_empty( $instance, 'count', 1 ) );
-        $img_size = esc_attr( _filter_object_empty( $instance, 'size', '' ) );
-        $ads_img = _filter_object_empty( $instance, 'ads_img', array() );
-        $width = _filter_object_empty( $instance, 'width', '' );
-        $height = _filter_object_empty( $instance, 'height', '' );
+        $title = esc_attr( _filter_array_empty( $instance, 'title', '' ) );
+        $count = esc_attr( _filter_array_empty( $instance, 'count', 1 ) );
+        $img_size = esc_attr( _filter_array_empty( $instance, 'size', '' ) );
+        $ads_img = _filter_array_empty( $instance, 'ads_img', array() );
+        $width = _filter_array_empty( $instance, 'width', '' );
+        $height = _filter_array_empty( $instance, 'height', '' );
 ?>
         <p>
 			<label for="<?php echo $this->get_field_id('title'); ?>"><?php _e( '标题:', 'new' ); ?></label>

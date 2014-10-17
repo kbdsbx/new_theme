@@ -9,11 +9,11 @@ class WP_Widget_Picture extends WP_Widget {
 
     function widget( $args, $instance ) {
         global $size_enum, $post_types_keys;
-        $title      = apply_filters( 'widget_title', _filter_object_empty( $instance, 'title', __( '图片集', 'new' ), $instance, $this->id_base ) );
-        $posts_per_page = _filter_object_empty( $instance, 'posts_per_page', 4 );
-        $category_id= _filter_object_empty( $instance, 'category_id', '' );
-        $size       = _filter_object_empty( $instance, 'size', 'xx' );
-        $post_size  = _filter_object_empty( $size_enum, $size, $size_enum['xx'] );
+        $title      = apply_filters( 'widget_title', _filter_array_empty( $instance, 'title', __( '图片集', 'new' ), $instance, $this->id_base ) );
+        $posts_per_page = _filter_array_empty( $instance, 'posts_per_page', 4 );
+        $category_id= _filter_array_empty( $instance, 'category_id', '' );
+        $size       = _filter_array_empty( $instance, 'size', 'xx' );
+        $post_size  = _filter_array_empty( $size_enum, $size, $size_enum['xx'] );
 
         $query = new WP_Query( array(
             'posts_per_page' => $posts_per_page,
@@ -53,10 +53,10 @@ class WP_Widget_Picture extends WP_Widget {
     function form( $instance ) {
         global $size_enum;
 
-        $title = esc_attr( _filter_object_empty( $instance, 'title', '' ) );
-        $posts_per_page = esc_attr( _filter_object_empty( $instance, 'posts_per_page', '' ) );
-        $category_id = esc_attr( _filter_object_empty( $instance, 'category_id', '' ) );
-        $picture_size = esc_attr( _filter_object_empty( $instance, 'size', '' ) );
+        $title = esc_attr( _filter_array_empty( $instance, 'title', '' ) );
+        $posts_per_page = esc_attr( _filter_array_empty( $instance, 'posts_per_page', '' ) );
+        $category_id = esc_attr( _filter_array_empty( $instance, 'category_id', '' ) );
+        $picture_size = esc_attr( _filter_array_empty( $instance, 'size', '' ) );
 ?>
 		<p>
 			<label for="<?php echo $this->get_field_id('title'); ?>"><?php _e( '标题:', 'new' ); ?></label>

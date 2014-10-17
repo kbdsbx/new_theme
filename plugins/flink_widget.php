@@ -13,9 +13,9 @@ class WP_Widget_flink extends WP_Widget {
     }
 
     function widget( $args, $instance ) {
-        $title = apply_filters( 'widget_title', _filter_object_empty( $instance, 'title', __( '友情链接', 'new' ) ), $instance, $this->id_base );
-        $count      = _filter_object_empty( $instance, 'flink_count', 64 );
-        $orderby    = _filter_object_empty( $instance, 'orderby', 'link_name' );
+        $title = apply_filters( 'widget_title', _filter_array_empty( $instance, 'title', __( '友情链接', 'new' ) ), $instance, $this->id_base );
+        $count      = _filter_array_empty( $instance, 'flink_count', 64 );
+        $orderby    = _filter_array_empty( $instance, 'orderby', 'link_name' );
 
         $this->callback_args = array(
             'orderby'   => $orderby
@@ -52,9 +52,9 @@ class WP_Widget_flink extends WP_Widget {
 
 
     function form( $instance ) {
-        $title          = esc_attr( _filter_object_empty( $instance, 'title', '' ) );
-        $flink_count    = esc_attr( _filter_object_empty( $instance, 'flink_count', '' ) );
-        $orderby        = esc_attr( _filter_object_empty( $instance, 'orderby', '' ) );
+        $title          = esc_attr( _filter_array_empty( $instance, 'title', '' ) );
+        $flink_count    = esc_attr( _filter_array_empty( $instance, 'flink_count', '' ) );
+        $orderby        = esc_attr( _filter_array_empty( $instance, 'orderby', '' ) );
 ?>
         <p>
             <label for="<?php echo $this->get_field_id('title'); ?>"><?php _e( '标题:', 'new' ); ?></label>

@@ -2,11 +2,11 @@
 <div class="column-one-fourth">
     <ul class="block3">
     <li><?php _e( '文件名称: ', 'new' ); ?><span><?php the_title(); ?></span></li>
-    <li><?php _e( '资源类型: ', 'new' ); ?><span><?php echo get_field_object( 'type' )['choices'][ get_field( 'type' ) ]; ?></span></li>
-    <li><?php _e( '文件类型: ', 'new' ); ?><span><?php echo get_field_object( 'type-' . get_field( 'type' ) )['choices'][ get_field( 'type-' . get_field( 'type' ) ) ]; ?></span></li>
-    <li><?php _e( '文件大小: ', 'new' ); ?><span><?php the_field( 'size' ); ?></span></li>
+    <li><?php _e( '资源类型: ', 'new' ); ?><span><?php echo new_get_resource_field( 'new_resource_type' ); ?></span></li>
+    <li><?php _e( '文件类型: ', 'new' ); ?><span><?php echo new_get_resource_field( 'new_resource_file_type' ); ?></span></li>
+    <li><?php _e( '文件大小: ', 'new' ); ?><span><?php echo new_get_resource_field( 'new_resource_file_size' ); ?></span></li>
     <li><?php _e( '上传日期: ', 'new' ); ?><span><?php the_time( get_option( 'date_format' ) ); ?></span></li>
-    <li><?php _e( '下载数量: ', 'new' ); ?><span><?php the_field( 'new-article-views' ); ?></span></li>
+    <li><?php _e( '下载数量: ', 'new' ); ?><span><?php echo new_get_view_count(); ?></span></li>
     <li><?php if ( function_exists( 'wpfp_link' ) ) { wpfp_link(); } ?></li>
     </ul>
 </div>
@@ -21,5 +21,5 @@
 </div>
 <div class="column-two-third">
 <h5 class="line"><span><?php _e( '下载', 'new' ); ?></span></h5>
-<a href="<?php echo wp_get_attachment_url( get_field( 'field_53e1810d8dd21' ) ); ?>" target="_blank"><?php _e( '下载地址', 'new' ); ?></a>
+<a href="<?php echo wp_get_attachment_url( new_get_resource_field( 'new_resource_file' ) ); ?>" target="_blank"><?php _e( '下载地址', 'new' ); ?></a>
 </div>

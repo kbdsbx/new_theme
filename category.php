@@ -6,7 +6,7 @@ get_header(); ?>
 <section id="content">
     <div class="container">
         <div class="breadcrumbs column">
-        <?php if( function_exists( 'bcn_display' ) ) : bcn_display(); endif; ?>
+        <?php echo new_breadcrumbs(); ?>
         </div>
         <div class="main-content">
             <!-- Popular News -->	

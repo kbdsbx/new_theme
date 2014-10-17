@@ -13,13 +13,13 @@ class WP_Widget_Slider extends WP_Widget {
 	function widget( $args, $instance ) {
 		global $size_enum, $post_types_keys;
 
-		$title          = apply_filters( 'widget_title', _filter_object_empty( $instance, 'title', ''), $instance, $this->id_base );
-		$posts_per_page = _filter_object_empty_numeric( $instance, 'posts_per_page', 5 );
-		$orderby        = _filter_object_empty( $instance, 'orderby', 'post_date' );
+		$title          = apply_filters( 'widget_title', _filter_array_empty( $instance, 'title', ''), $instance, $this->id_base );
+		$posts_per_page = _filter_array_empty_numeric( $instance, 'posts_per_page', 5 );
+		$orderby        = _filter_array_empty( $instance, 'orderby', 'post_date' );
 		$meta_key       = 'new-article-flags';
-		$meta_value     = _filter_object_empty( $instance, 'new_meta_article_flag', '' );
-        $size           = _filter_object_empty( $instance, 'size', 'lg' );
-        $post_size      = _filter_object_empty( $size_enum, $size, $size_enum['lg'] );
+		$meta_value     = _filter_array_empty( $instance, 'new_meta_article_flag', '' );
+        $size           = _filter_array_empty( $instance, 'size', 'lg' );
+        $post_size      = _filter_array_empty( $size_enum, $size, $size_enum['lg'] );
 
 		$query = new WP_Query( array(
             'posts_per_page'    => $posts_per_page,
@@ -78,11 +78,11 @@ class WP_Widget_Slider extends WP_Widget {
         if ( function_exists( 'get_field_object' ) ) {
             $posts_flags = get_field_object( 'field_53def322e5039' ); // new-article-flag
         }
-		$title = esc_attr( _filter_object_empty( $instance, 'title', '' ) );
-        $posts_per_page = esc_attr( _filter_object_empty( $instance, 'posts_per_page', '' ) );
-		$orderby = esc_attr( _filter_object_empty( $instance, 'orderby', '' ) );
-		$article_flag = esc_attr( _filter_object_empty( $instance, 'new_meta_article_flag', '' ) );
-		$article_size = esc_attr( _filter_object_empty( $instance, 'size', '' ) );
+		$title = esc_attr( _filter_array_empty( $instance, 'title', '' ) );
+        $posts_per_page = esc_attr( _filter_array_empty( $instance, 'posts_per_page', '' ) );
+		$orderby = esc_attr( _filter_array_empty( $instance, 'orderby', '' ) );
+		$article_flag = esc_attr( _filter_array_empty( $instance, 'new_meta_article_flag', '' ) );
+		$article_size = esc_attr( _filter_array_empty( $instance, 'size', '' ) );
 	?>
 		<p>
 			<label for="<?php echo $this->get_field_id('title'); ?>"><?php _e( '标题:', 'new' ); ?></label>

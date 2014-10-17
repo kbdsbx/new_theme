@@ -66,6 +66,80 @@ function new_log( $msg, $type = '' ) {
     }
 }
 
+/**
+ * 分页脚本
+ *
+ * @author 胡倡萌
+ * @url http://www.cmhello.com/wordpress-breadcrumbs.html
+ * @editor kbdsbx
+ */
+function new_breadcrumbs() {
+    global $post;
+    global $wp_query;
+ 
+    $delimiter = '&nbsp;&raquo;&nbsp;';
+    $home = sprintf( '<a href="%s" >%s</a>', get_bloginfo( 'url' ), __( '主页', 'new' ) ); //text for the 'Home' link
+    $breadcrumb_html = '';
+
+    if ( ! is_home() && ! is_front_page() || is_paged() ) {
+            $breadcrumb_html .= $home . $delimiter;
+        if ( is_category() ) {
+            $cat_obj = $wp_query->get_queried_object();
+            $thisCat = $cat_obj->term_id;
+            $thisCat = get_category($thisCat);
+            $parentCat = get_category($thisCat->parent);
+            if ( $thisCat->parent != 0 )
+                $breadcrumb_html .= get_category_parents( $parentCat, TRUE, $delimiter );
+            $breadcrumb_html .= single_cat_title( '', false );
+        } elseif ( is_day() ) {
+            $breadcrumb_html .= get_the_time('Y') . $delimiter;
+            $breadcrumb_html .= get_the_time('F') . $delimiter;
+            $breadcrumb_html .= get_the_time('d');
+        } elseif ( is_month() ) {
+            $breadcrumb_html .= get_the_time('Y') . $delimiter;
+            $breadcrumb_html .= get_the_time('F');
+        } elseif ( is_year() ) {
+            $breadcrumb_html .= get_the_time('Y');
+        } elseif ( is_single() ) {
+            $cat = get_the_category();
+            $cat = $cat[0];
+            $breadcrumb_html .= get_category_parents($cat, TRUE, $delimiter);
+            $breadcrumb_html .= get_the_title();
+        } elseif ( is_page() && ! $post->post_parent ) {
+            $breadcrumb_html .= get_the_title();
+        } elseif ( is_page() && $post->post_parent ) {
+            $parent_id  = $post->post_parent;
+            $breadcrumbs = array();
+            while ( $parent_id ) {
+                $page = get_page( $parent_id );
+                $breadcrumbs[] = '' . get_the_title($page->ID) . '';
+                $parent_id  = $page->post_parent;
+            }
+            $breadcrumbs = array_reverse($breadcrumbs);
+            foreach ( $breadcrumbs as $crumb ) 
+                $breadcrumb_html .= $crumb . $delimiter;
+            $breadcrumb_html .= get_the_title();
+        } elseif ( is_search() ) {
+            $breadcrumb_html .= sprintf( __( '搜索&#39;%s&#39;的结果', 'new' ), get_search_query() );
+        } elseif ( is_tag() ) {
+            $breadcrumb_html .= single_tag_title( '', false );
+        } elseif ( is_author() ) {
+            global $author;
+            $userdata = get_userdata( $author );
+            $breadcrumb_html .= $userdata->display_name;
+        } elseif ( is_404() ) {
+            $breadcrumb_html .= 'Error 404';
+        }
+     
+        if ( get_query_var('paged') ) {
+            if ( is_category() || is_day() || is_month() || is_year() || is_search() || is_tag() || is_author() ) {
+                $breadcrumb_html .= sprintf( __( '(第%s页)', 'new' ), get_query_var( 'paged' ) );
+            }
+        }
+    }
+    return $breadcrumb_html;
+}
+
 
 /**
  * PHP 汉字转拼音

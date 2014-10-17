@@ -13,9 +13,6 @@ DEFINE( 'new_hooks', get_template_directory(). '/hooks' );
 DEFINE( 'new_inc', get_template_directory(). '/includes' );
 DEFINE( 'new_expand', get_template_directory(). '/expand' );
 
-// require 'advanced-custom-fields/acf.php';
-// define( 'ACF_LITE', false );
-
 include_once new_inc . '/external_functions.php';
 include_once new_inc . '/widget_functions.php';
 include_once new_inc . '/filter_functions.php';
@@ -890,27 +887,7 @@ function set_post_views() {
     global $post;
     if ( ! isset ( $post->ID ) )
         return;
-    if ( function_exists( 'get_field' ) ) {
-        $post_ID = $post->ID;
-        $post_views = get_field( 'new-article-views', $post_ID );
-        if ( is_singular() ) {
-            if( $post_ID )	{
-                update_field( 'new-article-views', $post_views + 1, $post_ID );
-            }
-        } else if ( is_admin() ) {
-            if ( $post_ID && empty( $post_views ) ) {
-                update_field( 'new-article-views', rand( 0, get_option( 'new_theme_heat_limit' ) ), $post_ID );
-            }
 
-            $size = get_field( 'size', $post_ID );
-            $file = get_field( 'file', $post_ID );
-            if ( empty( $size ) && ! empty( $file ) ) {
-                $file_path = WP_CONTENT_DIR . '/uploads/' . wp_get_attachment_metadata( $file )['file'];
-                $file_size = FileSizeConvert( filesize( $file_path ) );
-                update_field( 'field_53e2e24507824', $file_size, $post_ID );
-            }
-        }
-    }
     if ( is_singular() ) {
         if ( isset( $post->ID ) ) {
             $new_post_options = get_post_meta( $post->ID, 'new_post_options', true );
@@ -1062,13 +1039,6 @@ add_filter( 'nav_menu_link_attributes', 'new_filter_menu_link_attributes', 10, 3
  * 分类目录针对不同文章类型的模板筛选
  */
 function new_filter_category_template( $template_path ) {
-    if ( function_exists( 'get_field' ) ) {
-        $post_type = get_field( 'field_53e19dd6d5ccb', get_queried_object() );
-        $template = get_template_directory() . '/category-' . $post_type . '.php';
-        if ( $post_type != 'post' && file_exists( $template ) ) {
-            $template_path = $template;
-        }
-    }
     $cat_ID = get_query_var( 'cat' );
     $categories_post_type = get_option( 'categories_post_type' );
     $post_type = _filter_array_empty( $categories_post_type, $cat_ID, '' );
@@ -1232,23 +1202,12 @@ add_filter( 'wp_terms_checklist_args', 'new_terms_checklist_args' );
  */
 function new_filter_get_terms( $terms, $taxonomies, $args ) {
     global $post;
-    if ( function_exists( 'get_field' ) ) {
-        $post_type = isset( $post->post_type ) ? $post->post_type : ( isset( $_REQUEST['post_type'] ) ? $_REQUEST['post_type'] : '' );
-        if ( in_array( 'category', $taxonomies ) ) {
-            foreach ( $terms as $key => $term ) {
-                $category_post_type = get_field( 'field_53e19dd6d5ccb', 'category_' . $terms[ $key ]->term_id );
-                if ( ! empty( $post_type ) && ! empty( $category_post_type ) && $post_type != $category_post_type ) {
-                    unset( $terms[ $key ] );
-                }
-            }
-        }
-    }
+
     $post_type = _filter_object_empty( $post, 'post_type', _filter_array_empty( $_REQUEST, 'post_type', '' ) );
     if ( in_array( 'category', $taxonomies ) ) {
         foreach ( $terms as $key => $term ) {
             $categories_post_type = get_option( 'categories_post_type' );
             $category_post_type = _filter_array_empty( $categories_post_type, _filter_object_empty( $term, 'term_id', '' ), '' );
-            // $category_post_type = get_field( 'field_53e19dd6d5ccb', 'category_' . $terms[ $key ]->term_id );
             if ( ! empty( $post_type ) && ! empty( $category_post_type ) && $post_type != $category_post_type ) {
                 unset( $terms[ $key ] );
             }

@@ -23,7 +23,7 @@ endwhile;
                     </ul>
                 </div>
                 <div class="pager">
-                    <?php wp_pagenavi(); ?>
+                    <?php echo new_pagenavi(); ?>
                 </div>
             </div>
             <!-- /Popular News -->

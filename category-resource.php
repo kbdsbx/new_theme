@@ -23,7 +23,7 @@ endwhile;
                     </ul>
                 </div>
                 <div class="pager">
-                    <?php if ( function_exists( 'wp_pagenavi' ) ) : wp_pagenavi(); endif; ?>
+                    <?php echo new_pagenavi(); ?>
                 </div>
             </div>
             <!-- /Popular News -->

@@ -66,7 +66,7 @@ function new_log( $msg, $type = '' ) {
 }
 
 /**
- * 分页脚本
+ * 面包屑脚本
  *
  * @author 胡倡萌
  * @url http://www.cmhello.com/wordpress-breadcrumbs.html
@@ -138,6 +138,69 @@ function new_breadcrumbs() {
     }
     return $breadcrumb_html;
 }
+
+/**
+ * 分页脚本Pagenavi 
+ * 
+ * @author 王思捷
+ * @url http://ilovetile.com/2410
+ * @editor kbdsbx
+ */
+function new_pagenavi( $p = 5 ) {   
+    if ( is_singular() )
+        return;   
+
+    global $wp_query, $paged;
+    $paged_html = '';
+
+    $max_page = $wp_query->max_num_pages;   
+    $paged = empty( $paged ) ? 1 : $paged;
+
+    if ( $max_page == 1 ) return;
+
+    $paged_html .= '<ul>';
+    $paged_html .= '<li><span class="pages">Page: ' . $paged . ' of ' . $max_page . ' </span></li>';
+
+    if ( $paged > 1 )
+        $paged_html .= p_link( $paged - 1, __( '上一页', 'new' ), '«' );   
+
+    if ( $paged > $p + 1 )
+        $paged_html .= p_link( 1, __( '首页', 'new' ) );
+
+    if ( $paged > $p + 2 )
+        $paged_html .= '<li><span>...</span><li>';
+
+    for ( $i = $paged - $p; $i <= $paged + $p; $i++ ) {
+        if ( $i > 0 && $i <= $max_page ) 
+            $paged_html .= ( $i == $paged ? p_link( $i, '', '', true ) : p_link( $i ) );   
+    }   
+
+    if ( $paged < $max_page - $p - 1 )
+        $paged_html .= '<li><span>...</span><li>';
+
+    if ( $paged < $max_page - $p )
+        $paged_html .= p_link( $max_page, __( '尾页', 'new' ) );
+
+    if ( $paged < $max_page )
+        $paged_html .= p_link( $paged + 1, __( '下一页' ), '»' );
+
+    $paged_html .= '</ul>';
+
+    return $paged_html;
+}   
+
+/**
+ * 分页脚本Pagenavi辅助方法
+ * 
+ * @author 王思捷
+ * @url http://ilovetile.com/2410
+ * @editor kbdsbx
+ */
+function p_link( $i, $title = '', $linktype = '', $current = false ) {   
+    $title = $title != '' ? $title : sprintf( __( '第%s页', 'new' ), $i );
+    $linktext = $linktype != '' ? $linktype : $i;
+    return '<li' . ( $current ? ' class="thisclass"' : '' ) . '><a class="' . ( $current ? 'active' : '' ) . '" href="' . esc_html( get_pagenum_link( $i ) ) . '" title="' . $title . '">' . $linktext . '</a></li>';   
+}  
 
 
 /**

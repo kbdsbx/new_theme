@@ -85,4 +85,71 @@ function new_filter_permalink( $link ) {
 }
 add_filter( 'editable_slug', 'new_filter_permalink' );
 
+/**
+ * 文章收藏
+ */
+function new_favourite() {
+    $user_id = get_current_user_id();
+    $post_id = get_the_ID();
+    $favourite_html = '<span id="new_favourite">';
+    if ( $user_id != 0 ) {
+        $user_favourite = _filter_empty_array( get_user_meta( $user_id, 'new_favourite_posts' , true ) );
+        if ( array_search( $post_id, $user_favourite ) !== false ) {
+            $favourite_html .= '<i class="icon-heart red"></i><a class="load-click pointer" data-url="' . admin_url( 'admin-ajax.php' ) . '" data-target="#new_favourite" data-dtype="JSON" data-action="new_favourite" data-opt="cancel" data-post_id="' . $post_id . '">' . __( '取消收藏', 'new' ) . '</a>';
+        } else {
+            $favourite_html .= '<i class="icon-heart-empty"></i><a class="load-click pointer" data-url="' . admin_url( 'admin-ajax.php' ) . '" data-target="#new_favourite" data-dtype="JSON" data-action="new_favourite" data-opt="favourite" data-post_id="' . $post_id . '">' . __( '收藏', 'new' ) . '</a>';
+        }
+    } else {
+        $favourite_html .= sprintf( __( '您还没有登录，无法收藏文章，<a href="%s">点此登录</a>' ), home_url( 'wp-login.php' ) );
+    }
+    $favourite_html .= '</span>';
+    return $favourite_html;
+}
+
+/**
+ * 未登录用户收藏操作
+ */
+function new_favourite_nopriv() {
+    wp_send_json( array(
+        'html' => sprintf( __( '只有登录用户才可以收藏哦，<a href="%s">点此登录</a>', 'new' ), home_url( 'wp-login.php' ) )
+    ) );
+}
+add_action( 'wp_ajax_nopriv_new_favourite', 'new_favourite_nopriv' );
+
+/**
+ * 已登录用户收藏操作
+ */
+function new_favourite_logged() {
+    $post_id = _filter_array_empty_numeric( $_REQUEST, 'post_id' );
+    $user_id = get_current_user_id();
+    $user_favourite = _filter_empty_array( get_user_meta( $user_id, 'new_favourite_posts' , true ) );
+
+    switch( _filter_array_empty( $_REQUEST, 'opt' ) ) {
+    case 'favourite':
+        $user_favourite[] = $post_id;
+        $msg = '<i class="icon-heart red"></i>' . __( '收藏成功', 'new' );
+        break;
+    case 'cancel':
+        $key = array_search( $post_id, $user_favourite );
+        if ( $key !== false ) {
+            unset( $user_favourite[ $key ] );
+        }
+        $msg = '<i class="icon-heart-empty"></i>' . __( '取消收藏成功', 'new' );
+        break;
+    case 'clear':
+        $user_favourite = array();
+        $msg = '<i class="icon-ok"></i>' . __( '清空收藏成功', 'new' );
+        break;
+    default:
+        $msg = '<i class="icon-remove-sign red"></i>' . __( '操作失败啦', 'new' );
+        break;
+    }
+    $user_favourite = array_unique( $user_favourite );
+    update_user_meta( $user_id, 'new_favourite_posts', $user_favourite );
+    wp_send_json( array(
+        'html' => $msg,
+    ) );
+}
+add_action( 'wp_ajax_new_favourite', 'new_favourite_logged' );
+
 /* !post */

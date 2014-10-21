@@ -1627,3 +1627,11 @@ div.text-404{
     top: 20%;
     right: 0;
 }
+
+.red {
+    color : red;
+}
+
+.pointer {
+    cursor: pointer;
+}

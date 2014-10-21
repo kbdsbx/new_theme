@@ -39,6 +39,16 @@ function new_admin_enqueue_scripts_styles() {
 add_action( 'admin_enqueue_scripts', 'new_admin_enqueue_scripts_styles' );
 
 /**
+ * 添加dc脚本使用的body类
+ */
+function new_add_dc_body_class( $classes ) {
+    $classes[] = 'dc-on';
+    return $classes;
+}
+add_filter( 'body_class', 'new_add_dc_body_class' );
+
+
+/**
  * 添加模板样式
  */
 function new_add_styles() {
@@ -66,6 +76,8 @@ function new_add_styles() {
         wp_enqueue_style( 'new-1000', new_template_uri . '/css/new/devices/1000.min.css', array(), null );
         wp_enqueue_style( 'new-767', new_template_uri . '/css/new/devices/767.min.css', array(), null );
         wp_enqueue_style( 'new-479', new_template_uri . '/css/new/devices/479.min.css', array(), null );
+        // wp_enqueue_style( 'new-fontawesome', new_template_uri . '/css/new/font-awesome.css', array(), null );
+        wp_enqueue_style( 'new-mqueue', new_template_uri . '/css/new/mqueue.css', array(), null );
         if ( wp_style_is( 'jquery-ui' ) ) {
             wp_dequeue_style( 'jquery-ui' );
         }
@@ -81,6 +93,8 @@ add_action( 'wp_enqueue_scripts', 'new_add_styles' );
  * 添加模板脚本
  */
 function new_add_scripts() {
+    wp_enqueue_script( 'new-dc', new_template_uri . '/js/new/dc.js', array(), '1.4.2', true );
+
     if ( is_home()
       || is_preview()
       || is_archive()

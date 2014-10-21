@@ -49,20 +49,22 @@
                             <div class="space-6"></div>
 
                             <div class="position-relative">
-                                <?php WPUF_Login::init()->show_errors(); ?>
-                                <?php WPUF_Login::init()->show_messages(); ?>
-
                                 <div id="login-box" class="login-box visible widget-box no-border">
                                     <div class="widget-body">
                                         <div class="widget-main">
                                                <h4 class="header blue lighter bigger">
                                                 <i class="icon-coffee green"></i><?php _e( '登陆' ,'new' ); ?>
                                             </h4>
+                                            <?php if ( isset( $errors ) && $errors->get_error_code() ) : ?>
+                                            <blockquote>
+                                            <?php echo new_get_error_msg( $errors ); ?>
+                                            </blockquote>
+                                            <?php endif; ?>
 
                                             <div class="space-6"></div>
                                             <p><?php _e( '请输入您的登入账户', 'new' ); ?></p>
 
-                                            <form method="post" action="">
+                                            <form method="post" action="<?php echo home_url( 'wp-login.php' ); ?>">
                                                 <fieldset>
                                                     <label class="block clearfix">
                                                         <span class="block input-icon input-icon-right">
@@ -82,50 +84,29 @@
 
                                                     <div class="clearfix">
                                                         <label class="inline">
-                                                            <input type="checkbox" class="ace" />
+                                                            <input type="checkbox" class="ace" name="rememberme" />
                                                             <span class="lbl"><?php _e( '记住我', 'new' ); ?></span>
                                                         </label>
 
                                                         <button type="submit" class="width-35 pull-right btn btn-sm btn-primary">
                                                             <i class="icon-key"></i><?php _e( 'Log in' ); ?>
-
                                                         </button>
-                                                        <input type="hidden" name="redirect_to" value="<?php echo WPUF_Login::get_posted_value( 'redirect_to' ); ?>" />
-                                                        <input type="hidden" name="wpuf_login" value="true" />
-                                                        <input type="hidden" name="action" value="login" />
-                                                        <?php wp_nonce_field( 'wpuf_login_action' ); ?>
+                                                        <input type="hidden" name="redirect_to" value="<?php echo _filter_array_empty( $_REQUEST, 'redirect_to', _filter_array_empty( $_SERVER, 'HTTP_REFERER', home_url( '/' ) ) ); /* 登录重定向位置优先级：上次登录重定向 > 本次登录重定向 > 首页 */ ?>" />
                                                     </div>
 
                                                     <div class="space-4"></div>
                                                 </fieldset>
                                             </form>
 
-                                            <div class="social-or-login center">
-                                                <span class="bigger-110"><?php _e( '或使用以下方式登陆', 'new' ); ?></span>
-                                            </div>
-
-                                            <div class="social-login center">
-                                                <a class="btn btn-primary">
-                                                    <i class="icon-facebook"></i>
-                                                </a>
-
-                                                <a class="btn btn-info">
-                                                    <i class="icon-twitter"></i>
-                                                </a>
-
-                                                <a class="btn btn-danger">
-                                                    <i class="icon-google-plus"></i>
-                                                </a>
-                                            </div>
                                         </div><!-- /widget-main -->
 
                                         <div class="toolbar clearfix">
                                             <div>
-                                                <a href="#" onclick="show_box('forgot-box'); return false;" class="forgot-password-link"><i class="icon-arrow-left"></i><?php _e( '忘记密码点我~', 'new' ); ?></a>
+                                                <a href="#" onclick="show_box('forgot-box');" class="forgot-password-link"><i class="icon-arrow-left"></i><?php _e( '忘记密码点我~', 'new' ); ?></a>
                                             </div>
 
                                             <div>
-                                                <a href="#" onclick="show_box('signup-box'); return false;" class="user-signup-link"><?php _e( '想要注册点我~', 'new' ); ?><i class="icon-arrow-right"></i></a>
+                                                <a href="#" onclick="show_box('signup-box');" class="user-signup-link"><?php _e( '想要注册点我~', 'new' ); ?><i class="icon-arrow-right"></i></a>
                                             </div>
                                         </div>
                                     </div><!-- /widget-body -->
@@ -164,7 +145,6 @@
                                                         <input type="hidden" name="redirect_to" value="<?php echo home_url( '/login' ); ?>" />
                                                         <input type="hidden" name="login" id="user_login" value="<?php echo WPUF_Login::get_posted_value( 'login' ); ?>" />
                                                         <input type="hidden" name="wpuf_reset_password" value="true" />
-                                                        <?php wp_nonce_field( 'wpuf_reset_pass' ); ?>
                                                     </div>
                                                 </fieldset>
                                             </form>
@@ -186,7 +166,7 @@
 
                                             <div class="space-6"></div>
                                             <p><?php _e( '请输入您的注册邮箱', 'new' ); ?></p>
-                                            <form method="post" action="">
+                                            <form method="post" action="<?php echo home_url( 'wp-login.php' ); ?>">
                                                 <fieldset>
                                                     <label class="block clearfix">
                                                         <span class="block input-icon input-icon-right">
@@ -198,10 +178,8 @@
                                                         <button type="submit" name="wp-submit" id="wp-submit" class="width-35 pull-right btn btn-sm btn-danger">
                                                             <i class="icon-lightbulb"></i><?php _e( 'Submit' ); ?>
                                                         </button>
-                                                        <input type="hidden" name="redirect_to" value="<?php echo WPUF_Login::get_posted_value( 'redirect_to' ); ?>" />
-                                                        <input type="hidden" name="wpuf_reset_password" value="true" />
+                                                        <input type="hidden" name="redirect_to" value="<?php echo home_url( 'wp-login.php' ); ?>" />
                                                         <input type="hidden" name="action" value="lostpassword" />
-                                                        <?php wp_nonce_field( 'wpuf_lost_pass' ); ?>
                                                     </div>
                                                 </fieldset>
                                             </form>
@@ -225,11 +203,6 @@
 
                                             <div class="space-6"></div>
                                             <p><?php _e( '请输入您的注册信息', 'new' ); ?></p>
-                                            <?php
-                                            $page_id = wpuf_get_option( 'reg_override_page', 'wpuf_profile', false );
-                                            $code = get_post( $page_id )->post_content;
-                                            echo do_shortcode( $code );
-                                            ?>
                                         </div>
 
                                         <div class="toolbar center">
@@ -279,7 +252,7 @@
         <!-- inline scripts related to this page -->
 
         <script type="text/javascript">
-            function show_box(id) {
+            function show_box( id ) {
                 jQuery('.widget-box.visible').removeClass('visible');
                 jQuery('#'+id).addClass('visible');
             }

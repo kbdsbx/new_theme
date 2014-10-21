@@ -13,34 +13,35 @@ DEFINE( 'new_hooks', get_template_directory(). '/hooks' );
 DEFINE( 'new_inc', get_template_directory(). '/includes' );
 DEFINE( 'new_expand', get_template_directory(). '/expand' );
 
-include_once new_inc . '/external_functions.php';
-include_once new_inc . '/widget_functions.php';
-include_once new_inc . '/filter_functions.php';
-include_once new_inc . '/post_functions.php';
+require_once new_inc . '/external_functions.php';
+require_once new_inc . '/widget_functions.php';
+require_once new_inc . '/filter_functions.php';
+require_once new_inc . '/post_functions.php';
+require_once new_inc . '/page_functions.php';
 
-include_once new_hooks . '/meta_box.php';
-include_once new_hooks . '/init.php';
-include_once new_hooks . '/category.php';
-include_once new_hooks . '/post.php';
-include_once new_hooks . '/theme.php';
-include_once new_hooks . '/seo.php';
-include_once new_hooks . '/plugins.php';
-include_once new_hooks . '/shortcode.php';
+require_once new_hooks . '/meta_box.php';
+require_once new_hooks . '/init.php';
+require_once new_hooks . '/category.php';
+require_once new_hooks . '/post.php';
+require_once new_hooks . '/theme.php';
+require_once new_hooks . '/seo.php';
+require_once new_hooks . '/plugins.php';
+require_once new_hooks . '/shortcode.php';
 
-include_once new_plugins . '/slider_widget.php';
-include_once new_plugins . '/tabs_widget.php';
-include_once new_plugins . '/flink_widget.php';
-include_once new_plugins . '/follow_widget.php';
-include_once new_plugins . '/picture_widget.php';
-include_once new_plugins . '/ads_widget.php';
+require_once new_plugins . '/slider_widget.php';
+require_once new_plugins . '/tabs_widget.php';
+require_once new_plugins . '/flink_widget.php';
+require_once new_plugins . '/follow_widget.php';
+require_once new_plugins . '/picture_widget.php';
+require_once new_plugins . '/ads_widget.php';
 
-include_once new_plugins . '/flink_page.php';
-include_once new_plugins . '/modules_page.php';
-include_once new_plugins . '/theme_setting_page.php';
-include_once new_plugins . '/rss-importer.php';
+require_once new_plugins . '/flink_page.php';
+require_once new_plugins . '/modules_page.php';
+require_once new_plugins . '/theme_setting_page.php';
+require_once new_plugins . '/rss-importer.php';
 
-include_once new_classes . '/class-new-flink-list-table.php';
-include_once new_classes . '/class-new-comment-walker.php';
-include_once new_classes . '/class-new-modules-list-table.php';
-include_once new_classes . '/class-new-walker-category-radiolist.php';
+require_once new_classes . '/class-new-flink-list-table.php';
+require_once new_classes . '/class-new-comment-walker.php';
+require_once new_classes . '/class-new-modules-list-table.php';
+require_once new_classes . '/class-new-walker-category-radiolist.php';
 

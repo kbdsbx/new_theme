@@ -1,7 +1,7 @@
 <?php
 
 
-/* other function */
+/* post function */
 
 /**
  * 获取缩略图链接（若存在）或使用主题默认缩略图
@@ -142,5 +142,5 @@ function new_get_module( $id ) {
     return false;
 }
 
-/* !other function */
+/* !post function */
 

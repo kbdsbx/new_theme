@@ -128,11 +128,7 @@ function new_filter_page_template( $page ) {
     );
     if ( is_page( $pages ) ) {
         $new_template = locate_template( array( 'page-user.php' ) );
-        if ( '' != $new_template ) {
-            return $new_template;
-        } else {
-            return $page;
-        }
+        return _filter_empty( $new_template, $page );
     }
     return $page;
 }
@@ -148,5 +144,36 @@ function new_filter_get_avatar( $avatar ) {
     return $avatar;
 }
 add_filter( 'get_avatar', 'new_filter_get_avatar' );
+
+/**
+ * 添加Login信息
+ *
+ * @author: 萨龙龙
+ * @url: http://yfdxs.com/login-interface-two.html
+ */
+function new_login_body_class( $classes ) {
+    $classes[] = 'custom-background';
+    return $classes;
+}
+add_action('login_body_class', 'new_login_body_class');
+/**
+ * 添加Login样式
+ *
+ * @author: 萨龙龙
+ * @url: http://yfdxs.com/login-interface-two.html
+ */
+function new_login_head() {
+    wp_enqueue_style( 'new-login', new_template_uri . '/css/member/login.css', array(), null );
+    _custom_background_cb();
+}
+add_action( 'login_head', 'new_login_head' );
+
+/**
+ * 修改Logo链接
+ *
+ * @author: 胡倡萌
+ * @url: http://www.wpdaxue.com/custom-wordpress-login-page.html
+ */
+add_filter( 'login_headerurl', create_function( false, "return home_url( '/' );" ) );
 
 /* !plugins */

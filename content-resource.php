@@ -7,7 +7,7 @@
     <li><?php _e( '文件大小: ', 'new' ); ?><span><?php echo new_get_resource_field( 'new_resource_file_size' ); ?></span></li>
     <li><?php _e( '上传日期: ', 'new' ); ?><span><?php the_time( get_option( 'date_format' ) ); ?></span></li>
     <li><?php _e( '下载数量: ', 'new' ); ?><span><?php echo new_get_view_count(); ?></span></li>
-    <li><?php if ( function_exists( 'wpfp_link' ) ) { wpfp_link(); } ?></li>
+    <li><?php echo new_favourite(); ?></li>
     </ul>
 </div>
 <div class="column-one-third">

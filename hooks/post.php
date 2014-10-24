@@ -152,4 +152,13 @@ function new_favourite_logged() {
 }
 add_action( 'wp_ajax_new_favourite', 'new_favourite_logged' );
 
+function new_ajax_query_attachments_args( $query ) {
+    $user = get_user_by( 'id', get_current_user_id() );
+    if ( ! in_array( 'administrator', _filter_object_empty_array( $user, 'roles' ) ) ) {
+        $query['author'] = get_current_user_id();
+    }
+    return $query;
+}
+add_action( 'ajax_query_attachments_args', 'new_ajax_query_attachments_args' );
+
 /* !post */

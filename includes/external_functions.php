@@ -61,7 +61,8 @@ function new_log( $msg, $type = '' ) {
 	        $msg = print_r( $msg, true );
 	    }
         $msg = sprintf( "[%s][%s] %s\n", date( 'd.m.Y h:i:s' ), $type, $msg );
-        error_log( $msg, 3, new_template . '/log.txt' );
+        
+        error_log( $msg, 3, new_template . '/logs/log.' . date( 'Y.m.d' ) . '.txt' );
     }
 }
 
@@ -145,20 +146,24 @@ function new_breadcrumbs() {
  * @author 王思捷
  * @url http://ilovetile.com/2410
  * @editor kbdsbx
+ * @param numeric $p 中间显示页数
+ * @param array $params 其他参数
+ *              ul_class        分页样式
+ *              active_class    当前页链接样式
  */
-function new_pagenavi( $p = 5 ) {   
-    if ( is_singular() )
-        return;   
+function new_pagenavi( $p = 5, $params = array() ) {   
+    if ( is_singular() && ! is_page() )
+        return;
 
     global $wp_query, $paged;
     $paged_html = '';
 
-    $max_page = $wp_query->max_num_pages;   
+    $max_page = $wp_query->max_num_pages;
     $paged = empty( $paged ) ? 1 : $paged;
 
-    if ( $max_page == 1 ) return;
+    if ( $max_page <= 1 ) return;
 
-    $paged_html .= '<ul>';
+    $paged_html .= sprintf( '<ul class="%s">', _filter_array_empty( $params, 'ul_class' ) );
     $paged_html .= '<li><span class="pages">Page: ' . $paged . ' of ' . $max_page . ' </span></li>';
 
     if ( $paged > 1 )
@@ -172,7 +177,7 @@ function new_pagenavi( $p = 5 ) {
 
     for ( $i = $paged - $p; $i <= $paged + $p; $i++ ) {
         if ( $i > 0 && $i <= $max_page ) 
-            $paged_html .= ( $i == $paged ? p_link( $i, '', '', true ) : p_link( $i ) );   
+            $paged_html .= ( $i == $paged ? p_link( $i, '', '', true, $params ) : p_link( $i ) );   
     }   
 
     if ( $paged < $max_page - $p - 1 )
@@ -196,10 +201,10 @@ function new_pagenavi( $p = 5 ) {
  * @url http://ilovetile.com/2410
  * @editor kbdsbx
  */
-function p_link( $i, $title = '', $linktype = '', $current = false ) {   
+function p_link( $i, $title = '', $linktype = '', $current = false, $params = array() ) {   
     $title = $title != '' ? $title : sprintf( __( '第%s页', 'new' ), $i );
     $linktext = $linktype != '' ? $linktype : $i;
-    return '<li' . ( $current ? ' class="thisclass"' : '' ) . '><a class="' . ( $current ? 'active' : '' ) . '" href="' . esc_html( get_pagenum_link( $i ) ) . '" title="' . $title . '">' . $linktext . '</a></li>';   
+    return '<li class="' . ( $current ? _filter_array_empty( $params, 'active_class' ) : '' ) . '"><a class="' . ( $current ? 'active' : '' ) . '" href="' . esc_html( get_pagenum_link( $i ) ) . '" title="' . $title . '">' . $linktext . '</a></li>';   
 }  
 
 

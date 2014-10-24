@@ -1,13 +1,13 @@
 <?php
 
 $categories = array(
-    'dashboard' => array( 'slug' => 'Dashboard', 'title' => __( '我的文章', 'new' ), 'icon' => 'icon-dashboard' ),
-    'add_new' => array( 'slug' => 'Add New', 'title' => __( '发布文章', 'new' ), 'icon' => 'icon-edit' ),
-    'favourite' => array( 'slug' => 'Favourite', 'title' => __( '我的收藏', 'new' ), 'icon' => 'icon-heart' ),
-    'pm' => array( 'slug' => 'Pm', 'title' => __( '站内信息', 'new' ), 'icon' => 'icon-envelope' ),
-    'membership-account' => array( 'slug' => 'Membership Account', 'title' => __( '会员详情', 'new' ), 'icon' => 'icon-shopping-cart' ),
-    'membership-invoice' => array( 'slug' => 'Membership Invoice', 'title' => __( '订单查询', 'new' ), 'icon' => 'icon-list' ),
-    'info' => array( 'slug' => 'Info', 'title' => __( '编辑资料', 'new' ), 'icon' => 'icon-cog' ),
+    'dashboard' => array( 'icon' => 'icon-dashboard' ),
+    'post_add' => array( 'icon' => 'icon-edit' ),
+    'favourite' => array( 'icon' => 'icon-heart' ),
+    'pm' => array( 'icon' => 'icon-envelope' ),
+    'membership-account' => array( 'icon' => 'icon-shopping-cart' ),
+    'membership-invoice' => array( 'icon' => 'icon-list' ),
+    'info' => array( 'icon' => 'icon-cog' ),
 );
 
 ?><!DOCTYPE html>
@@ -65,11 +65,11 @@ $categories = array(
 			</a>
             <div class="sidebar sidebar-fixed" id="sidebar">
                 <ul class="nav nav-list">
-                    <?php foreach( $categories as $k => $category ) : ?>
+                    <?php foreach( $categories as $k => $category ) : $page = new_get_page_by_slug( $k ); ?>
                     <li <?php if ( is_page( $k ) ) echo 'class="active"'; ?>>
-                        <a href="<?php echo get_page_link( get_page_by_title( $category['slug'] )->ID ); ?>">
+                        <a href="<?php if ( $page !== false ) { echo get_permalink( $page->ID ); } ?>">
                             <i class="<?php echo $category['icon']; ?>"></i>
-                            <span class="menu-text"><?php echo $category['title']; ?></span>
+                            <span class="menu-text"><?php if ( $page !== false ) { echo $page->post_title; } ?></span>
                         </a>
                     </li>
                     <?php endforeach; ?>

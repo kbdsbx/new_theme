@@ -45,6 +45,7 @@
         if("ontouchend" in document) document.write("<script src='<?php echo new_template_uri; ?>/js/member/jquery.mobile.custom.min.js'>"+"<"+"/script>");
     </script>
     <script src="<?php echo new_template_uri; ?>/js/member/bootstrap.min.js"></script>
+    <script src="<?php echo new_template_uri; ?>/js/member/bootstrap-wysiwyg.min.js"></script>
     <script src="<?php echo new_template_uri; ?>/js/member/typeahead-bs2.min.js"></script>
 
     <!-- page specific plugin scripts -->
@@ -55,8 +56,9 @@
     <script src="<?php echo new_template_uri; ?>/js/member/jquery-ui-1.10.3.custom.min.js"></script>
     <script src="<?php echo new_template_uri; ?>/js/member/jquery.ui.touch-punch.min.js"></script>
     <script src="<?php echo new_template_uri; ?>/js/member/bootbox.min.js"></script>
-    <script src="<?php echo new_template_uri; ?>/js/member/jquery.easy-pie-chart.min.js"></script>
-    <script src="<?php echo new_template_uri; ?>/js/member/jquery.gritter.min.js"></script>
+    <!-- script src="<?php echo new_template_uri; ?>/js/member/jquery.easy-pie-chart.min.js"></script -->
+    <!-- script src="<?php echo new_template_uri; ?>/js/member/jquery.gritter.min.js"></script -->
+    <script src="<?php echo new_template_uri; ?>/js/member/jquery.hotkeys.min.js"></script>
     <!-- ace scripts -->
 
     <script src="<?php echo new_template_uri; ?>/js/member/ace-elements.min.js"></script>

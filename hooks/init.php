@@ -229,5 +229,46 @@ function new_mail_smtp( $phpmailer ) {
 }
 add_action( 'phpmailer_init', 'new_mail_smtp' );
 
+/**
+ * 为投稿者添加文件上传字段，允许投稿者上传文件
+ */
+function new_allow_contributor_uploads() {
+    $contributor = get_role( 'contributor' );
+    $contributor->add_cap( 'upload_files' );
+}
+if ( current_user_can('contributor') && ! current_user_can( 'upload_files' ) ) {
+    add_action( 'init', 'new_allow_contributor_uploads' );
+}
+
+/**
+ * 删除页面的多媒体选择控件涉及到权限的字段
+ */
+function new_media_view_settings( $settings ) {
+    if ( is_page( 'post_add' ) ) {
+        $settings['post']['id'] = 0;
+    }
+    return $settings;
+}
+add_filter( 'media_view_settings', 'new_media_view_settings' );
+
+function new_upload_mimes( $t, $user_id ) {
+    $user = get_user_by( 'id', _filter_empty( $user_id, get_current_user_id() ) );
+
+    if ( ! in_array( 'administrator', _filter_object_empty_array( $user, 'roles' ) ) ) {
+        $t = array(
+            // 限制普通用户的上传文件类型
+            // Image formats
+            'jpg|jpeg|jpe' => 'image/jpeg',
+            'gif' => 'image/gif',
+            'png' => 'image/png',
+            'bmp' => 'image/bmp',
+            'tif|tiff' => 'image/tiff',
+            'ico' => 'image/x-icon'
+        );
+    }
+    return $t;
+}
+add_filter( 'upload_mimes', 'new_upload_mimes', 10, 2 );
+
 /* !init */
 

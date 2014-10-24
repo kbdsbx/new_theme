@@ -68,49 +68,13 @@ function new_filter_scripts() {
 add_action( 'wp_print_scripts', 'new_filter_scripts', 100 );
 
 /**
- * wpuf
- */
-function new_wpuf_filter_post_status( $show_status, $status ) {
-    switch ( $status ) {
-    case 'publish':
-        $title = __( '已发布', 'new' );
-        $fontcolor = "#33CC33";
-        $icon = "icon-ok-circle";
-        break;
-    case 'draft':
-        $title = __( '草稿', 'new' );
-        $fontcolor = "#bbbbbb";
-        $icon = "icon-file-alt";
-        break;
-    case 'pending':
-        $title = __( '等待审核', 'new' );
-        $fontcolor = "#C00202";
-        $icon = "icon-question-sign";
-        break;
-    case 'future':
-        $title = __( '定时发布', 'new' );
-        $fontcolor = "#bbbbbb";
-        $icon = "icon-time";
-        break;
-    case 'private':
-        $title = __( '私人', 'new' );
-        $fontcolor = "#bbbbbb";
-        $icon = "icon-lock";
-        break;
-    }
-    $show_status = '<span style="color:' . $fontcolor . ';"><i class="' . $icon . '"></i>&nbsp;&nbsp;' . $title . '</span>';
-    return $show_status;
-}
-add_filter( 'wpuf_show_post_status', 'new_wpuf_filter_post_status', 10, 2 );
-
-/**
  * 修改页面模板，未完成
  * TODO:
  */
 function new_filter_page_template( $page ) {
     $pages = array(
         'dashboard',
-        'add_new',
+        'post_add',
         'edit',
         'favourite',
         'pm',
@@ -175,5 +139,80 @@ add_action( 'login_head', 'new_login_head' );
  * @url: http://www.wpdaxue.com/custom-wordpress-login-page.html
  */
 add_filter( 'login_headerurl', create_function( false, "return home_url( '/' );" ) );
+
+/**
+ * 添加注册表单字段
+ */
+function new_register_form() {
+?>
+<p>
+    <label for="pass1"><?php _e( '密码', 'new' ); ?><br />
+	<input type="password" name="new_password" id="pass1" class="input" value="" size="20" /></label>
+</p>
+<p>
+    <label for="pass2"><?php _e( '再次输入密码', 'new' ); ?><br />
+	<input type="password" name="new_password2" id="pass2" class="input" value="" size="20" /></label>
+</p>
+<p>
+    <div id="pass-strength-result"><?php _e('Strength indicator'); ?></div>
+</p>
+<p>
+    <label for="user_url"><?php _e( '网站', 'new' ); ?><br />
+    <input type="url" name="new_user_url" id="user_url" class="input" value="" size="20" /></label>
+</p>
+<?php wp_print_scripts( 'user-profile' ); ?>
+<?php
+}
+add_action( 'register_form', 'new_register_form' );
+
+/**
+ * 添加注册错误信息
+ */
+function new_registration_errors( $errors ) {
+    if ( empty( $_POST['new_password'] ) || empty( $_POST['new_password2'] ) ) {
+        $errors->add( 'empty_password', __( '<strong>错误</strong>：密码不能为空', 'new' ) );
+    } else if ( $_POST['new_password'] != $_POST['new_password2'] ) {
+        $errors->add( 'invalid_password', __( '<strong>错误</strong>：再次输入密码不匹配', 'new' ) );
+    }
+    return $errors;
+}
+add_filter( 'registration_errors', 'new_registration_errors' );
+
+/**
+ * 添加注册信息更新
+ */
+function new_user_register( $user_id ) {
+    $userdata = array(
+        'ID' => $user_id
+    );
+    if ( isset( $_POST['new_user_url'] ) ) {
+        $userdata['user_url'] = $_POST['new_user_url'];
+    }
+    wp_update_user( $userdata );
+}
+add_filter( 'user_register', 'new_user_register' );
+
+/**
+ * 当存在密码提交时，随机密码使用提交的密码
+ */
+function new_random_password( $password ) {
+    if ( isset( $_POST['new_password'] ) && isset( $_POST['new_password2'] ) && $_POST['new_password'] == $_POST['new_password2'] ) {
+        return $_POST['new_password'];
+    }
+    return $password;
+}
+add_filter( 'random_password', 'new_random_password' );
+
+/**
+ * 跳转
+ */
+function new_login_redirect( $redirect_to, $requested_redirect_to, $user ) {
+    if ( !is_wp_error( $user ) && $user->has_cap( 'manage_options' ) ) {
+        return $redirect_to ? $redirect_to : admin_url();
+    } else {
+        return ( $redirect_to && $redirect_to != admin_url() ) ? $redirect_to : _filter_empty( new_get_page_link_by_slug( 'dashboard' ), home_url( '/' ) );
+    }
+}
+add_filter( 'login_redirect', 'new_login_redirect', 10, 3 );
 
 /* !plugins */

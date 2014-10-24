@@ -18,6 +18,7 @@ require_once new_inc . '/widget_functions.php';
 require_once new_inc . '/filter_functions.php';
 require_once new_inc . '/post_functions.php';
 require_once new_inc . '/page_functions.php';
+require_once new_inc . '/category_functions.php';
 
 require_once new_hooks . '/meta_box.php';
 require_once new_hooks . '/init.php';

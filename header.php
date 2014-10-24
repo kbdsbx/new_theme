@@ -35,7 +35,7 @@
                         </div>
                         <div class="user">
                         <?php if ( is_user_logged_in() ) : ?>
-                            <a href="<?php home_url( 'wp-login.php' ); // TODO: 链接至用户中心首页 ?>"><?php echo get_avatar( get_current_user_id(), 35 ); ?></a>
+                            <a href="<?php echo _filter_empty( new_get_page_link_by_slug( 'dashboard' ), home_url( 'wp-login.php' ) ); ?>"><?php echo get_avatar( get_current_user_id(), 35 ); ?></a>
                         <?php else : ?>
                             <button class="ub" onclick="location.href='<?php echo home_url( 'wp-login.php' ); ?>'"></button>
                         <?php endif; ?>
